@@ -1,12 +1,23 @@
 import gleam/list
 import gleam/string
 import gleam/dynamic.{Dynamic}
+import gleam/io
 
 pub fn discover_and_run_tests() -> Nil {
+  let options = [
+    Verbose,
+    NoTty,
+    Report(#(
+      dangerously_convert_string_to_atom("gleeunit_progress"),
+      [dynamic.from(#(dangerously_convert_string_to_atom("colored"), True))],
+    )),
+  ]
+
   find_files(matching: "**/*.{erl,gleam}", in: "test")
   |> list.map(remove_extension)
   |> list.map(dangerously_convert_string_to_atom)
-  |> run_eunit([Verbose])
+  |> run_eunit(options)
+
   Nil
 }
 
@@ -27,6 +38,8 @@ external fn dangerously_convert_string_to_atom(String) -> Atom =
 
 type EunitOption {
   Verbose
+  NoTty
+  Report(#(Atom, List(Dynamic)))
 }
 
 // NoTty
