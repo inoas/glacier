@@ -1,9 +1,9 @@
 import gleam/list
+import gleam/result
 import gleam/string
 import gleam/dynamic.{Dynamic}
-import gleam/io
 
-pub fn discover_and_run_tests() -> Nil {
+pub fn main() -> Nil {
   let options = [
     Verbose,
     NoTty,
@@ -13,13 +13,23 @@ pub fn discover_and_run_tests() -> Nil {
     )),
   ]
 
-  find_files(matching: "**/*.{erl,gleam}", in: "test")
-  |> list.map(remove_extension)
-  |> list.map(dangerously_convert_string_to_atom)
-  |> run_eunit(options)
+  let result =
+    find_files(matching: "**/*.{erl,gleam}", in: "test")
+    |> list.map(remove_extension)
+    |> list.map(dangerously_convert_string_to_atom)
+    |> run_eunit(options)
+    |> dynamic.result
+    |> result.unwrap(Error(dynamic.from(Nil)))
 
-  Nil
+  let code = case result {
+    Ok(_) -> 0
+    Error(_) -> 1
+  }
+  halt(code)
 }
+
+external fn halt(Int) -> Nil =
+  "erlang" "halt"
 
 fn remove_extension(path: String) -> String {
   path

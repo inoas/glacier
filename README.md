@@ -11,14 +11,14 @@ Add this package to your `gleam.toml` dependencies:
 gleeunit = "~> 0.1.0"
 ```
 
-And then call the `discover_and_run_tests` function from your test main function.
+And then call the `gleeunit.main` function from your test main function.
 
 ```rust
 // In test/yourapp_test.gleam
 import gleeunit
 
 pub fn main() {
-  gleeunit.discover_and_run_tests()
+  gleeunit.main()
 }
 ```
 

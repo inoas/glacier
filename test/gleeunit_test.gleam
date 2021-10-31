@@ -1,7 +1,7 @@
 import gleeunit
 
 pub fn main() {
-  gleeunit.discover_and_run_tests()
+  gleeunit.main()
 }
 
 pub fn some_test() {
