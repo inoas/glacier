@@ -3,7 +3,7 @@ version = "0.1.0"
 license = "Apache-2.0"
 
 [dependencies]
-gleam_stdlib = "~> 0.17.1"
+gleam_stdlib = "~> 0.17"
 
 [dev-dependencies]
 # some_test_package = "~> 1.0.0"

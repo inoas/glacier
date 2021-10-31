@@ -2,7 +2,7 @@
 # You typically do not need to edit this file
 
 [requirements]
-gleam_stdlib = "~> 0.17.1"
+gleam_stdlib = "~> 0.17"
 
 [packages]
 gleam_stdlib = "0.17.1"
