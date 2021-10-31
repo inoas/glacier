@@ -30,3 +30,5 @@ pub fn the_universe_test() {
   assert 1 = 1
 }
 ```
+
+Run the test by entering `gleam test` in the command line.
