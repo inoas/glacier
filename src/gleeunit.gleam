@@ -3,6 +3,12 @@ import gleam/result
 import gleam/string
 import gleam/dynamic.{Dynamic}
 
+/// Find and run all test functions for the current project using Erlang's EUnit
+/// test framework.
+///
+/// Any Erlang or Gleam function in the `test` directory with a name editing in
+/// `_test` is considered a test function and will be run.
+///
 pub fn main() -> Nil {
   let options = [
     Verbose,
