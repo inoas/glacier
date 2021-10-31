@@ -1,21 +1,32 @@
 # gleeunit
 
-A Gleam project
+Gleam bindings to the Erlang EUnit test framework.
 
-## Quick start
+## Usage
 
-```sh
-gleam run   # Run the project
-gleam test  # Run the tests
-gleam shell # Run an Erlang shell
+Add this package to your `gleam.toml` dependencies:
+
+```toml
+[dev-dependencies]
+gleeunit = "~> 0.1.0"
 ```
 
-## Installation
+And then call the `discover_and_run_tests` function from your test main function.
 
-If available on Hex this package can be installed by adding `gleeunit` 
-to your `gleam.toml` dependencies:
+```gleam
+// In test/yourapp_test.gleam
+import gleeunit
 
-```erlang
-[dependencies]
-gleeunit = "~> 0.1.0"
+pub fn main() {
+  gleeunit.discover_and_run_tests()
+}
+```
+
+Now any public function with a name ending in `_test` in the `test` directory
+will be found and run as a test.
+
+```gleam
+pub fn the_universe_test() {
+  assert 1 = 1
+}
 ```
