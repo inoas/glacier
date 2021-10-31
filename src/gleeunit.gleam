@@ -2,11 +2,12 @@ import gleam/list
 import gleam/string
 import gleam/dynamic.{Dynamic}
 
-pub fn discover_and_run_tests() {
+pub fn discover_and_run_tests() -> Nil {
   find_files(matching: "**/*.{erl,gleam}", in: "test")
   |> list.map(remove_extension)
   |> list.map(dangerously_convert_string_to_atom)
   |> run_eunit([Verbose])
+  Nil
 }
 
 fn remove_extension(path: String) -> String {
