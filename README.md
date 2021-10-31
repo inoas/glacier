@@ -13,7 +13,7 @@ gleeunit = "~> 0.1.0"
 
 And then call the `discover_and_run_tests` function from your test main function.
 
-```gleam
+```rust
 // In test/yourapp_test.gleam
 import gleeunit
 
@@ -25,7 +25,7 @@ pub fn main() {
 Now any public function with a name ending in `_test` in the `test` directory
 will be found and run as a test.
 
-```gleam
+```rust
 pub fn the_universe_test() {
   assert 1 = 1
 }
