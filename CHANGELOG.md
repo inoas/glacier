@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.4.0 - 2021-11-01
+
+- Slightly improved failure format.
+
 ## v0.3.0 - 2021-10-31
 
 - Fixed Hex package which was missing some files.
