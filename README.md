@@ -8,7 +8,7 @@ Add this package to your `gleam.toml` dependencies:
 
 ```toml
 [dev-dependencies]
-gleeunit = "~> 0.1.0"
+gleeunit = "~> 0.3"
 ```
 
 And then call the `gleeunit.main` function from your test main function.
