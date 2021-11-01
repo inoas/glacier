@@ -1,9 +1,9 @@
 -module(erlang_test_module).
 
--export([one_test/0, two_test/0]).
+-include_lib("eunit/include/eunit.hrl").
 
 one_test() ->
-  1 = 1.
+  ?assertEqual(1, 2).
 
 two_test() ->
   2 = 2.

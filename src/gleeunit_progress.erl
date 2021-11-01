@@ -296,12 +296,28 @@ print_failure_reason({skipped, Reason}, _Output, State) ->
     print_colored(io_lib:format("     ~ts~n", [format_pending_reason(Reason)]),
                   ?RED, State);
 print_failure_reason({error, {_Class, Term, Stack}}, Output, State) when
-      is_tuple(Term), tuple_size(Term) == 2, is_list(element(2, Term)) ->
+        is_tuple(Term), tuple_size(Term) == 2, is_list(element(2, Term)) ->
     print_assertion_failure(Term, Stack, Output, State),
+    print_failure_output(5, Output, State);
+print_failure_reason({error, {error, Error, Stack}}, Output, State) when
+        is_list(Stack) andalso is_map(Error) ->
+    print_colored(indent(5, "Failure/Error: ~p~n", [Error]), ?RED, State),
+    print_stack(Stack, State),
     print_failure_output(5, Output, State);
 print_failure_reason({error, Reason}, Output, State) ->
     print_colored(indent(5, "Failure/Error: ~p~n", [Reason]), ?RED, State),
     print_failure_output(5, Output, State).
+
+print_stack([{eunit_test, _, _, _} | Stack], State) ->
+    print_stack(Stack, State);
+print_stack([{eunit_proc, _, _, _} | Stack], State) ->
+    print_stack(Stack, State);
+print_stack([{Module, Function, _Arity, _Location} | Stack], State) ->
+    print_colored(indent(5, "in ~p.~p~n", [Module, Function]), ?CYAN, State),
+    print_stack(Stack, State);
+print_stack([], _State) ->
+    ok.
+
 
 print_failure_output(_, <<>>, _) -> ok;
 print_failure_output(_, undefined, _) -> ok;
