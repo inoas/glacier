@@ -3,7 +3,8 @@
 -include_lib("eunit/include/eunit.hrl").
 
 one_test() ->
-  ?assertEqual(1, 2).
+  % ?assertEqual(1, 2),
+  1 = 1.
 
 two_test() ->
   2 = 2.

@@ -276,7 +276,7 @@ print_failures(#state{failures=[]}) ->
     ok;
 print_failures(#state{failures=Fails}=State) ->
     io:nl(),
-    io:fwrite("Failures:~n~n",[]),
+    io:fwrite("Failures:~n",[]),
     lists:foldr(print_failure_fun(State), 1, Fails),
     ok.
 
@@ -284,7 +284,7 @@ print_failure_fun(#state{status=Status}=State) ->
     fun(Key, Count) ->
             TestData = dict:fetch(Key, Status),
             TestId = format_test_identifier(TestData),
-            io:fwrite("  ~p) ~ts~n", [Count, TestId]),
+            io:fwrite("~n  ~p) ~ts~n", [Count, TestId]),
             print_failure_reason(proplists:get_value(status, TestData),
                                  proplists:get_value(output, TestData),
                                  State),
@@ -299,23 +299,25 @@ print_failure_reason({error, {_Class, Term, Stack}}, Output, State) when
         is_tuple(Term), tuple_size(Term) == 2, is_list(element(2, Term)) ->
     print_assertion_failure(Term, Stack, Output, State),
     print_failure_output(5, Output, State);
-print_failure_reason({error, {error, Error, Stack}}, Output, State) when
-        is_list(Stack) andalso is_map(Error) ->
-    print_colored(indent(5, "Failure/Error: ~p~n", [Error]), ?RED, State),
+print_failure_reason({error, {error, Error, Stack}}, Output, State) when is_list(Stack) ->
+    print_colored(indent(5, "Failure: ~p~n", [Error]), ?RED, State),
     print_stack(Stack, State),
     print_failure_output(5, Output, State);
 print_failure_reason({error, Reason}, Output, State) ->
-    print_colored(indent(5, "Failure/Error: ~p~n", [Reason]), ?RED, State),
+    print_colored(indent(5, "Failure: ~p~n", [Reason]), ?RED, State),
     print_failure_output(5, Output, State).
 
-print_stack([{eunit_test, _, _, _} | Stack], State) ->
-    print_stack(Stack, State);
-print_stack([{eunit_proc, _, _, _} | Stack], State) ->
-    print_stack(Stack, State);
-print_stack([{Module, Function, _Arity, _Location} | Stack], State) ->
-    print_colored(indent(5, "in ~p.~p~n", [Module, Function]), ?CYAN, State),
-    print_stack(Stack, State);
-print_stack([], _State) ->
+print_stack(Stack, State) ->
+    print_colored(indent(5, "Stacktrace:~n", []), ?CYAN, State),
+    print_stackframes(Stack, State).
+print_stackframes([{eunit_test, _, _, _} | Stack], State) ->
+    print_stackframes(Stack, State);
+print_stackframes([{eunit_proc, _, _, _} | Stack], State) ->
+    print_stackframes(Stack, State);
+print_stackframes([{Module, Function, _Arity, _Location} | Stack], State) ->
+    print_colored(indent(7, "~p.~p~n", [Module, Function]), ?CYAN, State),
+    print_stackframes(Stack, State);
+print_stackframes([], _State) ->
     ok.
 
 
@@ -473,7 +475,7 @@ format_assertion_failure(Type, Props, I) when Type =:= assertion_failed
     HasHamcrestProps = ([expected, actual, matcher] -- Keys) =:= [],
     if
         HasEUnitProps ->
-            [indent(I, "Failure/Error: ?assert(~ts)~n", [proplists:get_value(expression, Props)]),
+            [indent(I, "Failure: ?assert(~ts)~n", [proplists:get_value(expression, Props)]),
              indent(I, "  expected: true~n", []),
              case proplists:get_value(value, Props) of
                  false ->
@@ -482,11 +484,11 @@ format_assertion_failure(Type, Props, I) when Type =:= assertion_failed
                      indent(I, "       got: ~p", [V])
              end];
         HasHamcrestProps ->
-            [indent(I, "Failure/Error: ?assertThat(~p)~n", [proplists:get_value(matcher, Props)]),
+            [indent(I, "Failure: ?assertThat(~p)~n", [proplists:get_value(matcher, Props)]),
              indent(I, "  expected: ~p~n", [proplists:get_value(expected, Props)]),
              indent(I, "       got: ~p", [proplists:get_value(actual, Props)])];
         true ->
-            [indent(I, "Failure/Error: unknown assert: ~p", [Props])]
+            [indent(I, "Failure: unknown assert: ~p", [Props])]
     end;
 
 format_assertion_failure(Type, Props, I) when Type =:= assertMatch_failed
@@ -494,7 +496,7 @@ format_assertion_failure(Type, Props, I) when Type =:= assertMatch_failed
     Expr = proplists:get_value(expression, Props),
     Pattern = proplists:get_value(pattern, Props),
     Value = proplists:get_value(value, Props),
-    [indent(I, "Failure/Error: ?assertMatch(~ts, ~ts)~n", [Pattern, Expr]),
+    [indent(I, "Failure: ?assertMatch(~ts, ~ts)~n", [Pattern, Expr]),
      indent(I, "  expected: = ~ts~n", [Pattern]),
      indent(I, "       got: ~p", [Value])];
 
@@ -503,7 +505,7 @@ format_assertion_failure(Type, Props, I) when Type =:= assertNotMatch_failed
     Expr = proplists:get_value(expression, Props),
     Pattern = proplists:get_value(pattern, Props),
     Value = proplists:get_value(value, Props),
-    [indent(I, "Failure/Error: ?assertNotMatch(~ts, ~ts)~n", [Pattern, Expr]),
+    [indent(I, "Failure: ?assertNotMatch(~ts, ~ts)~n", [Pattern, Expr]),
      indent(I, "  expected not: = ~ts~n", [Pattern]),
      indent(I, "           got:   ~p", [Value])];
 
@@ -512,7 +514,7 @@ format_assertion_failure(Type, Props, I) when Type =:= assertEqual_failed
     Expr = proplists:get_value(expression, Props),
     Expected = proplists:get_value(expected, Props),
     Value = proplists:get_value(value, Props),
-    [indent(I, "Failure/Error: ?assertEqual(~w, ~ts)~n", [Expected,
+    [indent(I, "Failure: ?assertEqual(~w, ~ts)~n", [Expected,
                                                          Expr]),
      indent(I, "  expected: ~p~n", [Expected]),
      indent(I, "       got: ~p", [Value])];
@@ -521,7 +523,7 @@ format_assertion_failure(Type, Props, I) when Type =:= assertNotEqual_failed
                                             ; Type =:= assertNotEqual ->
     Expr = proplists:get_value(expression, Props),
     Value = proplists:get_value(value, Props),
-    [indent(I, "Failure/Error: ?assertNotEqual(~p, ~ts)~n",
+    [indent(I, "Failure: ?assertNotEqual(~p, ~ts)~n",
             [Value, Expr]),
      indent(I, "  expected not: == ~p~n", [Value]),
      indent(I, "           got:    ~p", [Value])];
@@ -531,7 +533,7 @@ format_assertion_failure(Type, Props, I) when Type =:= assertException_failed
     Expr = proplists:get_value(expression, Props),
     Pattern = proplists:get_value(pattern, Props),
     {Class, Term} = extract_exception_pattern(Pattern), % I hate that we have to do this, why not just give DATA
-    [indent(I, "Failure/Error: ?assertException(~ts, ~ts, ~ts)~n", [Class, Term, Expr]),
+    [indent(I, "Failure: ?assertException(~ts, ~ts, ~ts)~n", [Class, Term, Expr]),
      case proplists:is_defined(unexpected_success, Props) of
          true ->
              [indent(I, "  expected: exception ~ts but nothing was raised~n", [Pattern]),
@@ -548,7 +550,7 @@ format_assertion_failure(Type, Props, I) when Type =:= assertNotException_failed
     Pattern = proplists:get_value(pattern, Props),
     {Class, Term} = extract_exception_pattern(Pattern), % I hate that we have to do this, why not just give DAT
     Ex = proplists:get_value(unexpected_exception, Props),
-    [indent(I, "Failure/Error: ?assertNotException(~ts, ~ts, ~ts)~n", [Class, Term, Expr]),
+    [indent(I, "Failure: ?assertNotException(~ts, ~ts, ~ts)~n", [Class, Term, Expr]),
      indent(I, "  expected not: exception ~ts~n", [Pattern]),
      indent(I, "           got: exception ~p", [Ex])];
 
@@ -557,7 +559,7 @@ format_assertion_failure(Type, Props, I) when Type =:= command_failed
     Cmd = proplists:get_value(command, Props),
     Expected = proplists:get_value(expected_status, Props),
     Status = proplists:get_value(status, Props),
-    [indent(I, "Failure/Error: ?cmdStatus(~p, ~p)~n", [Expected, Cmd]),
+    [indent(I, "Failure: ?cmdStatus(~p, ~p)~n", [Expected, Cmd]),
      indent(I, "  expected: status ~p~n", [Expected]),
      indent(I, "       got: status ~p", [Status])];
 
@@ -566,7 +568,7 @@ format_assertion_failure(Type, Props, I) when Type =:= assertCmd_failed
     Cmd = proplists:get_value(command, Props),
     Expected = proplists:get_value(expected_status, Props),
     Status = proplists:get_value(status, Props),
-    [indent(I, "Failure/Error: ?assertCmdStatus(~p, ~p)~n", [Expected, Cmd]),
+    [indent(I, "Failure: ?assertCmdStatus(~p, ~p)~n", [Expected, Cmd]),
      indent(I, "  expected: status ~p~n", [Expected]),
      indent(I, "       got: status ~p", [Status])];
 
@@ -575,7 +577,7 @@ format_assertion_failure(Type, Props, I) when Type =:= assertCmdOutput_failed
     Cmd = proplists:get_value(command, Props),
     Expected = proplists:get_value(expected_output, Props),
     Output = proplists:get_value(output, Props),
-    [indent(I, "Failure/Error: ?assertCmdOutput(~p, ~p)~n", [Expected, Cmd]),
+    [indent(I, "Failure: ?assertCmdOutput(~p, ~p)~n", [Expected, Cmd]),
      indent(I, "  expected: ~p~n", [Expected]),
      indent(I, "       got: ~p", [Output])];
 
