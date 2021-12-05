@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.5.0 - 2021-12-05
+
+- Updated for Gleam v0.18.0.
+- Added `gleeunit/should` module containing assertions.
+
 ## v0.4.0 - 2021-11-01
 
 - Slightly improved failure format.
