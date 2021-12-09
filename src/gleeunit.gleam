@@ -10,19 +10,12 @@ import gleam/dynamic.{Dynamic}
 /// `_test` is considered a test function and will be run.
 ///
 pub fn main() -> Nil {
-  let options = [
-    Verbose,
-    NoTty,
-    Report(#(
-      dangerously_convert_string_to_atom("gleeunit_progress"),
-      [dynamic.from(#(dangerously_convert_string_to_atom("colored"), True))],
-    )),
-  ]
+  let options = [Verbose, NoTty, Report(#(GleeunitProgress, [Colored(True)]))]
 
   let result =
     find_files(matching: "**/*.{erl,gleam}", in: "test")
-    |> list.map(remove_extension)
-    |> list.map(dangerously_convert_string_to_atom)
+    |> list.map(gleam_to_erlang_module_name)
+    |> list.map(dangerously_convert_string_to_atom(_, Utf8))
     |> run_eunit(options)
     |> dynamic.result
     |> result.unwrap(Error(dynamic.from(Nil)))
@@ -37,7 +30,7 @@ pub fn main() -> Nil {
 external fn halt(Int) -> Nil =
   "erlang" "halt"
 
-fn remove_extension(path: String) -> String {
+fn gleam_to_erlang_module_name(path: String) -> String {
   path
   |> string.replace(".gleam", "")
   |> string.replace(".erl", "")
@@ -49,15 +42,26 @@ external fn find_files(matching: String, in: String) -> List(String) =
 
 external type Atom
 
-external fn dangerously_convert_string_to_atom(String) -> Atom =
+type Encoding {
+  Utf8
+}
+
+external fn dangerously_convert_string_to_atom(String, Encoding) -> Atom =
   "erlang" "binary_to_atom"
+
+type ReportModuleName {
+  GleeunitProgress
+}
+
+type GleeunitProgressOption {
+  Colored(Bool)
+}
 
 type EunitOption {
   Verbose
   NoTty
-  Report(#(Atom, List(Dynamic)))
+  Report(#(ReportModuleName, List(GleeunitProgressOption)))
 }
 
-// NoTty
 external fn run_eunit(List(Atom), List(EunitOption)) -> Dynamic =
   "eunit" "test"
