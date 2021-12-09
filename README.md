@@ -30,4 +30,4 @@ pub fn the_universe_test() {
 }
 ```
 
-Run the test by entering `gleam test` in the command line.
+Run the tests by entering `gleam test` in the command line.
