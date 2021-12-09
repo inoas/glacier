@@ -1,7 +1,7 @@
 name = "gleeunit"
-version = "0.5.0"
+version = "0.5.1"
 licences = ["Apache-2.0"]
-description = "Gleam bindings to the Erlang EUnit test framework"
+description = "Gleam bindings to Erlang's EUnit test framework"
 
 [dependencies]
 gleam_stdlib = "~> 0.17"
