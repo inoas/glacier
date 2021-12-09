@@ -4,11 +4,10 @@ Gleam bindings to the Erlang EUnit test framework.
 
 ## Usage
 
-Add this package to your `gleam.toml` dependencies:
+Add this package to your Gleam project.
 
 ```toml
-[dev-dependencies]
-gleeunit = "~> 0.4"
+gleam add gleeunit --dev
 ```
 
 And then call the `gleeunit.main` function from your test main function.
