@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.1 - Unreleases
+
+- Added support for OTP versions below 23.
+
 ## v0.5.0 - 2021-12-05
 
 - Updated for Gleam v0.18.0.
