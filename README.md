@@ -6,7 +6,7 @@ Gleam bindings to the Erlang EUnit test framework.
 
 Add this package to your Gleam project.
 
-```toml
+```sh
 gleam add gleeunit --dev
 ```
 
