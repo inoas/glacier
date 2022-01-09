@@ -4,7 +4,7 @@ licences = ["Apache-2.0"]
 description = "Gleam bindings to Erlang's EUnit test framework"
 
 [dependencies]
-gleam_stdlib = "~> 0.17"
+gleam_stdlib = "~> 0.19"
 
 [dev-dependencies]
 # some_test_package = "~> 1.0.0"
