@@ -1,8 +1,9 @@
 # Changelog
 
-## v0.5.1 - Unreleases
+## v0.6.0 - Unreleased
 
 - Added support for OTP versions below 23.
+- Added support for running tests on the JavaScript target.
 
 ## v0.5.0 - 2021-12-05
 
