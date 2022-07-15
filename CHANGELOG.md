@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.6.1 - 2022-07-15
+
+- Fixed a bug where assertions in JavaScript tests could fail to report an
+  error due to them being async.
+
 ## v0.6.1 - 2022-01-26
 
 - Fixed a bug where failed tests on the JavaScript target would crash the `main`
