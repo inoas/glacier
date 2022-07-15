@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.6.1 - 2022-07-15
+## v0.6.2 - 2022-07-15
 
 - Fixed a bug where assertions in JavaScript tests could fail to report an
   error due to them being async.
