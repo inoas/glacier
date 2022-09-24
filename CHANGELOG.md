@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.7.0 - 2022-09-24
+
+- Line numbers are printed on JS for assertions.
+
 ## v0.6.2 - 2022-07-15
 
 - Fixed a bug where assertions in JavaScript tests could fail to report an
