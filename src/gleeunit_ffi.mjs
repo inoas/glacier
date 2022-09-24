@@ -40,12 +40,8 @@ export async function main() {
         passes++;
       } catch (error) {
         let moduleName = "\n" + js_path.slice(0, -4);
-        if(error.line){
-          process.stdout.write(`\n❌ ${moduleName}.${fnName}:${error.line}: ${error}\n`);
-        }
-        else {
-          process.stdout.write(`\n❌ ${moduleName}.${fnName}: ${error}\n`);
-        }
+        let line = error.line ? `:${error.line}` : "";
+        process.stdout.write(`\n❌ ${moduleName}.${fnName}${line}: ${error}\n`);
         failures++;
       }
     }
