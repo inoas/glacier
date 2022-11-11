@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.7.1 - 2022-11-11
+
+- Fixed a bug where project names containing numbers would not run correctly on
+  JavaScript.
+
 ## v0.7.0 - 2022-09-24
 
 - Line numbers are printed on JS for assertions.
