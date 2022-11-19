@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.7.2 - 2022-11-19
+
+- Update for Gleam v0.25.0.
+
 ## v0.7.1 - 2022-11-11
 
 - Fixed a bug where project names containing numbers would not run correctly on
