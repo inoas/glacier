@@ -1,8 +1,9 @@
 # Changelog
 
-## v0.8
+## v0.8.0 - 2022-12-17
 
-- `should.be_ok` and `should.be_error` now unwrap the result argument
+- `should.be_ok` and `should.be_error` now return the contained value when the
+  assertion passes.
 
 ## v0.7.2 - 2022-11-19
 
