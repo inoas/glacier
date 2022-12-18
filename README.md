@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # gleeunit
 
 Gleam bindings to the Erlang EUnit test framework.
@@ -35,3 +36,29 @@ pub fn the_universe_test() {
 ```
 
 Run the tests by entering `gleam test` in the command line.
+=======
+# Glacier - Gleam Incremental Unit Testing
+
+<!-- [![Package Version](https://img.shields.io/hexpm/v/glacier)](https://hex.pm/packages/glacier)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/glacier/) -->
+
+A Gleam project
+
+## Quick start
+
+```sh
+gleam run   # Run the project
+gleam test  # Run the tests
+gleam shell # Run an Erlang shell
+```
+
+<!-- ## Installation
+
+If available on Hex this package can be added to your Gleam project:
+
+```sh
+gleam add glacier
+```
+
+and its documentation can be found at <https://hexdocs.pm/glacier>. -->
+>>>>>>> 52d5260 (integrate gleeunit)
