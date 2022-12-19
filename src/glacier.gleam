@@ -29,7 +29,7 @@ to:
   )
 }
 
-pub type InPathAtoms {
+type InPathAtoms {
   InSrcPath
   InTestPath
 }
@@ -47,9 +47,7 @@ pub fn run() {
   })
 }
 
-pub fn start_watcher(
-  event_handler_fn: fn(in_path, full_file_path) -> Nil,
-) -> Nil {
+fn start_watcher(event_handler_fn: fn(in_path, full_file_path) -> Nil) -> Nil {
   do_start_watcher(event_handler_fn)
   Nil
 }
