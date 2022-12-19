@@ -35,24 +35,34 @@ type InPathAtoms {
 }
 
 pub fn run() {
-  io.println("Starting Glacier watcher...")
-  start_watcher(fn(in_path, full_file_path) {
+  io.println("Starting Glacier watcher…")
+  start_watcher(fn(in_path: InPathAtoms, full_file_path: String) {
     case in_path {
       InSrcPath -> io.println("src changed: " <> full_file_path)
       InTestPath -> io.println("test changed: " <> full_file_path)
       _any -> io.println("./unknown:" <> full_file_path)
     }
-
     gleeunit.main(False)
+    Nil
   })
 }
 
-fn start_watcher(event_handler_fn: fn(in_path, full_file_path) -> Nil) -> Nil {
-  do_start_watcher(event_handler_fn)
+fn start_watcher(file_change_handler: fn(InPathAtoms, String) -> Nil) -> Nil {
+  do_start_watcher(file_change_handler)
   Nil
 }
 
 if erlang {
-  external fn do_start_watcher(callback) -> Nil =
+  external fn do_start_watcher(
+    file_change_handler: fn(InPathAtoms, String) -> Nil,
+  ) -> Nil =
     "glacier_ffi" "start_watcher"
+}
+
+if javascript {
+  fn do_start_watcher(
+    file_change_handler: fn(InPathAtoms, String) -> Nil,
+  ) -> Nil {
+    todo
+  }
 }
