@@ -16,7 +16,10 @@ if javascript {
 }
 
 if erlang {
-  import glacier/glacier_helpers
+  import gleam/list
+  import gleam/string
+  import gleam/int
+  import gleam/io
   import gleam/dynamic.{Dynamic}
 
   fn do_main(halts: Bool) -> Nil {
@@ -24,8 +27,8 @@ if erlang {
 
     let result =
       find_files(matching: "**/*.{erl,gleam}", in: "test")
-      |> glacier_helpers.list_map(gleam_to_erlang_module_name)
-      |> glacier_helpers.list_map(dangerously_convert_string_to_atom(_, Utf8))
+      |> list.map(gleam_to_erlang_module_name)
+      |> list.map(dangerously_convert_string_to_atom(_, Utf8))
       |> run_eunit(options)
       |> dynamic.result(dynamic.dynamic, dynamic.dynamic)
       |> fn(result) {
@@ -44,8 +47,8 @@ if erlang {
       True, code -> halt(code)
       False, 0 -> Nil
       False, code -> {
-        glacier_helpers.int_to_string(code)
-        |> glacier_helpers.io_println
+        int.to_string(code)
+        |> io.println
         Nil
       }
     }
@@ -56,9 +59,9 @@ if erlang {
 
   fn gleam_to_erlang_module_name(path: String) -> String {
     path
-    |> glacier_helpers.string_replace(".gleam", "")
-    |> glacier_helpers.string_replace(".erl", "")
-    |> glacier_helpers.string_replace("/", "@")
+    |> string.replace(".gleam", "")
+    |> string.replace(".erl", "")
+    |> string.replace("/", "@")
   }
 
   external fn find_files(matching: a, in: String) -> List(String) =
