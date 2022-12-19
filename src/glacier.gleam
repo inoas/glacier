@@ -1,8 +1,8 @@
 import gleeunit
-import glacier/glacier_helpers
+import gleam/io
 
 pub fn main() {
-  glacier_helpers.io_println(
+  io.println(
     "Welcome to Glacier - An incremental test runner for Gleam - Usage:
 
 1. In your app, run: gleam add glacier
@@ -37,10 +37,9 @@ pub type InPath {
 pub fn run() {
   start_watcher(fn(in_path, full_file_path) {
     case in_path {
-      InSrcPath -> glacier_helpers.io_println("src changed: " <> full_file_path)
-      InTestPath ->
-        glacier_helpers.io_println("test changed: " <> full_file_path)
-      _any -> glacier_helpers.io_println("./unknown:" <> full_file_path)
+      InSrcPath -> io.println("src changed: " <> full_file_path)
+      InTestPath -> io.println("test changed: " <> full_file_path)
+      _any -> io.println("./unknown:" <> full_file_path)
     }
 
     gleeunit.main(False)
