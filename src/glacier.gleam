@@ -29,7 +29,7 @@ to:
   )
 }
 
-pub type InPath {
+pub type InPathAtoms {
   InSrcPath
   InTestPath
 }
