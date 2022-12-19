@@ -23,11 +23,38 @@ to:
     glacier.run()
   }
 
-3. In your app run: gleam test
+3. In your app run: gleam test --target erlang -- --only-recently-saved=3
+   or run: gleam test --target javascript -- --only-recently-saved=3
 ",
   )
 }
 
+pub type InPath {
+  InSrcPath
+  InTestPath
+}
+
 pub fn run() {
-  gleeunit.main()
+  start_watcher(fn(in_path, full_file_path) {
+    case in_path {
+      InSrcPath -> glacier_helpers.io_println("src changed: " <> full_file_path)
+      InTestPath ->
+        glacier_helpers.io_println("test changed: " <> full_file_path)
+      _any -> glacier_helpers.io_println("./unknown:" <> full_file_path)
+    }
+
+    gleeunit.main(False)
+  })
+}
+
+pub fn start_watcher(
+  event_handler_fn: fn(in_path, full_file_path) -> Nil,
+) -> Nil {
+  do_start_watcher(event_handler_fn)
+  Nil
+}
+
+if erlang {
+  external fn do_start_watcher(callback) -> Nil =
+    "glacier_ffi" "start_watcher"
 }

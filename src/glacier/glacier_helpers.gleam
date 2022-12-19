@@ -57,42 +57,46 @@ if javascript {
     "../glacier_ffi.mjs" "string_replace"
 }
 
-// `Dynamic` data is data that we don't know the type of yet.
-/// From stdlib:
-/// We likely get data like this from interop with Erlang, or from
-/// IO with the outside world.
-///
-pub external type Dynamic
-
-/// Replaces stdlib's dynamic.from
-/// so that there are no deps on Glacier.
-///
-pub fn dynamic_from(a) -> Dynamic {
-  do_dynamic_from(a)
+pub fn int_to_string(int: Int) -> String {
+  do_int_to_string(int)
 }
 
 if erlang {
-  external fn do_dynamic_from(anything) -> Dynamic =
-    "gleam_stdlib" "identity"
+  external fn do_int_to_string(Int) -> String =
+    "glacier_ffi" "int_to_string"
 }
 
 if javascript {
-  external fn do_dynamic_from(anything) -> Dynamic =
+  external fn identity(a) -> b =
     "../glacier_ffi.mjs" "identity"
 }
+//
+// /// `Dynamic` data is data that we don't know the type of yet.
+// /// From stdlib:
+// /// We likely get data like this from interop with Erlang, or from
+// /// IO with the outside world.
+// ///
+// pub external type Dynamic
 
-/// Error returned when unexpected data is encountered
-///
-pub type DecodeError {
-  DecodeError(expected: String, found: String, path: List(String))
-}
+// /// Replaces stdlib's dynamic.from
+// /// so that there are no deps on Glacier.
+// ///
+// pub fn dynamic_from(a) -> Dynamic {
+//   do_dynamic_from(a)
+// }
 
-/// Decodes a `Dynamic` value from a `Dynamic` value.
-///
-/// This function doesn't seem very useful at first, but it can be convenient
-/// when you need to give a decoder function but you don't actually care what
-/// the to-decode value is.
-///
-pub fn dynamic_dynamic(value: Dynamic) -> Result(Dynamic, List(DecodeError)) {
-  Ok(value)
-}
+// /// Error returned when unexpected data is encountered
+// ///
+// pub type DecodeError {
+//   DecodeError(expected: String, found: String, path: List(String))
+// }
+
+// /// Decodes a `Dynamic` value from a `Dynamic` value.
+// ///
+// /// This function doesn't seem very useful at first, but it can be convenient
+// /// when you need to give a decoder function but you don't actually care what
+// /// the to-decode value is.
+// ///
+// pub fn dynamic_dynamic(value: Dynamic) -> Result(Dynamic, List(DecodeError)) {
+//   Ok(value)
+// }

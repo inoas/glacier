@@ -22,7 +22,12 @@ version = "0.1.0"
 # links = [{ title = "Website", href = "https://gleam.run" }]
 
 [dependencies]
+fs = "~> 8.6"
+gleam_stdlib = "~> 0.25"
 
 [dev-dependencies]
+<<<<<<< HEAD
 gleam_stdlib = "~> 0.25"
 >>>>>>> 52d5260 (integrate gleeunit)
+=======
+>>>>>>> edef0a6 (wip)

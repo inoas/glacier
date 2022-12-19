@@ -6,12 +6,12 @@
 ///
 /// If running on JavaScript tests will be run with a custom test runner.
 ///
-pub fn main() -> Nil {
-  do_main()
+pub fn main(halts: Bool) -> Nil {
+  do_main(halts)
 }
 
 if javascript {
-  external fn do_main() -> Nil =
+  external fn do_main(halts: Bool) -> Nil =
     "./gleeunit_ffi.mjs" "main"
 }
 
@@ -25,7 +25,7 @@ if erlang {
 >>>>>>> 52d5260 (integrate gleeunit)
   import gleam/dynamic.{Dynamic}
 
-  fn do_main() -> Nil {
+  fn do_main(halts: Bool) -> Nil {
     let options = [Verbose, NoTty, Report(#(GleeunitProgress, [Colored(True)]))]
 
     let result =
@@ -53,7 +53,16 @@ if erlang {
       Ok(_) -> 0
       Error(_) -> 1
     }
-    halt(code)
+
+    case halts, code {
+      True, code -> halt(code)
+      False, 0 -> Nil
+      False, code -> {
+        glacier_helpers.int_to_string(code)
+        |> glacier_helpers.io_println
+        Nil
+      }
+    }
   }
 
   external fn halt(Int) -> Nil =
