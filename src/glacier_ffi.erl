@@ -42,6 +42,7 @@ process_file_update_and_loop(SrcPath, TestPath, Callback) ->
             of
                 {true, true, false} ->
                     % io:format("~p ", [Changes]),
+					reload_all_available_modules(),
                     Callback(in_src_path, iolist_to_binary(Path));
                 {true, false, true} ->
                     % io:format("~p ", [Changes]),
@@ -55,3 +56,7 @@ process_file_update_and_loop(SrcPath, TestPath, Callback) ->
             % io:format("Unexpected message: ~p\n", [_Any]),
             process_file_update_and_loop(SrcPath, TestPath, Callback)
     end.
+
+reload_all_available_modules() ->
+	AllAvailableModules = code:all_available(),
+	io:format("All available modules: ~p\n", [AllAvailableModules]).
