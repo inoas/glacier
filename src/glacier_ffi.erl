@@ -38,5 +38,7 @@ process_file_update_and_loop(SrcPath, TestPath, Callback) ->
     end.
 
 reload_all_available_modules() ->
-	AllAvailableModules = code:all_available(),
-	io:format("All available modules: ~p\n", [AllAvailableModules]).
+	nil.
+	% AllAvailableModules = code:all_available(),
+	% io:format("All available modules: ~p\n", [AllAvailableModules]).
+
