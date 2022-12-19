@@ -35,6 +35,7 @@ pub type InPathAtoms {
 }
 
 pub fn run() {
+  io.println("Starting Glacier watcher...")
   start_watcher(fn(in_path, full_file_path) {
     case in_path {
       InSrcPath -> io.println("src changed: " <> full_file_path)
