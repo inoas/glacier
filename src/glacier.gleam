@@ -36,12 +36,18 @@ type InPathAtoms {
 
 pub fn run() {
   io.println("Starting Glacier watcher…")
-  start_watcher(fn(in_path: InPathAtoms, full_file_path: String) {
-    case in_path {
-      InSrcPath -> io.println("src changed: " <> full_file_path)
-      InTestPath -> io.println("test changed: " <> full_file_path)
-      _any -> io.println("./unknown:" <> full_file_path)
+  start_watcher(fn(in_path: InPathAtoms, full_module_path: String) {
+    let _test_modules = case in_path {
+      InSrcPath ->
+        detect_unique_import_dependencies(full_module_path)
+        |> derive_test_modules_off_import_dependencies()
+      InTestPath -> [full_module_path]
+      _any -> {
+        io.println("./unknown:" <> full_module_path)
+        []
+      }
     }
+    // TODO: pass test_modules to `gleam test`
     gleeunit.main(False)
     Nil
   })
@@ -65,4 +71,16 @@ if javascript {
   ) -> Nil {
     todo
   }
+}
+
+fn detect_unique_import_dependencies(module_path: String) -> List(String) {
+  io.debug(module_path)
+  []
+}
+
+fn derive_test_modules_off_import_dependencies(
+  module_paths: List(String),
+) -> List(String) {
+  io.debug(module_paths)
+  []
 }
