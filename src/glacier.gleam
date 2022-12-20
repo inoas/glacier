@@ -39,8 +39,8 @@ pub fn run() {
   start_watcher(fn(in_path: InPathAtoms, full_module_path: String) {
     let _test_modules = case in_path {
       InSrcPath ->
-        detect_unique_import_dependencies(full_module_path)
-        |> derive_test_modules_off_import_dependencies()
+        detect_unique_import_module_dependencies(full_module_path)
+        |> derive_test_modules_off_import_module_dependencies()
       InTestPath -> [full_module_path]
       _any -> {
         io.println("./unknown:" <> full_module_path)
@@ -73,12 +73,12 @@ if javascript {
   }
 }
 
-fn detect_unique_import_dependencies(module_path: String) -> List(String) {
+fn detect_unique_import_module_dependencies(module_path: String) -> List(String) {
   io.debug(module_path)
   []
 }
 
-fn derive_test_modules_off_import_dependencies(
+fn derive_test_modules_off_import_module_dependencies(
   module_paths: List(String),
 ) -> List(String) {
   io.debug(module_paths)
