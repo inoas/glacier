@@ -100,8 +100,8 @@ fn parse_module(
 ) -> List(String) {
   case chars {
     [] -> imports
-    [char, ..rest_chars] -> {
-      io.debug(#(context, collected, char))
+    [char, ..rest_chars] ->
+      // io.debug(#(context, collected, char))
       case context, collected, char {
         // Found `/`: Continue Initial with / in collected
         ParseModeSearch, "", "/" ->
@@ -151,7 +151,6 @@ fn parse_module(
         ParseModeInString, _collected, _char ->
           parse_module(rest_chars, imports, ParseModeInString, "")
       }
-    }
   }
 }
 
