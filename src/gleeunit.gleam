@@ -81,6 +81,7 @@ if erlang {
     "erlang" "halt"
 
   fn gleam_to_erlang_module_name(path: String) -> String {
+    io.debug(path)
     path
 <<<<<<< HEAD
 <<<<<<< HEAD

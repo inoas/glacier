@@ -29,45 +29,47 @@ to:
   )
 }
 
-type InPathAtoms {
-  InSrcPath
-  InTestPath
+type ModuleInPathAtom {
+  ModuleInSrcPath
+  ModuleInTestPath
 }
 
 pub fn run() {
   io.println("Starting Glacier watcher…")
-  start_watcher(fn(in_path: InPathAtoms, full_module_path: String) {
-    let _test_modules = case in_path {
-      InSrcPath ->
+  start_watcher(fn(module_in_path: ModuleInPathAtom, full_module_path: String) {
+    let _test_modules = case module_in_path {
+      ModuleInSrcPath ->
         detect_unique_import_module_dependencies(full_module_path)
         |> derive_test_modules_off_import_module_dependencies()
-      InTestPath -> [full_module_path]
+      ModuleInTestPath -> [full_module_path]
       _any -> {
-        io.println("./unknown:" <> full_module_path)
+        io.debug(#("unexpected", full_module_path))
         []
       }
     }
-    // TODO: pass test_modules to `gleam test`
+    // TODO: pass _test_modules to `gleam test`
     gleeunit.main(False)
     Nil
   })
 }
 
-fn start_watcher(file_change_handler: fn(InPathAtoms, String) -> Nil) -> Nil {
+fn start_watcher(
+  file_change_handler: fn(ModuleInPathAtom, String) -> Nil,
+) -> Nil {
   do_start_watcher(file_change_handler)
   Nil
 }
 
 if erlang {
   external fn do_start_watcher(
-    file_change_handler: fn(InPathAtoms, String) -> Nil,
+    file_change_handler: fn(ModuleInPathAtom, String) -> Nil,
   ) -> Nil =
     "glacier_ffi" "start_watcher"
 }
 
 if javascript {
   fn do_start_watcher(
-    file_change_handler: fn(InPathAtoms, String) -> Nil,
+    file_change_handler: fn(ModuleInPathAtom, String) -> Nil,
   ) -> Nil {
     todo
   }
