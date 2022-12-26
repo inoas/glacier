@@ -1,6 +1,7 @@
 //// module doc import in_module_docblock should be ignored
 
 import glacier_demo/glacier_demo_module_a
+import glacier_demo/glacier_demo_module_c
 
 /// function doc import in_fn_docblock should be ignored
 pub fn function_3() {

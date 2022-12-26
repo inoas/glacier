@@ -1,9 +1,16 @@
 -module(glacier_ffi).
 
--export([start_file_change_watcher/1]).
+-export([start_file_change_watcher/1, get_cwd_as_binary/0]).
+
+get_cwd() ->
+    {ok, Cwd} = file:get_cwd(),
+	Cwd.
+
+get_cwd_as_binary() ->
+	iolist_to_binary(get_cwd()).
 
 start_file_change_watcher(Callback) ->
-    {ok, Cwd} = file:get_cwd(),
+    Cwd = get_cwd(),
     fs:start_link(fs_watcher, Cwd),
     fs:subscribe(fs_watcher),
     % fs:start_looper(),
@@ -22,7 +29,6 @@ process_file_update_and_loop(SrcPath, TestPath, Callback) ->
             of
                 {true, true, false} ->
                     % io:format("~p ", [Changes]),
-					reload_all_available_modules(),
                     Callback(src_module_kind, iolist_to_binary(Path));
                 {true, false, true} ->
                     % io:format("~p ", [Changes]),
@@ -36,9 +42,3 @@ process_file_update_and_loop(SrcPath, TestPath, Callback) ->
             % io:format("Unexpected message: ~p\n", [_Any]),
             process_file_update_and_loop(SrcPath, TestPath, Callback)
     end.
-
-reload_all_available_modules() ->
-	nil.
-	% AllAvailableModules = code:all_available(),
-	% io:format("All available modules: ~p\n", [AllAvailableModules]).
-
