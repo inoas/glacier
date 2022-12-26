@@ -29,60 +29,61 @@ to:
   )
 }
 
-type ModuleInPathAtom {
-  ModuleInSrcPath
-  ModuleInTestPath
+type ModuleKind {
+  SrcModuleKind
+  TestModuleKind
 }
 
 pub fn run() {
   io.println("Starting Glacier watcher…")
-  start_watcher(fn(module_in_path: ModuleInPathAtom, full_module_path: String) {
-    let _test_modules = case module_in_path {
-      ModuleInSrcPath ->
+  file_change_watcher(fn(module_kind: ModuleKind, full_module_path: String) {
+    let test_modules = case module_kind {
+      SrcModuleKind ->
         detect_unique_import_module_dependencies(full_module_path)
         |> derive_test_modules_off_import_module_dependencies()
-      ModuleInTestPath -> [full_module_path]
-      _any -> {
-        io.debug(#("unexpected", full_module_path))
+      TestModuleKind -> [full_module_path]
+      unexpected_atom -> {
+        io.debug(#("UNEXPECTED ATOM", unexpected_atom, "FOR", full_module_path))
         []
       }
     }
+    io.debug(test_modules)
     // TODO: pass _test_modules to `gleam test`
     gleeunit.main(False)
     Nil
   })
 }
 
-fn start_watcher(
-  file_change_handler: fn(ModuleInPathAtom, String) -> Nil,
+fn file_change_watcher(
+  file_change_handler: fn(ModuleKind, String) -> Nil,
 ) -> Nil {
-  do_start_watcher(file_change_handler)
+  do_file_change_watcher(file_change_handler)
   Nil
 }
 
 if erlang {
-  external fn do_start_watcher(
-    file_change_handler: fn(ModuleInPathAtom, String) -> Nil,
+  external fn do_file_change_watcher(
+    file_change_handler: fn(ModuleKind, String) -> Nil,
   ) -> Nil =
-    "glacier_ffi" "start_watcher"
+    "glacier_ffi" "start_file_change_watcher"
 }
 
 if javascript {
-  fn do_start_watcher(
-    file_change_handler: fn(ModuleInPathAtom, String) -> Nil,
+  fn do_file_change_watcher(
+    file_change_handler: fn(ModuleKind, String) -> Nil,
   ) -> Nil {
     todo
   }
 }
 
 fn detect_unique_import_module_dependencies(module_path: String) -> List(String) {
-  io.debug(module_path)
+  // io.debug(module_path)
   []
 }
 
 fn derive_test_modules_off_import_module_dependencies(
   module_paths: List(String),
 ) -> List(String) {
-  io.debug(module_paths)
+  // io.debug(module_paths)
   []
 }

@@ -1,8 +1,8 @@
 -module(glacier_ffi).
 
--export([start_watcher/1]).
+-export([start_file_change_watcher/1]).
 
-start_watcher(Callback) ->
+start_file_change_watcher(Callback) ->
     {ok, Cwd} = file:get_cwd(),
     fs:start_link(fs_watcher, Cwd),
     fs:subscribe(fs_watcher),
@@ -23,10 +23,10 @@ process_file_update_and_loop(SrcPath, TestPath, Callback) ->
                 {true, true, false} ->
                     % io:format("~p ", [Changes]),
 					reload_all_available_modules(),
-                    Callback(in_src_path, iolist_to_binary(Path));
+                    Callback(src_module_kind, iolist_to_binary(Path));
                 {true, false, true} ->
                     % io:format("~p ", [Changes]),
-                    Callback(in_test_path, iolist_to_binary(Path));
+                    Callback(test_module_kind, iolist_to_binary(Path));
                 _ ->
                     % io:format("Not in \"./src\": ~p\n", [{Path, _Changes}]),
                     nil
