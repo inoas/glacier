@@ -13,6 +13,12 @@ gleam test  # Run the tests
 gleam shell # Run an Erlang shell
 ```
 
+## Status
+
+![Under construction](https://web.archive.org/web/20090829023556im_/http://geocities.com/okitsugu/underconstruction.gif)
+
+
+
 <!-- ## Installation
 
 If available on Hex this package can be added to your Gleam project:
