@@ -217,9 +217,9 @@ fn parse_import_chars(
 }
 
 fn derive_test_modules_off_import_module_dependencies(
-  module_paths: List(String),
+  modules: List(String),
 ) -> List(String) {
-  io.debug(module_paths)
+  io.debug(modules)
   []
 }
 
