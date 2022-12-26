@@ -1,9 +1,5 @@
-import gleam/io
+// import in_comment
 
-if erlang {
-  import gleam/string
-}
-
-if javascript {
-  import gleam/int
+pub fn main() {
+  "import in_string"
 }

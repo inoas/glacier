@@ -82,14 +82,14 @@ if javascript {
 fn detect_unique_import_module_dependencies(module_path: String) -> List(String) {
   read_module_file(module_path)
   |> string.to_graphemes()
-  |> parse_module([], ParseModeInitial, "")
+  |> parse_module([], ParseModeSearch, "")
   |> list.unique()
 }
 
 type ParseMode {
-  ParseModeInitial
-  ParseModeComment
-  ParseModeString
+  ParseModeSearch
+  ParseModeInComment
+  ParseModeInString
 }
 
 fn parse_module(
@@ -103,50 +103,53 @@ fn parse_module(
     [char, ..rest_chars] -> {
       io.debug(#(context, collected, char))
       case context, collected, char {
+        // Found `/`: Continue Initial with / in collected
+        ParseModeSearch, "", "/" ->
+          parse_module(rest_chars, imports, ParseModeSearch, "/")
         // Found `/` + `/`: Enter Comment
-        ParseModeInitial, "/", "/" ->
-          parse_module(rest_chars, imports, ParseModeComment, "")
+        ParseModeSearch, "/", "/" ->
+          parse_module(rest_chars, imports, ParseModeInComment, "")
         // Found `"`: Enter String
-        ParseModeInitial, _collected, "\"" ->
-          parse_module(rest_chars, imports, ParseModeString, "")
+        ParseModeSearch, _collected, "\"" ->
+          parse_module(rest_chars, imports, ParseModeInString, "")
+        // Collecting import keyword: Continue Initial
+        ParseModeSearch, collected, char if collected == "" && char == "i" || collected == "i" && char == "m" || collected == "im" && char == "p" || collected == "imp" && char == "o" || collected == "impo" && char == "r" || collected == "impor" && char == "t" ->
+          parse_module(rest_chars, imports, ParseModeSearch, collected <> char)
         // Found `import` + whitespaceish: Enter Import
-        ParseModeInitial, "import", char if char == " " || char == "\t" || char == "\r" || char == "\n" -> {
+        ParseModeSearch, "import", char if char == " " || char == "\t" || char == "\r" || char == "\n" -> {
           let #(rest_chars, new_import) =
             parse_import_chars(rest_chars, string_builder.new())
-          let imports = [string_builder.to_string(new_import), ..imports]
-          parse_module(rest_chars, imports, ParseModeInitial, "")
+          let new_imports = [string_builder.to_string(new_import), ..imports]
+          parse_module(rest_chars, new_imports, ParseModeSearch, "")
         }
         // Found `import\r` + "\n": Enter Import
-        ParseModeInitial, "import\r", char if char == "\n" -> {
+        ParseModeSearch, "import\r", "\n" -> {
           let #(rest_chars, new_import) =
             parse_import_chars(rest_chars, string_builder.new())
           let imports = [string_builder.to_string(new_import), ..imports]
-          parse_module(rest_chars, imports, ParseModeInitial, "")
+          parse_module(rest_chars, imports, ParseModeSearch, "")
         }
-        // Found whitespaceish char: Continue Initial with out adding to collected
-        ParseModeInitial, collected, char if char == " " || char == "\t" || char == "\r" || char == "\n" ->
-          parse_module(rest_chars, imports, ParseModeInitial, collected)
-        // Found other char: Continue Initial
-        ParseModeInitial, collected, char ->
-          parse_module(rest_chars, imports, ParseModeInitial, collected <> char)
+        // Found whitespaceish char: Continue Initial with empty collected
+        ParseModeSearch, _collected, _char ->
+          parse_module(rest_chars, imports, ParseModeSearch, "")
         // In Comment; found `\n`: Exit Comment
-        ParseModeComment, _collected, "\n" ->
-          parse_module(rest_chars, imports, ParseModeInitial, "")
+        ParseModeInComment, _collected, "\n" ->
+          parse_module(rest_chars, imports, ParseModeSearch, "")
         // In Comment; found any other char: Continue Comment
-        ParseModeComment, _collected, _any ->
-          parse_module(rest_chars, imports, ParseModeComment, "")
+        ParseModeInComment, _collected, _any ->
+          parse_module(rest_chars, imports, ParseModeInComment, "")
+        // In String; escape found char: Continue String
+        ParseModeInString, "\\", _escaped ->
+          parse_module(rest_chars, imports, ParseModeInString, "")
         // In String; found `"`: Exit String
-        ParseModeString, _collected, "\"" ->
-          parse_module(rest_chars, imports, ParseModeInitial, "")
-        // In String; found `\` + `\`: Continue String with empty collected
-        ParseModeString, "\\", "\\" ->
-          parse_module(rest_chars, imports, ParseModeString, "")
+        ParseModeInString, _collected, "\"" ->
+          parse_module(rest_chars, imports, ParseModeSearch, "")
         // In String; found a single `\`: Continue String with collected set to `\`
-        ParseModeString, _collected, "\\" ->
-          parse_module(rest_chars, imports, ParseModeString, "\\")
+        ParseModeInString, _collected, "\\" ->
+          parse_module(rest_chars, imports, ParseModeInString, "\\")
         // In String; found any other char: Continue String with empty collected
-        ParseModeString, _collected, _char ->
-          parse_module(rest_chars, imports, ParseModeString, "")
+        ParseModeInString, _collected, _char ->
+          parse_module(rest_chars, imports, ParseModeInString, "")
       }
     }
   }
