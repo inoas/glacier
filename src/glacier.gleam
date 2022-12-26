@@ -42,7 +42,10 @@ pub fn run() {
   file_change_watcher(fn(module_kind: ModuleKind, full_module_path: String) {
     let _test_modules = case module_kind {
       SrcModuleKind ->
-        detect_unique_import_module_dependencies(full_module_path)
+        detect_unique_import_module_dependencies(
+          [src_file_name_to_src_module_name(full_module_path)],
+          [],
+        )
         |> derive_test_modules_off_import_module_dependencies()
       TestModuleKind -> [full_module_path]
       unexpected_atom -> {
@@ -79,10 +82,46 @@ if javascript {
   }
 }
 
-fn detect_unique_import_module_dependencies(module_path: String) -> List(String) {
-  read_module_file(module_path)
+fn detect_unique_import_module_dependencies(
+  module_names: List(String),
+  processed_module_names: List(String),
+) -> List(String) {
+  case module_names {
+    [] -> processed_module_names
+    [module_name, ..rest_module_names] ->
+      case list.contains(processed_module_names, module_name) {
+        True ->
+          detect_unique_import_module_dependencies(
+            rest_module_names,
+            processed_module_names,
+          )
+        False -> {
+          let unchecked_module_names =
+            module_name
+            |> src_module_name_to_src_file_name
+            |> parse_module_for_imports
+            |> list.append(module_names)
+            |> list.filter(for: fn(module_name) {
+              processed_module_names
+              |> list.contains(module_name) == False && src_module_name_to_src_file_name(
+                module_name,
+              )
+              |> file_exists
+            })
+          detect_unique_import_module_dependencies(
+            list.append(rest_module_names, unchecked_module_names),
+            list.append(processed_module_names, [module_name]),
+          )
+        }
+      }
+  }
+}
+
+fn parse_module_for_imports(module_file_name: String) -> List(String) {
+  module_file_name
+  |> read_module_file()
   |> string.to_graphemes()
-  |> parse_module([], ParseModeSearch, "")
+  |> do_parse_module([], ParseModeSearch, "")
   |> list.unique()
 }
 
@@ -92,7 +131,7 @@ type ParseMode {
   ParseModeInString
 }
 
-fn parse_module(
+fn do_parse_module(
   chars: List(String),
   imports: List(String),
   context: ParseMode,
@@ -105,51 +144,56 @@ fn parse_module(
       case context, collected, char {
         // Found `/`: Continue Initial with / in collected
         ParseModeSearch, "", "/" ->
-          parse_module(rest_chars, imports, ParseModeSearch, "/")
+          do_parse_module(rest_chars, imports, ParseModeSearch, "/")
         // Found `/` + `/`: Enter Comment
         ParseModeSearch, "/", "/" ->
-          parse_module(rest_chars, imports, ParseModeInComment, "")
+          do_parse_module(rest_chars, imports, ParseModeInComment, "")
         // Found `"`: Enter String
         ParseModeSearch, _collected, "\"" ->
-          parse_module(rest_chars, imports, ParseModeInString, "")
+          do_parse_module(rest_chars, imports, ParseModeInString, "")
         // Collecting import keyword: Continue Initial
         ParseModeSearch, collected, char if collected == "" && char == "i" || collected == "i" && char == "m" || collected == "im" && char == "p" || collected == "imp" && char == "o" || collected == "impo" && char == "r" || collected == "impor" && char == "t" ->
-          parse_module(rest_chars, imports, ParseModeSearch, collected <> char)
+          do_parse_module(
+            rest_chars,
+            imports,
+            ParseModeSearch,
+            collected <> char,
+          )
         // Found `import` + whitespaceish: Enter Import
         ParseModeSearch, "import", char if char == " " || char == "\t" || char == "\r" || char == "\n" -> {
           let #(rest_chars, new_import) =
             parse_import_chars(rest_chars, string_builder.new())
           let new_imports = [string_builder.to_string(new_import), ..imports]
-          parse_module(rest_chars, new_imports, ParseModeSearch, "")
+          do_parse_module(rest_chars, new_imports, ParseModeSearch, "")
         }
         // Found `import\r` + "\n": Enter Import
         ParseModeSearch, "import\r", "\n" -> {
           let #(rest_chars, new_import) =
             parse_import_chars(rest_chars, string_builder.new())
           let imports = [string_builder.to_string(new_import), ..imports]
-          parse_module(rest_chars, imports, ParseModeSearch, "")
+          do_parse_module(rest_chars, imports, ParseModeSearch, "")
         }
         // Found whitespaceish char: Continue Initial with empty collected
         ParseModeSearch, _collected, _char ->
-          parse_module(rest_chars, imports, ParseModeSearch, "")
+          do_parse_module(rest_chars, imports, ParseModeSearch, "")
         // In Comment; found `\n`: Exit Comment
         ParseModeInComment, _collected, "\n" ->
-          parse_module(rest_chars, imports, ParseModeSearch, "")
+          do_parse_module(rest_chars, imports, ParseModeSearch, "")
         // In Comment; found any other char: Continue Comment
         ParseModeInComment, _collected, _any ->
-          parse_module(rest_chars, imports, ParseModeInComment, "")
+          do_parse_module(rest_chars, imports, ParseModeInComment, "")
         // In String; escape found char: Continue String
         ParseModeInString, "\\", _escaped ->
-          parse_module(rest_chars, imports, ParseModeInString, "")
+          do_parse_module(rest_chars, imports, ParseModeInString, "")
         // In String; found `"`: Exit String
         ParseModeInString, _collected, "\"" ->
-          parse_module(rest_chars, imports, ParseModeSearch, "")
+          do_parse_module(rest_chars, imports, ParseModeSearch, "")
         // In String; found a single `\`: Continue String with collected set to `\`
         ParseModeInString, _collected, "\\" ->
-          parse_module(rest_chars, imports, ParseModeInString, "\\")
+          do_parse_module(rest_chars, imports, ParseModeInString, "\\")
         // In String; found any other char: Continue String with empty collected
         ParseModeInString, _collected, _char ->
-          parse_module(rest_chars, imports, ParseModeInString, "")
+          do_parse_module(rest_chars, imports, ParseModeInString, "")
       }
   }
 }
@@ -179,13 +223,36 @@ fn derive_test_modules_off_import_module_dependencies(
   []
 }
 
+fn src_module_name_to_src_file_name(module_name: String) -> String {
+  get_cwd() <> "/src/" <> module_name <> ".gleam"
+}
+
+fn src_file_name_to_src_module_name(module_name) {
+  assert Ok(#(_base_path, module_name_dot_gleam)) =
+    string.split_once(module_name, get_cwd() <> "/src/")
+  assert Ok(#(module_name, _dot_gleam)) =
+    string.split_once(module_name_dot_gleam, ".gleam")
+  module_name
+}
+
+fn file_exists(absolute_file_name: String) -> Bool {
+  do_file_exists(absolute_file_name)
+}
+
 if erlang {
   import gleam/erlang/file
 
   fn read_module_file(module_path: String) -> String {
+    io.debug("Reading module file " <> module_path)
     assert Ok(contents) = file.read(module_path)
     contents
   }
+
+  external fn get_cwd() -> String =
+    "glacier_ffi" "get_cwd_as_binary"
+
+  external fn do_file_exists(absolute_file_name: String) -> Bool =
+    "filelib" "is_regular"
 }
 
 if javascript {
