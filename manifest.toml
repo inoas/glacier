@@ -12,11 +12,16 @@ gleam_stdlib = "~> 0.19"
 =======
 =======
   { name = "fs", version = "8.6.1", build_tools = ["rebar3"], requirements = [], otp_app = "fs", source = "hex", outer_checksum = "61EA2BDAEDAE4E2024D0D25C63E44DCCF65622D4402DB4A2DF12868D1546503F" },
+<<<<<<< HEAD
 >>>>>>> edef0a6 (wip)
+=======
+  { name = "gleam_erlang", version = "0.17.1", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_erlang", source = "hex", outer_checksum = "BAAA84F5BCC4477E809BA3E03BB3009A3894A6544C1511626C44408E39DB2AE6" },
+>>>>>>> 9cf08d5 (wip)
   { name = "gleam_stdlib", version = "0.25.0", build_tools = ["gleam"], requirements = [], otp_app = "gleam_stdlib", source = "hex", outer_checksum = "AD0F89928E0B919C8F8EDF640484633B28DBF88630A9E6AE504617A3E3E5B9A2" },
 ]
 
 [requirements]
 fs = "~> 8.6"
+gleam_erlang = "~> 0.17"
 gleam_stdlib = "~> 0.25"
 >>>>>>> 52d5260 (integrate gleeunit)
