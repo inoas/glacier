@@ -51,7 +51,7 @@ Glacier differs insofar, that it let's you:
 
 1. Pass in an incremental flag `gleam test -- --incremental`.
 2. Pass in a specific unit test module to rerun `gleam test -- my_app_test.gleam`.
-3. If `gleam test` is passed without any `--`-arguments it behaves the same as `Gleeunit`.
+3. If `gleam test` is passed without any `--`-arguments it behaves the same as *Gleeunit*.
 4. You can still pass in `--target erlang` or `--target javascript`.
 
 ## Status
@@ -60,9 +60,9 @@ Glacier differs insofar, that it let's you:
 
 ## How does it work?
 
-1. `gleam test` passes through `glacier.run()` and simply executes `gleeunit.main()` as if gleeunit was used directly.
-2. `gleam test -- foo, bar` passes through `glacier.run()` and executes `gleeunit.test_modules(modules_list)` where `modules_list` is `["foo", "bar"]`. The given modules are checked if they exist as either `.gleam` or `.erl` test module files and then `gleeunit` runs these test modules.
-3. `gleam test -- --incremental` enters `glacier.run()` and starts a file watcher: Upon changes in files in `./test` just passes those through as `gleam test -- changed_test_module`(so re-saving test files executes the single test), and if a file in `./src` got changed it parses that changed mofule file for any imported modules and puts the module and all chained imported modules in a distinct list of modules that should be tested. Then all test files are read and imports of those are gathered one by one and cross matched against that list (filtered). The result is a list of test modules to be run, which then gets done by calling gleam test -- detected_test_module_a detected_test_module_b (goes to 2.).
+1. `gleam test` passes through `glacier.run()` and simply executes `gleeunit.main()` as if *Gleeunit* was used directly.
+2. `gleam test -- foo, bar` passes through `glacier.run()` and executes `gleeunit.test_modules(modules_list)` where `modules_list` is `["foo", "bar"]`. The given modules are checked if they exist as either `.gleam` or `.erl` test module files and then *Gleeunit* runs these test modules.
+3. `gleam test -- --incremental` enters `glacier.run()` and starts a file watcher: Upon changes in module files in `./test` it just passes those through as `gleam test -- changed_test_module`(so re-saving test files executes the single test), and if a module file in `./src` got changed it parses that changed module file for any imported modules and puts the module and all chained imported modules in a distinct list of modules that should be tested. Then all test module files are read and imports of those are gathered one by one and cross matched against that list. The result is a list of test modules that need to be run, which then gets done by executing a shell call similar to `gleam test -- detected_test_module_a detected_test_module_b detected_test_module_c etc`, aka jumps to (2.).
 
 ## TODO
 
