@@ -13,5 +13,6 @@ version = "0.1.0"
 fs = "~> 8.6"
 gleam_stdlib = "~> 0.25"
 gleam_erlang = "~> 0.17"
+# shellout = "~> 1.0" # TODO: Add some nice outputs
 
 [dev-dependencies]

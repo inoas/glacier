@@ -1,6 +1,7 @@
 import glacier_demo/glacier_demo_module_d
 
 pub fn function_5() {
+  glacier_demo_module_d.main()
   5
 }
 

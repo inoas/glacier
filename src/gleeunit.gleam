@@ -7,11 +7,12 @@
 /// If running on JavaScript tests will be run with a custom test runner.
 ///
 pub fn main(halts: Bool) -> Nil {
-  do_main(halts)
+  determine_test_modules()
+  |> run_test_modules(halts)
 }
 
 if javascript {
-  external fn do_main(halts: Bool) -> Nil =
+  external fn run_test_modules(halts: Bool) -> Nil =
     "./gleeunit_ffi.mjs" "main"
 }
 
@@ -23,11 +24,11 @@ if erlang {
   import gleam/list
   import gleam/string
 
-  fn do_main(halts: Bool) -> Nil {
+  pub fn run_test_modules(test_modules: List(String), halts: Bool) -> Nil {
     let options = [Verbose, NoTty, Report(#(GleeunitProgress, [Colored(True)]))]
 
     let result =
-      determine_test_modules()
+      test_modules
       |> list.map(gleam_to_erlang_module_name)
       |> list.map(dangerously_convert_string_to_atom(_, Utf8))
       |> run_eunit(options)
@@ -59,26 +60,29 @@ if erlang {
     "erlang" "halt"
 
   fn determine_test_modules() {
-    io.debug(find_files(matching: "**/*.{erl,gleam}", in: "test"))
+    // io.debug(find_files(matching: "**/*.{erl,gleam}", in: "test"))
     let erlang_start_args = erlang.start_arguments()
     case erlang_start_args {
       [] -> find_files(matching: "**/*.{erl,gleam}", in: "test")
       erlang_start_args ->
         erlang_start_args
         |> list.map(fn(module_name) {
+          let test_module_has_prefix = string.ends_with(module_name, "test/")
           let test_module_has_suffix =
             string.ends_with(module_name, ".gleam") || string.ends_with(
               module_name,
               ".erl",
             )
-          case test_module_has_suffix {
-            True -> module_name
-            False -> module_name <> ".gleam"
+          case test_module_has_prefix, test_module_has_suffix {
+            True, True -> module_name
+            True, False -> module_name <> ".gleam"
+            False, True -> "test/" <> module_name
+            False, False -> "test/" <> module_name <> ".gleam"
           }
         })
         |> list.filter(fn(module_name) { file_exists("test/" <> module_name) })
         |> fn(module_names) {
-          io.debug(#("Matching test modules: ", module_names))
+          io.debug(#("Detected matching test modules", module_names))
           case module_names {
             [] -> find_files(matching: "**/*.{erl,gleam}", in: "test")
             _else -> module_names
