@@ -1,6 +1,6 @@
 -module(glacier_ffi).
 
--export([start_file_change_watcher/1, get_cwd_as_binary/0, find_files/2]).
+-export([start_file_change_watcher/1, get_cwd_as_binary/0, find_project_files/2]).
 
 get_cwd() ->
     {ok, Cwd} = file:get_cwd(),
@@ -43,7 +43,7 @@ process_file_update_and_loop(SrcPath, TestPath, Callback) ->
             process_file_update_and_loop(SrcPath, TestPath, Callback)
     end.
 
-% From gleeunit_ffi.erl
-find_files(Pattern, In) ->
+% Derived from gleeunit_ffi.erl
+find_project_files(Pattern, In) ->
     Results = filelib:wildcard(binary_to_list(Pattern), binary_to_list(In)),
     lists:map(fun list_to_binary/1, Results).
