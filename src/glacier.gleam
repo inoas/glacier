@@ -4,6 +4,8 @@ import gleam/list
 import gleam/string
 import gleam/string_builder
 import gleam/function
+import gleam/map
+import shellout
 import gleeunit
 
 pub fn main() {
@@ -39,12 +41,25 @@ type ModuleKind {
   TestModuleKind
 }
 
+pub const shellout_lookups: shellout.Lookups = [
+  #(
+    ["color", "background"],
+    [
+      #("buttercup", ["252", "226", "174"]),
+      #("mint", ["182", "255", "234"]),
+      #("pink", ["255", "175", "243"]),
+      #("lightblue", ["156", "231", "255"]),
+      #("dark", ["47", "47", "47"]),
+    ],
+  ),
+]
+
 pub fn run() {
   let erlang_start_args = erlang.start_arguments()
   let is_incremental = list.contains(erlang_start_args, "--incremental")
   let is_empty_args = erlang_start_args == []
   case is_empty_args, is_incremental {
-    True, _ -> gleeunit.main(True)
+    True, _ -> gleeunit.main()
     _, True -> {
       io.println("Starting Glacier watcher…")
       file_change_watcher(fn(module_kind: ModuleKind, full_module_path: String) {
@@ -70,7 +85,7 @@ pub fn run() {
         }
         case test_modules {
           [] -> {
-            io.debug("No matching tests found...")
+            io.println("No matching tests found...")
             Nil
           }
           test_modules -> {
@@ -78,8 +93,9 @@ pub fn run() {
               ErlangTarget -> "gleam test --target erlang -- "
               JavaScriptTarget -> "gleam test --target javascript -- "
             }
-            cmd <> string.join(test_modules, " ")
-            |> io.debug
+            // io.debug(cmd)
+            let cmd = cmd <> string.join(test_modules, " ")
+            cmd
             |> shell_exec
             |> function.tap(fn(shell_exec_return) {
               let #(_exit_code, message) = shell_exec_return
@@ -91,8 +107,21 @@ pub fn run() {
       })
     }
     _, _ -> {
-      io.debug(#("Running tests", erlang_start_args))
-      gleeunit.run_test_modules(erlang_start_args, True)
+      "\nRunning test modules:"
+      |> shellout.style(
+        with: shellout.display(["bold"]),
+        custom: shellout_lookups,
+      )
+      |> io.println
+      string.join(erlang_start_args, "\n")
+      |> shellout.style(
+        with: shellout.display(["bold"])
+        |> map.merge(shellout.color(["lightblue"]))
+        |> map.merge(shellout.background(["dark"])),
+        custom: shellout_lookups,
+      )
+      |> io.println
+      gleeunit.run(for: erlang_start_args)
     }
   }
   // io.debug(test_modules)

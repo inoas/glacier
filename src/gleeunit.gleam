@@ -6,25 +6,29 @@
 ///
 /// If running on JavaScript tests will be run with a custom test runner.
 ///
-pub fn main(halts: Bool) -> Nil {
-  determine_test_modules()
-  |> run_test_modules(halts)
+pub fn main() -> Nil {
+  find_files(matching: "**/*.{erl,gleam}", in: "test")
+  |> do_main()
+}
+
+pub fn run(for modules_list: List(String)) -> Nil {
+  modules_list
+  |> find_matching_test_modules
+  |> do_main()
 }
 
 if javascript {
-  external fn run_test_modules(halts: Bool) -> Nil =
+  external fn do_main() -> Nil =
     "./gleeunit_ffi.mjs" "main"
 }
 
 if erlang {
-  import gleam/dynamic.{Dynamic}
-  import gleam/erlang
-  import gleam/int
-  import gleam/io
   import gleam/list
+  import gleam/result
   import gleam/string
+  import gleam/dynamic.{Dynamic}
 
-  pub fn run_test_modules(test_modules: List(String), halts: Bool) -> Nil {
+  fn do_main(test_modules: List(String)) -> Nil {
     let options = [Verbose, NoTty, Report(#(GleeunitProgress, [Colored(True)]))]
 
     let result =
@@ -33,76 +37,26 @@ if erlang {
       |> list.map(dangerously_convert_string_to_atom(_, Utf8))
       |> run_eunit(options)
       |> dynamic.result(dynamic.dynamic, dynamic.dynamic)
-      |> fn(result) {
-        case result {
-          Ok(v) -> v
-          Error(_) -> Error(dynamic.from(Nil))
-        }
-      }
+      |> result.unwrap(Error(dynamic.from(Nil)))
 
     let code = case result {
       Ok(_) -> 0
       Error(_) -> 1
     }
-
-    case halts, code {
-      True, code -> halt(code)
-      False, 0 -> Nil
-      False, code -> {
-        int.to_string(code)
-        |> io.println
-        Nil
-      }
-    }
+    halt(code)
   }
 
   external fn halt(Int) -> Nil =
     "erlang" "halt"
 
-  fn determine_test_modules() {
-    // io.debug(find_files(matching: "**/*.{erl,gleam}", in: "test"))
-    let erlang_start_args = erlang.start_arguments()
-    case erlang_start_args {
-      [] -> find_files(matching: "**/*.{erl,gleam}", in: "test")
-      erlang_start_args ->
-        erlang_start_args
-        |> list.map(fn(module_name) {
-          let test_module_has_prefix = string.ends_with(module_name, "test/")
-          let test_module_has_suffix =
-            string.ends_with(module_name, ".gleam") || string.ends_with(
-              module_name,
-              ".erl",
-            )
-          case test_module_has_prefix, test_module_has_suffix {
-            True, True -> module_name
-            True, False -> module_name <> ".gleam"
-            False, True -> "test/" <> module_name
-            False, False -> "test/" <> module_name <> ".gleam"
-          }
-        })
-        |> list.filter(fn(module_name) { file_exists("test/" <> module_name) })
-        |> fn(module_names) {
-          io.debug(#("Detected matching test modules", module_names))
-          case module_names {
-            [] -> find_files(matching: "**/*.{erl,gleam}", in: "test")
-            _else -> module_names
-          }
-        }
-    }
-  }
-
-  external fn file_exists(absolute_file_name: String) -> Bool =
-    "filelib" "is_regular"
-
   fn gleam_to_erlang_module_name(path: String) -> String {
-    // io.debug(path)
     path
     |> string.replace(".gleam", "")
     |> string.replace(".erl", "")
     |> string.replace("/", "@")
   }
 
-  external fn find_files(matching: a, in: String) -> List(String) =
+  external fn find_files(matching: String, in: String) -> List(String) =
     "gleeunit_ffi" "find_files"
 
   external type Atom
@@ -130,4 +84,29 @@ if erlang {
 
   external fn run_eunit(List(Atom), List(EunitOption)) -> Dynamic =
     "eunit" "test"
+
+  external fn file_exists(absolute_file_name: String) -> Bool =
+    "filelib" "is_regular"
+
+  fn find_matching_test_modules(test_modules) {
+    test_modules
+    |> list.map(fn(module_name) {
+      let test_module_has_prefix = string.ends_with(module_name, "test/")
+      let test_module_has_suffix =
+        string.ends_with(module_name, ".gleam") || string.ends_with(
+          module_name,
+          ".erl",
+        )
+      case test_module_has_prefix, test_module_has_suffix {
+        True, True -> module_name
+        True, False -> module_name <> ".gleam"
+        False, True -> "test/" <> module_name
+        False, False -> "test/" <> module_name <> ".gleam"
+      }
+    })
+    |> list.filter(fn(module_name) {
+      // io.debug(module_name)
+      file_exists(module_name)
+    })
+  }
 }
