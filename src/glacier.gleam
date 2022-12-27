@@ -222,7 +222,7 @@ fn derive_test_modules_off_import_module_dependencies(
 ) -> List(String) {
   // io.debug(modules)
   let all_test_modules =
-    find_files(matching: "**/*.{gleam}", in: "test")
+    find_project_files(matching: "**/*.{gleam}", in: "test")
     |> list.map(fn(module_name_dot_gleam) {
       assert Ok(#(module_name, _dot_gleam)) =
         string.split_once(module_name_dot_gleam, ".gleam")
@@ -276,8 +276,8 @@ fn file_exists(absolute_file_name: String) -> Bool {
   do_file_exists(absolute_file_name)
 }
 
-fn find_files(matching matching: String, in in: String) -> List(String) {
-  do_find_files(matching, in)
+fn find_project_files(matching matching: String, in in: String) -> List(String) {
+  do_find_project_files(matching, in)
 }
 
 if erlang {
@@ -295,8 +295,11 @@ if erlang {
   external fn do_file_exists(absolute_file_name: String) -> Bool =
     "filelib" "is_regular"
 
-  external fn do_find_files(matching: String, in: String) -> List(String) =
-    "gleeunit_ffi" "find_files"
+  external fn do_find_project_files(
+    matching: String,
+    in: String,
+  ) -> List(String) =
+    "gleeunit_ffi" "find_project_files"
 }
 
 if javascript {
