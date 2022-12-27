@@ -54,10 +54,10 @@ Run the tests by entering `gleam test` in the command line.
 
 ## Introduction
 
-**Glacier** brings incremental interactive unit testing to **Gleam**.
+**Glacier** brings incremental interactive unit testing to [Gleam](https://gleam.run).
 It is used as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit) and relies on it, internally.
 
-Glacier differs insofar, that it let's you:
+*Glacier* differs insofar, that it let's you:
 
 1. Pass in an interactive flag `gleam test -- --glacier`; save a module and only related tests will rerun.
 2. Pass in a specific unit test modules to rerun `gleam test -- my_app_module_a_test.gleam my_app_module_b_test.gleam`.
