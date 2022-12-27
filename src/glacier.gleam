@@ -48,11 +48,13 @@ pub fn run() {
         let test_modules = case module_kind {
           SrcModuleKind ->
             detect_unique_import_module_dependencies(
-              [src_file_name_to_src_module_name(full_module_path)],
+              [file_name_to_module_name(full_module_path, SrcModuleKind)],
               [],
             )
             |> derive_test_modules_off_import_module_dependencies()
-          TestModuleKind -> [full_module_path]
+          TestModuleKind -> [
+            file_name_to_module_name(full_module_path, TestModuleKind),
+          ]
           unexpected_atom -> {
             io.debug(#(
               "UNEXPECTED ATOM",
@@ -257,7 +259,6 @@ fn derive_test_modules_off_import_module_dependencies(
   let dirty_test_modules =
     all_test_modules
     |> list.filter(fn(test_module) {
-      // TODO: build sha1 and only re-derive imports if sha1 differs, to improve speed
       let test_module_imports = derive_src_imports_off_test_module(test_module)
       list.any(
         in: src_modules,
@@ -273,6 +274,7 @@ fn derive_test_modules_off_import_module_dependencies(
 }
 
 fn derive_src_imports_off_test_module(test_module_name) {
+  // TODO: build sha1 and only re-derive imports if sha1 differs, to improve speed
   test_module_name
   |> module_name_to_file_name(TestModuleKind)
   |> parse_module_for_imports
@@ -288,11 +290,15 @@ fn module_name_to_file_name(
   }
 }
 
-fn src_file_name_to_src_module_name(module_name) {
-  assert Ok(#(_base_path, module_name_dot_gleam)) =
-    string.split_once(module_name, get_cwd() <> "/src/")
+fn file_name_to_module_name(module_name: String, module_kind: ModuleKind) {
+  assert Ok(#(_base_path, module_name_dot_gleam)) = case module_kind {
+    SrcModuleKind -> string.split_once(module_name, get_cwd() <> "/src/")
+    TestModuleKind -> string.split_once(module_name, get_cwd() <> "/test/")
+  }
+
   assert Ok(#(module_name, _dot_gleam)) =
     string.split_once(module_name_dot_gleam, ".gleam")
+
   module_name
 }
 
