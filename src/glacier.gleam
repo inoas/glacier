@@ -40,7 +40,7 @@ type ModuleKind {
 pub fn run() {
   io.println("Starting Glacier watcher…")
   file_change_watcher(fn(module_kind: ModuleKind, full_module_path: String) {
-    let _test_modules = case module_kind {
+    let test_modules = case module_kind {
       SrcModuleKind ->
         detect_unique_import_module_dependencies(
           [src_file_name_to_src_module_name(full_module_path)],
@@ -53,7 +53,7 @@ pub fn run() {
         []
       }
     }
-    // io.debug(test_modules)
+    io.debug(test_modules)
     // TODO: pass _test_modules to `gleam test`
     gleeunit.main(False)
     Nil
@@ -98,13 +98,14 @@ fn detect_unique_import_module_dependencies(
         False -> {
           let unchecked_module_names =
             module_name
-            |> src_module_name_to_src_file_name
+            |> module_name_to_file_name(SrcModuleKind)
             |> parse_module_for_imports
             |> list.append(module_names)
             |> list.filter(for: fn(module_name) {
               processed_module_names
-              |> list.contains(module_name) == False && src_module_name_to_src_file_name(
+              |> list.contains(module_name) == False && module_name_to_file_name(
                 module_name,
+                SrcModuleKind,
               )
               |> file_exists
             })
@@ -217,14 +218,50 @@ fn parse_import_chars(
 }
 
 fn derive_test_modules_off_import_module_dependencies(
-  modules: List(String),
+  src_modules: List(String),
 ) -> List(String) {
-  io.debug(modules)
-  []
+  // io.debug(modules)
+  let all_test_modules =
+    find_files(matching: "**/*.{gleam}", in: "test")
+    |> list.map(fn(module_name_dot_gleam) {
+      assert Ok(#(module_name, _dot_gleam)) =
+        string.split_once(module_name_dot_gleam, ".gleam")
+      module_name
+    })
+
+  // FIXME: Should be using a set instead of lists
+  let dirty_test_modules =
+    all_test_modules
+    |> list.filter(fn(test_module) {
+      // TODO: build sha1 and only re-derive imports if sha1 differs, to improve speed
+      let test_module_imports = derive_src_imports_off_test_module(test_module)
+      list.any(
+        in: src_modules,
+        satisfying: fn(src_module) {
+          test_module_imports
+          |> list.contains(src_module)
+        },
+      )
+    })
+
+  // io.debug(#("dirty_test_modules", dirty_test_modules))
+  dirty_test_modules
 }
 
-fn src_module_name_to_src_file_name(module_name: String) -> String {
-  get_cwd() <> "/src/" <> module_name <> ".gleam"
+fn derive_src_imports_off_test_module(test_module_name) {
+  test_module_name
+  |> module_name_to_file_name(TestModuleKind)
+  |> parse_module_for_imports
+}
+
+fn module_name_to_file_name(
+  module_name: String,
+  module_kind: ModuleKind,
+) -> String {
+  case module_kind {
+    SrcModuleKind -> get_cwd() <> "/src/" <> module_name <> ".gleam"
+    TestModuleKind -> get_cwd() <> "/test/" <> module_name <> ".gleam"
+  }
 }
 
 fn src_file_name_to_src_module_name(module_name) {
@@ -239,11 +276,15 @@ fn file_exists(absolute_file_name: String) -> Bool {
   do_file_exists(absolute_file_name)
 }
 
+fn find_files(matching matching: String, in in: String) -> List(String) {
+  do_find_files(matching, in)
+}
+
 if erlang {
   import gleam/erlang/file
 
   fn read_module_file(module_path: String) -> String {
-    io.debug("Reading module file " <> module_path)
+    // io.debug("Reading module file " <> module_path)
     assert Ok(contents) = file.read(module_path)
     contents
   }
@@ -253,6 +294,9 @@ if erlang {
 
   external fn do_file_exists(absolute_file_name: String) -> Bool =
     "filelib" "is_regular"
+
+  external fn do_find_files(matching: String, in: String) -> List(String) =
+    "gleeunit_ffi" "find_files"
 }
 
 if javascript {
