@@ -39,10 +39,21 @@ Run the tests by entering `gleam test` in the command line.
 =======
 # Glacier - Gleam Incremental Unit Testing
 
+![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)
+![Under construction](./resources/glacier-logo.png)
+
 <!-- [![Package Version](https://img.shields.io/hexpm/v/glacier)](https://hex.pm/packages/glacier)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/glacier/) -->
 
-A Gleam project
+**Glacier** brings incremental unit testing to **Gleam**.
+It is used as a drop-in replacement for **Gleeunit** and relies on it, internally.
+
+Glacier differs insofar, that it let's you:
+
+1. Pass in an incremental flag `gleam test -- --incremental`.
+2. Pass in a specific unit test module to rerun `gleam test -- my_app_test.gleam`.
+3. If `gleam test` is passed without any `--`-arguments it behaves the same as `Gleeunit`.
+4. You can still pass in `--target erlang` or `--target javascript`.
 
 ## Status
 
