@@ -65,14 +65,22 @@ pub fn run() {
             []
           }
         }
-        "gleam test -- " <> string.join(test_modules, " ")
-        |> io.debug
-        |> shell_exec
-        |> function.tap(fn(shell_exec_return) {
-          let #(_exit_code, message) = shell_exec_return
-          io.println(message)
-        })
-        Nil
+        case test_modules {
+          [] -> {
+            io.debug("No matching tests found...")
+            Nil
+          }
+          test_modules -> {
+            "gleam test -- " <> string.join(test_modules, " ")
+            |> io.debug
+            |> shell_exec
+            |> function.tap(fn(shell_exec_return) {
+              let #(_exit_code, message) = shell_exec_return
+              io.println(message)
+            })
+            Nil
+          }
+        }
       })
     }
     erlang_start_args -> {
@@ -296,10 +304,18 @@ fn file_name_to_module_name(module_name: String, module_kind: ModuleKind) {
     TestModuleKind -> string.split_once(module_name, get_cwd() <> "/test/")
   }
 
-  assert Ok(#(module_name, _dot_gleam)) =
-    string.split_once(module_name_dot_gleam, ".gleam")
-
-  module_name
+  case string.ends_with(module_name, ".erl") {
+    True -> {
+      assert Ok(#(module_name, _dot_gleam)) =
+        string.split_once(module_name_dot_gleam, ".erl")
+      module_name
+    }
+    False -> {
+      assert Ok(#(module_name, _dot_gleam)) =
+        string.split_once(module_name_dot_gleam, ".gleam")
+      module_name
+    }
+  }
 }
 
 fn file_exists(absolute_file_name: String) -> Bool {
