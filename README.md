@@ -31,7 +31,6 @@ To enable this behavior, all you have to do is add *Glacier* as a dev dependency
 
 ## TODO
 
-- Reduce gleeunit changes to the bare minimum.
 - Introduce some delay between the file watcher picking up a change and the test running, so that if you find-replace-save-all via an editor it does not try to run the tests 10 times. This requires some medium large changes as the code to detect imports and dependent imports needs to run for 1..n modules and if test modules are affected it needs to be handled separatly (added afterwards distinct, unique).
 - Handling of JavaScript src and test modules for node and deno:
   - NodeJS <https://nodejs.org/docs/latest/api/fs.html#fspromiseswatchfilename-options>
