@@ -41,8 +41,11 @@ type ModuleKind {
 
 pub fn run() {
   let erlang_start_args = erlang.start_arguments()
-  case erlang_start_args {
-    [] -> {
+  let is_incremental = list.contains(erlang_start_args, "--incremental")
+  let is_empty_args = erlang_start_args == []
+  case is_empty_args, is_incremental {
+    True, _ -> gleeunit.main(True)
+    _, True -> {
       io.println("Starting Glacier watcher…")
       file_change_watcher(fn(module_kind: ModuleKind, full_module_path: String) {
         let test_modules = case module_kind {
@@ -87,7 +90,7 @@ pub fn run() {
         }
       })
     }
-    erlang_start_args -> {
+    _, _ -> {
       io.debug(#("Running tests", erlang_start_args))
       gleeunit.run_test_modules(erlang_start_args, True)
     }
