@@ -1,6 +1,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # gleeunit
 
 Gleam bindings to the Erlang EUnit test framework.
@@ -46,6 +47,9 @@ Run the tests by entering `gleam test` in the command line.
 =======
 # Glacier · Gleam incremental interactive unit testing
 >>>>>>> 2cc4776 (testing)
+=======
+# Glacier · Gleam Incremental Interactive Unit Testing
+>>>>>>> cb94e4f (readme)
 
 ![Under construction](./resources/glacier-logo.png)
 
