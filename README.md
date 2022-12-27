@@ -28,15 +28,15 @@ gleam shell # Run an Erlang shell
 ## TODO
 
 - Restore previous default behavior, add a flag such as `gleam test -- --incremental` to toggle the new behavior.
-- Introduce some delay between the file watcher picking up a change and the test running, so that if you find-replace-save-all via an editor it does not try to run the tests 10 times.
-- Save import lists per module into an in-memory hash-table. Before a file gets parsed for its imports, build the hash and check if a cached version already exists.
-- Use set instead of lists?
-- Handling of Elixir src and test modules
-- Handling of JavaScript src and test modules for node and deno
+- Handling of JavaScript src and test modules for node and deno:
   - NodeJS <https://nodejs.org/docs/latest/api/fs.html#fspromiseswatchfilename-options>
   - Deno <https://deno.land/api@v1.29.1?s=Deno.watchFs>
-
+- Handling of Elixir src and test modules.
+- Introduce some delay between the file watcher picking up a change and the test running, so that if you find-replace-save-all via an editor it does not try to run the tests 10 times.
+- Save import lists per module into an in-memory hash-table. Before a file gets parsed for its imports, build the hash and check if a cached version already exists.
+- Use set instead of lists in some places?
 - Once gleam does only recompile changed modules: Do not test dependencies if they had been tested recently, aka the first time a module it saved all its dependencies are tested but afterwards only if they changed by keeping a cache table with the module name and an mtime it last run the tests for those modules.
+- Backport gleeunit changes.
 
 ## Installation & Usage
 
