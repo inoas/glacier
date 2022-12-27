@@ -44,15 +44,6 @@ Run the tests by entering `gleam test` in the command line.
 
 A Gleam project
 
-## Quick start
-
-```sh
-gleam run   # Run the project
-gleam test  # Run the tests
-gleam shell # Run an Erlang shell
-
-```
-
 ## Status
 
 ![Under construction](https://web.archive.org/web/20090829023556im_/http://geocities.com/okitsugu/underconstruction.gif)
@@ -95,4 +86,16 @@ and its documentation can be found at <https://hexdocs.pm/glacier>. -->
 >>>>>>> 52d5260 (integrate gleeunit)
 =======
 ... and its documentation can be found at <https://hexdocs.pm/glacier>.
+<<<<<<< HEAD
 >>>>>>> 6b9b162 (readme)
+=======
+
+## Quick start
+
+```sh
+git clone https://github.com/inoas/glacier.git
+cd glacier
+gleam run   # Show instructions how to use the library stand alone
+gleam test  # Run the tests on this library
+```
+>>>>>>> 3df3ccd (readme)
