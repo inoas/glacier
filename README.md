@@ -74,7 +74,9 @@ gleam shell # Run an Erlang shell
 - Handling of JavaScript src and test modules for node and deno
 - Once gleam does only recompile changed modules: Do not test dependencies if they had been tested recently, aka the first time a module it saved all its dependencies are tested but afterwards only if they changed by keeping a cache table with the module name and an mtime it last run the tests for those modules.
 
-## Installation
+## Installation & Usage
+
+This library depends on [/synrc/fs](https://github.com/synrc/fs). Because of this on Linux you will need [`inotify-tools` to be installed](https://github.com/synrc/fs#backends). On Mac and Windows it should work out of the box.
 
 If available on Hex this package can be added to your Gleam project:
 
@@ -84,6 +86,10 @@ If available on Hex this package can be added to your Gleam project:
    - save any test module (within `./test`) file to re-run that single test
    - save any src module (within `./src`) to run all associated tests. Associated tests are test modules where the module is imported or where any of the module's imports and their import's imports (import chain) are imported into.
 
+<<<<<<< HEAD
 <!--
 and its documentation can be found at <https://hexdocs.pm/glacier>. -->
 >>>>>>> 52d5260 (integrate gleeunit)
+=======
+... and its documentation can be found at <https://hexdocs.pm/glacier>.
+>>>>>>> 6b9b162 (readme)
