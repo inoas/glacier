@@ -27,7 +27,7 @@ gleam shell # Run an Erlang shell
 
 ## TODO
 
-- Add a flag such as `gleam test -- --run-all` which just runs all tests as before.
+- Restore previous default behavior, add a flag such as `gleam test -- --incremental` to toggle the new behavior.
 - Introduce some delay between the file watcher picking up a change and the test running, so that if you find-replace-save-all via an editor it does not try to run the tests 10 times.
 - Save import lists per module into an in-memory hash-table. Before a file gets parsed for its imports, build the hash and check if a cached version already exists.
 - Use set instead of lists?
