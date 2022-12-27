@@ -52,7 +52,7 @@ Glacier differs insofar, that it let's you:
 1. Pass in an incremental flag `gleam test -- --incremental`.
 2. Pass in a specific unit test module to rerun `gleam test -- my_app_test.gleam`.
 3. If `gleam test` is passed without any `--`-arguments it behaves the same as *Gleeunit*.
-4. You can still pass in `--target erlang` or `--target javascript`.
+4. You can still pass in `--target erlang` or `--target javascript`, like so: `gleam test --target erlang -- --incremental`.
 
 ## Status
 
