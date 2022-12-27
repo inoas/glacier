@@ -26,8 +26,8 @@ to:
     glacier.run()
   }
 
-3. In your app run: gleam test --target erlang -- --only-recently-saved=3
-   or run: gleam test --target javascript -- --only-recently-saved=3
+3. In your app run: gleam test --target erlang
+   or run: gleam test --target javascript
 ",
   )
 }
@@ -299,12 +299,9 @@ if erlang {
     matching: String,
     in: String,
   ) -> List(String) =
-    "gleeunit_ffi" "find_project_files"
+    "glacier_ffi" "find_project_files"
 }
 
 if javascript {
-  fn read_module_file(module_path: String) -> String {
-    todo
-    ""
-  }
+
 }
