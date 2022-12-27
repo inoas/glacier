@@ -71,7 +71,11 @@ pub fn run() {
             Nil
           }
           test_modules -> {
-            "gleam test -- " <> string.join(test_modules, " ")
+            let cmd = case target() {
+              ErlangTarget -> "gleam test --target erlang -- "
+              JavaScriptTarget -> "gleam test --target javascript -- "
+            }
+            cmd <> string.join(test_modules, " ")
             |> io.debug
             |> shell_exec
             |> function.tap(fn(shell_exec_return) {
@@ -350,4 +354,21 @@ if erlang {
 
 if javascript {
 
+}
+
+type Target {
+  ErlangTarget
+  JavaScriptTarget
+}
+
+if erlang {
+  fn target() {
+    ErlangTarget
+  }
+}
+
+if javascript {
+  fn target() {
+    JavaScriptTarget
+  }
 }
