@@ -1,4 +1,4 @@
-# Glacier · Gleam incremental interactive unit testing
+# Glacier · Gleam Incremental Interactive Unit Testing
 
 ![Under construction](./resources/glacier-logo.png)
 
