@@ -1,4 +1,4 @@
-# Glacier · Gleam interactive incremental unit testing
+# Glacier · Gleam incremental interactive unit testing
 
 ![Under construction](./resources/glacier-logo.png)
 
@@ -7,7 +7,7 @@
 
 ## Introduction
 
-**Glacier** brings interactive unit testing to **Gleam**.
+**Glacier** brings incremental interactive unit testing to **Gleam**.
 It is used as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit) and relies on it, internally.
 
 Glacier differs insofar, that it let's you:
