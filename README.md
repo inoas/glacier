@@ -33,6 +33,9 @@ gleam shell # Run an Erlang shell
 - Use set instead of lists?
 - Handling of Elixir src and test modules
 - Handling of JavaScript src and test modules for node and deno
+  - NodeJS <https://nodejs.org/docs/latest/api/fs.html#fspromiseswatchfilename-options>
+  - Deno <https://deno.land/api@v1.29.1?s=Deno.watchFs>
+
 - Once gleam does only recompile changed modules: Do not test dependencies if they had been tested recently, aka the first time a module it saved all its dependencies are tested but afterwards only if they changed by keeping a cache table with the module name and an mtime it last run the tests for those modules.
 
 ## Installation & Usage
