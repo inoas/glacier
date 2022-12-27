@@ -5,15 +5,6 @@
 
 A Gleam project
 
-## Quick start
-
-```sh
-gleam run   # Run the project
-gleam test  # Run the tests
-gleam shell # Run an Erlang shell
-
-```
-
 ## Status
 
 ![Under construction](https://web.archive.org/web/20090829023556im_/http://geocities.com/okitsugu/underconstruction.gif)
@@ -51,3 +42,12 @@ If available on Hex this package can be added to your Gleam project:
    - save any src module (within `./src`) to run all associated tests. Associated tests are test modules where the module is imported or where any of the module's imports and their import's imports (import chain) are imported into.
 
 ... and its documentation can be found at <https://hexdocs.pm/glacier>.
+
+## Quick start
+
+```sh
+git clone https://github.com/inoas/glacier.git
+cd glacier
+gleam run   # Show instructions how to use the library stand alone
+gleam test  # Run the tests on this library
+```
