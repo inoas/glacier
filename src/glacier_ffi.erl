@@ -1,13 +1,13 @@
 -module(glacier_ffi).
 
--export([start_file_change_watcher/1, get_cwd_as_binary/0]).
+-export([start_file_change_watcher/1, get_cwd_as_binary/0, find_files/2]).
 
 get_cwd() ->
     {ok, Cwd} = file:get_cwd(),
-	Cwd.
+    Cwd.
 
 get_cwd_as_binary() ->
-	iolist_to_binary(get_cwd()).
+    iolist_to_binary(get_cwd()).
 
 start_file_change_watcher(Callback) ->
     Cwd = get_cwd(),
@@ -42,3 +42,8 @@ process_file_update_and_loop(SrcPath, TestPath, Callback) ->
             % io:format("Unexpected message: ~p\n", [_Any]),
             process_file_update_and_loop(SrcPath, TestPath, Callback)
     end.
+
+% From gleeunit_ffi.erl
+find_files(Pattern, In) ->
+    Results = filelib:wildcard(binary_to_list(Pattern), binary_to_list(In)),
+    lists:map(fun list_to_binary/1, Results).
