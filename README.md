@@ -76,7 +76,7 @@ gleam shell # Run an Erlang shell
 
 ## Installation & Usage
 
-This library depends on [/synrc/fs](https://github.com/synrc/fs). Because of this on Linux you will need [`inotify-tools` to be installed](https://github.com/synrc/fs#backends). On Mac and Windows it should work out of the box.
+For Erlang this library depends on [fs](https://hexdocs.pm/fs/). Because of this on Linux you will need [`inotify-tools` to be installed](https://github.com/synrc/fs#backends). On Mac and Windows it should work out of the box.
 
 If available on Hex this package can be added to your Gleam project:
 
