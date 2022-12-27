@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # gleeunit
 
 Gleam bindings to the Erlang EUnit test framework.
@@ -42,6 +43,9 @@ Run the tests by entering `gleam test` in the command line.
 =======
 # Glacier · Gleam interactive incremental unit testing
 >>>>>>> c7b5be5 (more polish)
+=======
+# Glacier · Gleam incremental interactive unit testing
+>>>>>>> 2cc4776 (testing)
 
 ![Under construction](./resources/glacier-logo.png)
 
@@ -50,7 +54,7 @@ Run the tests by entering `gleam test` in the command line.
 
 ## Introduction
 
-**Glacier** brings interactive unit testing to **Gleam**.
+**Glacier** brings incremental interactive unit testing to **Gleam**.
 It is used as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit) and relies on it, internally.
 
 Glacier differs insofar, that it let's you:
