@@ -6,7 +6,7 @@
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/glacier/) -->
 
 **Glacier** brings incremental unit testing to **Gleam**.
-It is used as a drop-in replacement for **Gleeunit** and relies on it, internally.
+It is used as a drop-in replacement for [**Gleeunit**](https://github.com/lpil/gleeunit) and relies on it, internally.
 
 Glacier differs insofar, that it let's you:
 
