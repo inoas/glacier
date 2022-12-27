@@ -7,13 +7,15 @@
 /// If running on JavaScript tests will be run with a custom test runner.
 ///
 pub fn main() -> Nil {
-  find_files(matching: "**/*.{erl,gleam}", in: "test")
-  |> do_main()
+  let test_modules = find_files(matching: "**/*.{erl,gleam}", in: "test")
+  do_main(test_modules)
 }
 
-pub fn run(for modules_list: List(String)) -> Nil {
-  modules_list
-  |> find_matching_test_modules
+/// Runs a specific list ofd test modules
+///
+pub fn run(for test_modules: List(String)) -> Nil {
+  test_modules
+  |> find_matching_test_module_files
   |> do_main()
 }
 
@@ -88,25 +90,25 @@ if erlang {
   external fn file_exists(absolute_file_name: String) -> Bool =
     "filelib" "is_regular"
 
-  fn find_matching_test_modules(test_modules) {
+  external fn get_cwd() -> String =
+    "glacier_ffi" "get_cwd_as_binary"
+
+  fn find_matching_test_module_files(test_modules) {
     test_modules
     |> list.map(fn(module_name) {
-      let test_module_has_prefix = string.ends_with(module_name, "test/")
       let test_module_has_suffix =
         string.ends_with(module_name, ".gleam") || string.ends_with(
           module_name,
           ".erl",
         )
-      case test_module_has_prefix, test_module_has_suffix {
-        True, True -> module_name
-        True, False -> module_name <> ".gleam"
-        False, True -> "test/" <> module_name
-        False, False -> "test/" <> module_name <> ".gleam"
+      case test_module_has_suffix {
+        True -> module_name
+        False -> module_name <> ".gleam"
       }
     })
     |> list.filter(fn(module_name) {
-      // io.debug(module_name)
-      file_exists(module_name)
+      let absolute_module_file = get_cwd() <> "/test/" <> module_name
+      file_exists(absolute_module_file)
     })
   }
 }

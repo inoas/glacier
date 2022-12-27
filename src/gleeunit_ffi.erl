@@ -1,7 +1,7 @@
 -module(gleeunit_ffi).
 
 -export([find_files/2, should_equal/2, should_not_equal/2, should_be_ok/1,
-         should_be_error/1]).
+         should_be_error/1, get_cwd/0, get_cwd_as_binary/0]).
 
 -include_lib("eunit/include/eunit.hrl").
 
@@ -22,3 +22,10 @@ should_be_ok(A) ->
 should_be_error(A) ->
     ?assertMatch({error, _}, A),
     element(2, A).
+
+get_cwd() ->
+    {ok, Cwd} = file:get_cwd(),
+    Cwd.
+
+get_cwd_as_binary() ->
+    iolist_to_binary(get_cwd()).

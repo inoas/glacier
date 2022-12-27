@@ -56,12 +56,18 @@ pub const shellout_lookups: shellout.Lookups = [
 
 pub fn run() {
   let erlang_start_args = erlang.start_arguments()
-  let is_incremental = list.contains(erlang_start_args, "--incremental")
+  let is_incremental = list.contains(erlang_start_args, "--glacier")
   let is_empty_args = erlang_start_args == []
   case is_empty_args, is_incremental {
     True, _ -> gleeunit.main()
     _, True -> {
-      io.println("Starting Glacier watcher…")
+      "Glacier is watching for changes."
+      |> shellout.style(
+        with: shellout.display(["bold"])
+        |> map.merge(shellout.color(["lightblue"])),
+        custom: shellout_lookups,
+      )
+      |> io.println
       file_change_watcher(fn(module_kind: ModuleKind, full_module_path: String) {
         let test_modules = case module_kind {
           SrcModuleKind ->
@@ -85,7 +91,13 @@ pub fn run() {
         }
         case test_modules {
           [] -> {
-            io.println("No matching tests found...")
+            "Could not find any matching test modules."
+            |> shellout.style(
+              with: shellout.display(["bold"])
+              |> map.merge(shellout.color(["lightblue"])),
+              custom: shellout_lookups,
+            )
+            |> io.println
             Nil
           }
           test_modules -> {
@@ -107,17 +119,16 @@ pub fn run() {
       })
     }
     _, _ -> {
-      "\nRunning test modules:"
+      "Running test modules:"
       |> shellout.style(
-        with: shellout.display(["bold"]),
+        with: shellout.display(["bold"])
+        |> map.merge(shellout.color(["lightblue"])),
         custom: shellout_lookups,
       )
       |> io.println
       string.join(erlang_start_args, "\n")
       |> shellout.style(
-        with: shellout.display(["bold"])
-        |> map.merge(shellout.color(["lightblue"]))
-        |> map.merge(shellout.background(["dark"])),
+        with: shellout.color(["lightblue"]),
         custom: shellout_lookups,
       )
       |> io.println
