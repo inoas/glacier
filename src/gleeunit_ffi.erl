@@ -7,6 +7,7 @@
 
 find_files(Pattern, In) ->
 <<<<<<< HEAD
+<<<<<<< HEAD
   Results = filelib:wildcard(binary_to_list(Pattern), binary_to_list(In)),
   lists:map(fun list_to_binary/1, Results).
 
@@ -24,19 +25,21 @@ should_be_error(A) ->
 =======
     Results = filelib:wildcard(binary_to_list(Pattern), binary_to_list(In)),
     lists:map(fun list_to_binary/1, Results).
+=======
+  Results = filelib:wildcard(binary_to_list(Pattern), binary_to_list(In)),
+  lists:map(fun list_to_binary/1, Results).
+
+>>>>>>> c36ab77 (polish)
 
 should_equal(Actual, Expected) ->
     ?assertEqual(Expected, Actual),
     nil.
-
 should_not_equal(Actual, Expected) ->
     ?assertNotEqual(Expected, Actual),
     nil.
-
 should_be_ok(A) ->
     ?assertMatch({ok, _}, A),
     element(2, A).
-
 should_be_error(A) ->
 >>>>>>> 52d5260 (integrate gleeunit)
     ?assertMatch({error, _}, A),
