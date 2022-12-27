@@ -1,6 +1,5 @@
 # Glacier - Gleam Incremental Unit Testing
 
-![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)
 ![Under construction](./resources/glacier-logo.png)
 
 <!-- [![Package Version](https://img.shields.io/hexpm/v/glacier)](https://hex.pm/packages/glacier)
