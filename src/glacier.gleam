@@ -1,58 +1,57 @@
 import gleam/erlang
+import gleam/function
 import gleam/io
 import gleam/list
+import gleam/map
 import gleam/string
 import gleam/string_builder
-import gleam/function
-import gleam/map
-import shellout
 import gleeunit
+import shellout
+
+pub const shellout_lookups: shellout.Lookups = [
+  #(
+    ["color", "background"],
+    [#("pink", ["255", "175", "243"]), #("lightblue", ["156", "231", "255"])],
+  ),
+]
 
 pub fn main() {
-  io.println(
-    "Welcome to Glacier - An incremental test runner for Gleam - Usage:
+  "Glacier · Gleam Incremental Interactive Unit Testing"
+  |> shellout.style(
+    with: shellout.display(["bold"])
+    |> map.merge(shellout.color(["lightblue"])),
+    custom: shellout_lookups,
+  )
+  |> io.println
+
+  "\nUsage:
 
 1. In your app, run: gleam add glacier
-
 2. In your app's ./test/YOUR_PROJECT_test.gleam module change:
-
   import gleeunit
 
   pub fn main() {
     gleeunit.main()
   }
-
 to:
-
   import glacier
 
   pub fn main() {
     glacier.run()
   }
-
-3. In your app run: gleam test --target erlang
-   or run: gleam test --target javascript
-",
+3. Run: gleam test --target erlang -- --glacier
+   Or run: gleam test --target javascript -- --glacier"
+  |> shellout.style(
+    with: shellout.color(["lightblue"]),
+    custom: shellout_lookups,
   )
+  |> io.println
 }
 
 type ModuleKind {
   SrcModuleKind
   TestModuleKind
 }
-
-pub const shellout_lookups: shellout.Lookups = [
-  #(
-    ["color", "background"],
-    [
-      #("buttercup", ["252", "226", "174"]),
-      #("mint", ["182", "255", "234"]),
-      #("pink", ["255", "175", "243"]),
-      #("lightblue", ["156", "231", "255"]),
-      #("dark", ["47", "47", "47"]),
-    ],
-  ),
-]
 
 pub fn run() {
   let erlang_start_args = erlang.start_arguments()
