@@ -15,6 +15,8 @@ Glacier differs insofar, that it let's you:
 3. If `gleam test` is passed without any `--`-arguments it behaves the same as *Gleeunit*.
 4. You can still pass in `--target erlang` or `--target javascript`, like so: `gleam test --target erlang -- --incremental`.
 
+To enable this behavior, all you have to do is add glacier as a dev dependency, aka `gleam add glacier`, open `./test/YOUR_PROJECT.gleam` and replace `gleeunit.main()` with `glacier.main()`.
+
 ## Status
 
 ![Under construction](https://web.archive.org/web/20090829023556im_/http://geocities.com/okitsugu/underconstruction.gif)
