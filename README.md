@@ -8,7 +8,7 @@
 ## Introduction
 
 **Glacier** brings incremental interactive unit testing to [Gleam](https://gleam.run).
-It is used as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit) and relies on it, internally.
+It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit) and it relies on it, internally.
 
 *Glacier* differs insofar, that it let's you:
 
