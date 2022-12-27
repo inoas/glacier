@@ -13,7 +13,7 @@ pub fn function_3() {
 }
 
 pub fn function_4() {
-  glacier_demo_module_c.function_5() + 2
+  glacier_demo_module_c.function_5() - 1
 }
 
 if erlang {

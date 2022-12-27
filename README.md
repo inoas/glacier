@@ -21,14 +21,12 @@ Glacier differs insofar, that it let's you:
 
 ## How does it work?
 
-- `gleam test` enters the main test module and there `gleeunit.main()` needs to be replaced with `glacier.main()`.
-- In `glacier.main()` it is checked if any args were given when `gleam test` got called, such as for example `gleam test -- foo bar`
-  1. If there are args, in this case `foo` and `bar`, then these are passed into `gleeunit.run_test_modules(erlang_start_args)` which is the same as `gleeunit.main()` except that it does not call `find_files(matching: "**/*.{erl,gleam}", in: "test")` but instead checks if the args given exist as either `.gleam` or `.erl` test module files and then runs the tests on those.
-  2. If there are no args then a file watcher starts which upon changes in files in `./test` just passes those through as `gleam test -- changed_test_module`(so re-saving test files executes the single test), and if a file in `./src` got changed it parses that changed mofule file for any imported modules and puts the module and all chained imported modules in a distinct list of modules that should be tested. Then all test files are read and imports of those are gathered one by one and cross matched against that list (filtered). The result is a list of test modules to be run, which then gets done by calling gleam test -- detected_test_module_a detected_test_module_b (goes to 2.)
+1. `gleam test` passes through `glacier.run()` and simply executes `gleeunit.main()` as if gleeunit was used directly.
+2. `gleam test -- foo, bar` passes through `glacier.run()` and executes `gleeunit.test_modules(modules_list)` where `modules_list` is `["foo", "bar"]`. The given modules are checked if they exist as either `.gleam` or `.erl` test module files and then `gleeunit` runs these test modules.
+3. `gleam test -- --incremental` enters `glacier.run()` and starts a file watcher: Upon changes in files in `./test` just passes those through as `gleam test -- changed_test_module`(so re-saving test files executes the single test), and if a file in `./src` got changed it parses that changed mofule file for any imported modules and puts the module and all chained imported modules in a distinct list of modules that should be tested. Then all test files are read and imports of those are gathered one by one and cross matched against that list (filtered). The result is a list of test modules to be run, which then gets done by calling gleam test -- detected_test_module_a detected_test_module_b (goes to 2.).
 
 ## TODO
 
-- Restore previous default behavior, add a flag such as `gleam test -- --incremental` to toggle the new behavior.
 - Handling of JavaScript src and test modules for node and deno:
   - NodeJS <https://nodejs.org/docs/latest/api/fs.html#fspromiseswatchfilename-options>
   - Deno <https://deno.land/api@v1.29.1?s=Deno.watchFs>
