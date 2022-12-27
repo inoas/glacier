@@ -10,8 +10,8 @@ It is used as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit) 
 
 Glacier differs insofar, that it let's you:
 
-1. Pass in an incremental flag `gleam test -- --incremental`.
-2. Pass in a specific unit test module to rerun `gleam test -- my_app_test.gleam`.
+1. Pass in an incremental flag `gleam test -- --incremental`; save a module and only related tests will rerun.
+2. Pass in a specific unit test modules to rerun `gleam test -- my_app_module_a_test.gleam my_app_module_b_test.gleam`.
 3. If `gleam test` is passed without any `--`-arguments it behaves the same as *Gleeunit*.
 4. You can still pass in `--target erlang` or `--target javascript`, like so: `gleam test --target erlang -- --incremental`.
 
