@@ -1,7 +1,9 @@
+import gleam/erlang
 import gleam/io
 import gleam/list
 import gleam/string
 import gleam/string_builder
+import gleam/function
 import gleeunit
 
 pub fn main() {
@@ -38,27 +40,49 @@ type ModuleKind {
 }
 
 pub fn run() {
-  io.println("Starting Glacier watcher…")
-  file_change_watcher(fn(module_kind: ModuleKind, full_module_path: String) {
-    let test_modules = case module_kind {
-      SrcModuleKind ->
-        detect_unique_import_module_dependencies(
-          [src_file_name_to_src_module_name(full_module_path)],
-          [],
-        )
-        |> derive_test_modules_off_import_module_dependencies()
-      TestModuleKind -> [full_module_path]
-      unexpected_atom -> {
-        io.debug(#("UNEXPECTED ATOM", unexpected_atom, "FOR", full_module_path))
-        []
-      }
+  let erlang_start_args = erlang.start_arguments()
+  case erlang_start_args {
+    [] -> {
+      io.println("Starting Glacier watcher…")
+      file_change_watcher(fn(module_kind: ModuleKind, full_module_path: String) {
+        let test_modules = case module_kind {
+          SrcModuleKind ->
+            detect_unique_import_module_dependencies(
+              [src_file_name_to_src_module_name(full_module_path)],
+              [],
+            )
+            |> derive_test_modules_off_import_module_dependencies()
+          TestModuleKind -> [full_module_path]
+          unexpected_atom -> {
+            io.debug(#(
+              "UNEXPECTED ATOM",
+              unexpected_atom,
+              "FOR",
+              full_module_path,
+            ))
+            []
+          }
+        }
+        "gleam test -- " <> string.join(test_modules, " ")
+        |> io.debug
+        |> shell_exec
+        |> function.tap(fn(shell_exec_return) {
+          let #(_exit_code, message) = shell_exec_return
+          io.println(message)
+        })
+        Nil
+      })
     }
-    io.debug(test_modules)
-    // TODO: pass _test_modules to `gleam test`
-    gleeunit.main(False)
-    Nil
-  })
+    erlang_start_args -> {
+      io.debug(#("Running tests", erlang_start_args))
+      gleeunit.run_test_modules(erlang_start_args, True)
+    }
+  }
+  // io.debug(test_modules)
 }
+
+external fn shell_exec(cmd: String) -> #(Int, String) =
+  "glacier_ffi" "shell_exec"
 
 fn file_change_watcher(
   file_change_handler: fn(ModuleKind, String) -> Nil,

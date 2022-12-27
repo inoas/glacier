@@ -1,6 +1,7 @@
 -module(glacier_ffi).
 
--export([start_file_change_watcher/1, get_cwd_as_binary/0, find_project_files/2]).
+-export([start_file_change_watcher/1, get_cwd_as_binary/0, find_project_files/2,
+         shell_exec/1]).
 
 get_cwd() ->
     {ok, Cwd} = file:get_cwd(),
@@ -47,3 +48,36 @@ process_file_update_and_loop(SrcPath, TestPath, Callback) ->
 find_project_files(Pattern, In) ->
     Results = filelib:wildcard(binary_to_list(Pattern), binary_to_list(In)),
     lists:map(fun list_to_binary/1, Results).
+
+% shell_exec(Cmd) when is_binary(Cmd) ->
+%     os:cmd().
+
+% https://stackoverflow.com/questions/27028486/how-to-execute-system-command-in-erlang-and-get-results-using-oscmd-1
+shell_exec(Command) when is_binary(Command) ->
+    Command@2 = binary_to_list(Command),
+    Port = open_port({spawn, Command@2}, [stream, in, eof, hide, exit_status]),
+    get_data(Port, []).
+
+get_data(Port, Sofar) ->
+    receive
+        {Port, {data, Bytes}} ->
+            get_data(Port, [Sofar | Bytes]);
+        {Port, eof} ->
+            Port ! {self(), close},
+            receive
+                {Port, closed} ->
+                    true
+            end,
+            receive
+                {'EXIT', Port, _} ->
+                    ok
+            after 1 ->              % force context switch
+                ok
+            end,
+            ExitCode =
+                receive
+                    {Port, {exit_status, Code}} ->
+                        Code
+                end,
+            {ExitCode, lists:flatten(Sofar)}
+    end.
