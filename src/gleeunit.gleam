@@ -1,6 +1,7 @@
 import gleam/io
 import gleam/list
 import gleam/string
+import gleam/function
 
 type Target {
   ErlangTarget
@@ -50,12 +51,14 @@ fn find_matching_test_module_files(test_modules) {
   })
   |> list.filter(fn(module_name) {
     let absolute_module_file = get_cwd() <> "/test/" <> module_name
-    let is_file_existing = file_exists(absolute_module_file)
-    case is_file_existing {
-      True -> Nil
-      False -> io.println("Error: Could not find " <> absolute_module_file)
-    }
-    is_file_existing == True
+    file_exists(absolute_module_file)
+    |> function.tap(fn(module_file_exists: Bool) {
+      case module_file_exists {
+        True -> Nil
+        // TODO: gleam 0.26 io.print_error
+        False -> io.print("Error: Could not find " <> absolute_module_file)
+      }
+    })
   })
 }
 
