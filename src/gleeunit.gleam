@@ -216,17 +216,17 @@ if javascript {
     "./gleeunit_ffi.mjs" "main"
 
   fn detect_test_modules() -> List(String) {
-    // impl. node equivalent of find_files(matching: "**/*.{erl,gleam}", in: "test")
+    // TODO: impl. node equivalent of find_files(matching: "**/*.{erl,gleam}", in: "test")
     todo
   }
 
   fn file_exists(absolute_file_name: String) -> Bool {
-    // impl. node equivalent of "filelib" "is_regular"
+    // TODO: impl. node equivalent of "filelib" "is_regular"
     todo
   }
 
   fn get_cwd() -> String {
-    // impl. node equivalent of "glacier_ffi" "get_cwd_as_binary"
+    // TODO: impl. node equivalent of "glacier_ffi" "get_cwd_as_binary"
     todo
   }
 
