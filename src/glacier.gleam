@@ -67,77 +67,16 @@ pub fn run() {
         custom: shellout_lookups,
       )
       |> io.println
-      file_change_watcher(fn(module_kind: ModuleKind, full_module_path: String) {
-        let test_modules = case module_kind {
-          SrcModuleKind ->
-            detect_unique_import_module_dependencies(
-              [file_name_to_module_name(full_module_path, SrcModuleKind)],
-              [],
-            )
-            |> derive_test_modules_off_import_module_dependencies()
-          TestModuleKind -> [
-            file_name_to_module_name(full_module_path, TestModuleKind),
-          ]
-          unexpected_atom -> {
-            io.debug(#(
-              "UNEXPECTED ATOM",
-              unexpected_atom,
-              "FOR",
-              full_module_path,
-            ))
-            []
-          }
-        }
-        case test_modules {
-          [] -> {
-            "🏔 Did not detect any matching test modules!"
-            |> shellout.style(
-              with: shellout.display(["bold"])
-              |> map.merge(shellout.color(["lightblue"])),
-              custom: shellout_lookups,
-            )
-            |> io.println
-            Nil
-          }
-          test_modules -> {
-            "🏔 Detected test modules:"
-            |> shellout.style(
-              with: shellout.display(["bold"])
-              |> map.merge(shellout.color(["lightblue"])),
-              custom: shellout_lookups,
-            )
-            |> io.println
-            list.map(
-              test_modules,
-              with: fn(test_module: String) { "  ❄ " <> test_module },
-            )
-            |> string.join("\n")
-            |> shellout.style(
-              with: shellout.color(["lightblue"]),
-              custom: shellout_lookups,
-            )
-            |> io.println
-            let args = [
-              "test",
-              "--target",
-              case target() {
-                ErlangTarget -> "erlang"
-                JavaScriptTarget -> "javascript"
-              },
-              "--",
-              ..test_modules
-            ]
-            assert Ok(result) =
-              shellout.command(
-                run: "gleam",
-                with: args,
-                in: ".",
-                opt: [shellout.LetBeStdout, shellout.LetBeStderr],
-              )
-            result
-            |> io.print
-            Nil
-          }
+      file_change_watcher(fn(full_module_path: String) {
+        let ends_with_dot_gleam = string.ends_with(full_module_path, ".gleam")
+        let is_in_src_path =
+          string.starts_with(full_module_path, get_cwd() <> "/src")
+        let is_in_test_path =
+          string.starts_with(full_module_path, get_cwd() <> "/test")
+        case ends_with_dot_gleam, is_in_src_path, is_in_test_path {
+          True, True, False -> foo(SrcModuleKind, full_module_path)
+          True, False, True -> foo(TestModuleKind, full_module_path)
+          _, _, _ -> Nil
         }
       })
     }
@@ -146,9 +85,76 @@ pub fn run() {
   // io.debug(test_modules)
 }
 
-fn file_change_watcher(
-  file_change_handler: fn(ModuleKind, String) -> Nil,
-) -> Nil {
+fn foo(module_kind: ModuleKind, full_module_path) {
+  let test_modules = case module_kind {
+    SrcModuleKind ->
+      detect_unique_import_module_dependencies(
+        [file_name_to_module_name(full_module_path, SrcModuleKind)],
+        [],
+      )
+      |> derive_test_modules_off_import_module_dependencies()
+    TestModuleKind -> [
+      file_name_to_module_name(full_module_path, TestModuleKind),
+    ]
+    unexpected_atom -> {
+      io.debug(#("UNEXPECTED ATOM", unexpected_atom, "FOR", full_module_path))
+      []
+    }
+  }
+  case test_modules {
+    [] -> {
+      "🏔 Did not detect any matching test modules!"
+      |> shellout.style(
+        with: shellout.display(["bold"])
+        |> map.merge(shellout.color(["lightblue"])),
+        custom: shellout_lookups,
+      )
+      |> io.println
+      Nil
+    }
+    test_modules -> {
+      "🏔 Detected test modules:"
+      |> shellout.style(
+        with: shellout.display(["bold"])
+        |> map.merge(shellout.color(["lightblue"])),
+        custom: shellout_lookups,
+      )
+      |> io.println
+      list.map(
+        test_modules,
+        with: fn(test_module: String) { "  ❄ " <> test_module },
+      )
+      |> string.join("\n")
+      |> shellout.style(
+        with: shellout.color(["lightblue"]),
+        custom: shellout_lookups,
+      )
+      |> io.println
+      let args = [
+        "test",
+        "--target",
+        case target() {
+          ErlangTarget -> "erlang"
+          JavaScriptTarget -> "javascript"
+        },
+        "--",
+        ..test_modules
+      ]
+      assert Ok(result) =
+        shellout.command(
+          run: "gleam",
+          with: args,
+          in: ".",
+          opt: [shellout.LetBeStdout, shellout.LetBeStderr],
+        )
+      result
+      |> io.print
+      Nil
+    }
+  }
+}
+
+fn file_change_watcher(file_change_handler: fn(String) -> Nil) -> Nil {
   do_file_change_watcher(file_change_handler)
   Nil
 }
@@ -374,7 +380,7 @@ if erlang {
   }
 
   external fn do_file_change_watcher(
-    file_change_handler: fn(ModuleKind, String) -> Nil,
+    file_change_handler: fn(String) -> Nil,
   ) -> Nil =
     "glacier_ffi" "start_file_change_watcher"
 
