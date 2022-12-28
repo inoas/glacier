@@ -64,9 +64,9 @@ pub fn run() {
   case is_empty_args, is_incremental {
     True, _ -> gleeunit.main()
     _, True -> {
-      "Glacier is watching for changes."
+      "🏔 Glacier is watching for changes..."
       |> shellout.style(
-        with: shellout.display(["bold"])
+        with: shellout.display(["italic"])
         |> map.merge(shellout.color(["lightblue"])),
         custom: shellout_lookups,
       )
@@ -94,7 +94,7 @@ pub fn run() {
         }
         case test_modules {
           [] -> {
-            "Could not find any matching test modules."
+            "🏔 Did not detect any matching test modules!"
             |> shellout.style(
               with: shellout.display(["bold"])
               |> map.merge(shellout.color(["lightblue"])),
@@ -104,6 +104,23 @@ pub fn run() {
             Nil
           }
           test_modules -> {
+            "🏔 Detected test modules:"
+            |> shellout.style(
+              with: shellout.display(["bold"])
+              |> map.merge(shellout.color(["lightblue"])),
+              custom: shellout_lookups,
+            )
+            |> io.println
+            list.map(
+              test_modules,
+              with: fn(test_module: String) { "   ❄ " <> test_module <> "\n" },
+            )
+            |> string.concat()
+            |> shellout.style(
+              with: shellout.color(["lightblue"]),
+              custom: shellout_lookups,
+            )
+            |> io.println
             let cmd = case target() {
               ErlangTarget -> "gleam test --target erlang -- "
               JavaScriptTarget -> "gleam test --target javascript -- "
@@ -114,29 +131,15 @@ pub fn run() {
             |> shell_exec
             |> function.tap(fn(shell_exec_return) {
               let #(_exit_code, message) = shell_exec_return
-              io.println(message)
+              message
+              |> io.print()
             })
             Nil
           }
         }
       })
     }
-    _, _ -> {
-      "Running test modules:"
-      |> shellout.style(
-        with: shellout.display(["bold"])
-        |> map.merge(shellout.color(["lightblue"])),
-        custom: shellout_lookups,
-      )
-      |> io.println
-      string.join(start_args, "\n")
-      |> shellout.style(
-        with: shellout.color(["lightblue"]),
-        custom: shellout_lookups,
-      )
-      |> io.println
-      gleeunit.run(for: start_args)
-    }
+    _, _ -> gleeunit.run(for: start_args)
   }
   // io.debug(test_modules)
 }
