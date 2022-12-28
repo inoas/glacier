@@ -54,7 +54,7 @@ to:
 }
 
 pub fn run() {
-  let start_args = get_start_args()
+  let start_args = start_args()
   let is_incremental = list.contains(start_args, "--glacier")
   let is_empty_args = start_args == []
   case is_empty_args, is_incremental {
@@ -74,8 +74,8 @@ pub fn run() {
         let is_in_test_path =
           string.starts_with(full_module_path, get_cwd() <> "/test")
         case ends_with_dot_gleam, is_in_src_path, is_in_test_path {
-          True, True, False -> foo(SrcModuleKind, full_module_path)
-          True, False, True -> foo(TestModuleKind, full_module_path)
+          True, True, False -> run_tests(SrcModuleKind, full_module_path)
+          True, False, True -> run_tests(TestModuleKind, full_module_path)
           _, _, _ -> Nil
         }
       })
@@ -85,7 +85,7 @@ pub fn run() {
   // io.debug(test_modules)
 }
 
-fn foo(module_kind: ModuleKind, full_module_path) {
+fn run_tests(module_kind: ModuleKind, full_module_path) {
   let test_modules = case module_kind {
     SrcModuleKind ->
       detect_unique_import_module_dependencies(
@@ -295,7 +295,8 @@ fn parse_import_chars(
 fn derive_test_modules_off_import_module_dependencies(
   src_modules: List(String),
 ) -> List(String) {
-  // io.debug(modules)
+  // io.debug(src_modules)
+
   let all_test_modules =
     find_project_files(matching: "**/*.{gleam}", in: "test")
     |> list.map(fn(module_name_dot_gleam) {
@@ -304,7 +305,6 @@ fn derive_test_modules_off_import_module_dependencies(
       module_name
     })
 
-  // FIXME: Should be using a set instead of lists
   let dirty_test_modules =
     all_test_modules
     |> list.filter(fn(test_module) {
@@ -367,15 +367,27 @@ fn find_project_files(matching matching: String, in in: String) -> List(String) 
   do_find_project_files(matching, in)
 }
 
+fn target() -> Target {
+  do_target()
+}
+
+fn start_args() -> List(String) {
+  do_start_args()
+}
+
+fn get_cwd() -> String {
+  do_get_cwd()
+}
+
 if erlang {
   import gleam/erlang
   import gleam/erlang/file
 
-  fn target() -> Target {
+  fn do_target() -> Target {
     ErlangTarget
   }
 
-  fn get_start_args() -> List(String) {
+  fn do_start_args() -> List(String) {
     erlang.start_arguments()
   }
 
@@ -390,7 +402,7 @@ if erlang {
     contents
   }
 
-  external fn get_cwd() -> String =
+  external fn do_get_cwd() -> String =
     "glacier_ffi" "get_cwd_as_binary"
 
   external fn do_file_exists(absolute_file_name: String) -> Bool =
@@ -404,11 +416,11 @@ if erlang {
 }
 
 if javascript {
-  fn target() -> Target {
+  fn do_target() -> Target {
     JavaScriptTarget
   }
 
-  fn get_start_args() -> List(String) {
+  fn do_start_args() -> List(String) {
     todo
   }
 
@@ -419,11 +431,10 @@ if javascript {
   }
 
   fn read_module_file(module_path: String) -> String {
-    // io.debug("Reading module file " <> module_path)
     todo
   }
 
-  fn get_cwd() -> String {
+  fn do_get_cwd() -> String {
     todo
   }
 
