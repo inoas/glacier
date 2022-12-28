@@ -1,3 +1,4 @@
+import gleam/io
 import gleam/list
 import gleam/string
 
@@ -50,7 +51,12 @@ fn find_matching_test_module_files(test_modules) {
   })
   |> list.filter(fn(module_name) {
     let absolute_module_file = get_cwd() <> "/test/" <> module_name
-    file_exists(absolute_module_file)
+    let is_file_existing = file_exists(absolute_module_file)
+    case is_file_existing {
+      True -> io.println("Could not find" <> absolute_module_file)
+      False -> Nil
+    }
+    is_file_existing
   })
 }
 
