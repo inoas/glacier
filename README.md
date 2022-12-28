@@ -91,6 +91,10 @@ To enable this behavior, all you have to do is add *Glacier* as a dev dependency
 - Once gleam does only recompile changed modules: Do not test dependencies if they had been tested recently, aka the first time a module it saved all its dependencies are tested but afterwards only if they changed by keeping a cache table with the module name and an mtime it last run the tests for those modules.
 - Backport gleeunit changes.
 
+## Known Caveats
+
+- With *Glacier* you can only run interactive incremental test against a single target, Erlang or JavaScript, at a time.
+
 ## Installation & Usage
 
 For Erlang this library depends on [fs](https://hexdocs.pm/fs/). Because of this on Linux you will need [`inotify-tools` to be installed](https://github.com/synrc/fs#backends). On Mac and Windows it should work out of the box.
