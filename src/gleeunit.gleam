@@ -53,10 +53,10 @@ fn find_matching_test_module_files(test_modules) {
     let absolute_module_file = get_cwd() <> "/test/" <> module_name
     let is_file_existing = file_exists(absolute_module_file)
     case is_file_existing {
-      True -> io.println("Could not find" <> absolute_module_file)
-      False -> Nil
+      True -> Nil
+      False -> io.println("Error: Could not find " <> absolute_module_file)
     }
-    is_file_existing
+    is_file_existing == True
   })
 }
 

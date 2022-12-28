@@ -172,12 +172,10 @@ fn detect_unique_import_module_dependencies(
             |> parse_module_for_imports
             |> list.append(module_names)
             |> list.filter(for: fn(module_name) {
-              processed_module_names
-              |> list.contains(module_name) == False && module_name_to_file_name(
+              list.contains(processed_module_names, module_name) == False && file_exists(module_name_to_file_name(
                 module_name,
                 SrcModuleKind,
-              )
-              |> file_exists
+              ))
             })
           detect_unique_import_module_dependencies(
             list.append(rest_module_names, unchecked_module_names),
