@@ -1,3 +1,6 @@
+import gleam/list
+import gleam/string
+
 type Target {
   ErlangTarget
   JavaScriptTarget
@@ -12,9 +15,7 @@ type Target {
 /// If running on JavaScript tests will be run with a custom test runner.
 ///
 pub fn main() -> Nil {
-  let test_modules = find_test_modules()
-
-  test_modules
+  detect_test_modules()
   |> run_suit
 }
 
@@ -54,9 +55,7 @@ fn find_matching_test_module_files(test_modules) {
 }
 
 if erlang {
-  import gleam/list
   import gleam/result
-  import gleam/string
   import gleam/dynamic.{Dynamic}
 
   fn run_suit(test_modules: List(String)) -> Nil {
@@ -87,7 +86,7 @@ if erlang {
     |> string.replace("/", "@")
   }
 
-  fn find_test_modules() -> List(String) {
+  fn detect_test_modules() -> List(String) {
     find_files(matching: "**/*.{erl,gleam}", in: "test")
   }
 
@@ -132,18 +131,21 @@ if erlang {
 }
 
 if javascript {
-  external fn run_suit(test_modules) -> Nil =
+  external fn run_suit(test_modules: List(String)) -> Nil =
     "./gleeunit_ffi.mjs" "main"
 
-  fn find_test_modules() -> List(String) {
+  fn detect_test_modules() -> List(String) {
+    // impl. node equivalent of find_files(matching: "**/*.{erl,gleam}", in: "test")
     todo
   }
 
-  fn file_exists(absolute_file_name: String) {
+  fn file_exists(absolute_file_name: String) -> Bool {
+    // impl. node equivalent of "filelib" "is_regular"
     todo
   }
 
   fn get_cwd() -> String {
+    // impl. node equivalent of "glacier_ffi" "get_cwd_as_binary"
     todo
   }
 
