@@ -43,7 +43,6 @@ fn find_matching_test_module_files(test_modules) {
           ".mjs",
         )
     }
-
     case test_module_has_suffix {
       True -> module_name
       False -> module_name <> ".gleam"
