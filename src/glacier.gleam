@@ -60,7 +60,7 @@ pub fn run() {
   case is_empty_args, is_incremental {
     True, _ -> gleeunit.main()
     _, True -> {
-      "🏔 Glacier is watching for changes..."
+      "🏔 Glacier is watching for changes…"
       |> shellout.style(
         with: shellout.display(["italic"])
         |> map.merge(shellout.color(["lightblue"])),
