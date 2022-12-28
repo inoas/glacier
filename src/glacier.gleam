@@ -1,4 +1,3 @@
-import gleam/function
 import gleam/io
 import gleam/list
 import gleam/map
@@ -118,19 +117,25 @@ pub fn run() {
               custom: shellout_lookups,
             )
             |> io.println
-            let cmd = case target() {
-              ErlangTarget -> "gleam test --target erlang -- "
-              JavaScriptTarget -> "gleam test --target javascript -- "
-            }
-            // io.debug(cmd)
-            let cmd = cmd <> string.join(test_modules, " ")
-            cmd
-            |> shell_exec
-            |> function.tap(fn(shell_exec_return) {
-              let #(_exit_code, message) = shell_exec_return
-              message
-              |> io.print()
-            })
+            let args = [
+              "test",
+              "--target",
+              case target() {
+                ErlangTarget -> "erlang"
+                JavaScriptTarget -> "javascript"
+              },
+              "--",
+              ..test_modules
+            ]
+            assert Ok(result) =
+              shellout.command(
+                run: "gleam",
+                with: args,
+                in: ".",
+                opt: [shellout.LetBeStdout, shellout.LetBeStderr],
+              )
+            result
+            |> io.print
             Nil
           }
         }
@@ -139,10 +144,6 @@ pub fn run() {
     _, _ -> gleeunit.run(for: start_args)
   }
   // io.debug(test_modules)
-}
-
-fn shell_exec(cmd: String) -> #(Int, String) {
-  do_shell_exec(cmd)
 }
 
 fn file_change_watcher(
@@ -394,9 +395,6 @@ if erlang {
     in: String,
   ) -> List(String) =
     "glacier_ffi" "find_project_files"
-
-  external fn do_shell_exec(cmd: String) -> #(Int, String) =
-    "glacier_ffi" "shell_exec"
 }
 
 if javascript {
@@ -428,10 +426,6 @@ if javascript {
   }
 
   fn do_find_project_files(matching: String, in: String) -> List(String) {
-    todo
-  }
-
-  fn do_shell_exec(cmd: String) -> #(Int, String) {
     todo
   }
 }
