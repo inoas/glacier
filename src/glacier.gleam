@@ -55,6 +55,7 @@ to:
 
 pub fn run() {
   let start_args = start_args()
+  io.debug(start_args)
   let is_incremental = list.contains(start_args, "--glacier")
   let is_empty_args = start_args == []
   case is_empty_args, is_incremental {
@@ -424,9 +425,7 @@ if javascript {
     todo
   }
 
-  fn do_file_change_watcher(
-    file_change_handler: fn(ModuleKind, String) -> Nil,
-  ) -> Nil {
+  fn do_file_change_watcher(file_change_handler: fn(String) -> Nil) -> Nil {
     todo
   }
 
