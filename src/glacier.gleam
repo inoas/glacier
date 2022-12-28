@@ -18,10 +18,7 @@ type ModuleKind {
 }
 
 pub const shellout_lookups: shellout.Lookups = [
-  #(
-    ["color", "background"],
-    [#("pink", ["255", "175", "243"]), #("lightblue", ["156", "231", "255"])],
-  ),
+  #(["color", "background"], [#("lightblue", ["156", "231", "255"])]),
 ]
 
 pub fn main() {
