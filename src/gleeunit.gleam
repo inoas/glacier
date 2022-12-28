@@ -1,4 +1,5 @@
 import gleam/io
+import gleam/int
 import gleam/list
 import gleam/string
 import gleam/function
@@ -18,7 +19,7 @@ type Target {
 ///
 pub fn main() -> Nil {
   detect_test_modules()
-  |> run_suit
+  |> run_suite(halts_on_error: True)
 }
 
 /// Runs a specific list of test modules
@@ -26,7 +27,7 @@ pub fn main() -> Nil {
 pub fn run(for test_modules: List(String)) -> Nil {
   test_modules
   |> find_matching_test_module_files
-  |> run_suit()
+  |> run_suite(halts_on_error: False)
 }
 
 fn find_matching_test_module_files(test_modules) {
@@ -100,7 +101,10 @@ if erlang {
   import gleam/dynamic.{Dynamic}
 >>>>>>> c36ab77 (polish)
 
-  fn run_suit(test_modules: List(String)) -> Nil {
+  fn run_suite(
+    test_modules: List(String),
+    halts_on_error halts_on_error: Bool,
+  ) -> Nil {
     let options = [Verbose, NoTty, Report(#(GleeunitProgress, [Colored(True)]))]
 
     let result =
@@ -140,11 +144,21 @@ if erlang {
 =======
 >>>>>>> c36ab77 (polish)
 
-    let code = case result {
+    let exit_code = case result {
       Ok(_) -> 0
       Error(_) -> 1
     }
-    halt(code)
+
+    case halts_on_error, exit_code {
+      True, exit_code -> halt(exit_code)
+      False, 0 -> Nil
+      False, 1 -> Nil
+      False, unhandled_exit_code -> {
+        "Unexpected Error Code: " <> int.to_string(unhandled_exit_code)
+        |> io.println
+        Nil
+      }
+    }
   }
 
   external fn halt(Int) -> Nil =
@@ -220,7 +234,7 @@ if erlang {
 }
 
 if javascript {
-  external fn run_suit(test_modules: List(String)) -> Nil =
+  external fn run_suite(test_modules: List(String)) -> Nil =
     "./gleeunit_ffi.mjs" "main"
 
   fn detect_test_modules() -> List(String) {
