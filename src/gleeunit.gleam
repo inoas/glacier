@@ -234,7 +234,17 @@ if erlang {
 }
 
 if javascript {
-  external fn run_suite(test_modules: List(String)) -> Nil =
+  fn run_suite(
+    test_modules: List(String),
+    halts_on_error halts_on_error: Bool,
+  ) -> Nil {
+    do_run_suite(test_modules, halts_on_error)
+  }
+
+  external fn do_run_suite(
+    test_modules: List(String),
+    halts_on_error: Bool,
+  ) -> Nil =
     "./gleeunit_ffi.mjs" "main"
 
   fn detect_test_modules() -> List(String) {
