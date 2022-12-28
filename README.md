@@ -82,11 +82,10 @@ To enable this behavior, all you have to do is add *Glacier* as a dev dependency
 
 ## TODO
 
+- Handling of JavaScript src and test modules for NODEJS: <https://nodejs.org/docs/latest/api/fs.html#fspromiseswatchfilename-options>.
 - Introduce some delay between the file watcher picking up a change and the test running, so that if you find-replace-save-all via an editor it does not try to run the tests 10 times. This requires some medium large changes as the code to detect imports and dependent imports needs to run for 1..n modules and if test modules are affected it needs to be handled separatly (added afterwards distinct, unique).
-- Handling of JavaScript src and test modules for node and deno:
-  - NodeJS <https://nodejs.org/docs/latest/api/fs.html#fspromiseswatchfilename-options>
-  - Deno <https://deno.land/api@v1.29.1?s=Deno.watchFs>
 - Handling of Elixir src and test modules.
+- Handling of JavaScript src and test modules for DENO: <https://deno.land/api@v1.29.1?s=Deno.watchFs>.
 - Save import lists per module into an in-memory hash-table. Before a file gets parsed for its imports, build the hash and check if a cached version already exists.
 - Use set instead of lists in some places?
 - Once gleam does only recompile changed modules: Do not test dependencies if they had been tested recently, aka the first time a module it saved all its dependencies are tested but afterwards only if they changed by keeping a cache table with the module name and an mtime it last run the tests for those modules.
