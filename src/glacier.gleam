@@ -113,9 +113,9 @@ pub fn run() {
             |> io.println
             list.map(
               test_modules,
-              with: fn(test_module: String) { "   ❄ " <> test_module <> "\n" },
+              with: fn(test_module: String) { "  ❄ " <> test_module },
             )
-            |> string.concat()
+            |> string.join("\n")
             |> shellout.style(
               with: shellout.color(["lightblue"]),
               custom: shellout_lookups,
