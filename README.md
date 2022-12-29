@@ -99,6 +99,8 @@ To enable this behavior, all you have to do is add *Glacier* as a dev dependency
 
 For Erlang this library depends on [fs](https://hexdocs.pm/fs/). Because of this on Linux you will need [`inotify-tools` to be installed](https://github.com/synrc/fs#backends). On Mac and Windows it should work out of the box.
 
+For NodeJS version 18 LTS is supported and development always and only happens on the latest stable LTS, such as Node.js say v18.12.1.
+
 If available on Hex this package can be added to your Gleam project:
 
 1. Run `gleam add glacier`
