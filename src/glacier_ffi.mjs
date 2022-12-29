@@ -31,7 +31,7 @@ async function watch_dir(base_dir, sub_dir, events, file_change_handler_fn) {
     for await (const event of watcher) {
       if (events.includes(event.eventType)) {
 				let touched_file = base_dir + sub_dir + "/" + event.filename
-				console.log(touched_file);
+				// console.log(touched_file);
         file_change_handler_fn(touched_file);
       }
     }
