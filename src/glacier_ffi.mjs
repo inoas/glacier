@@ -3,16 +3,23 @@ import * as Process from "node:process";
 const { watch } = require('node:fs/promises'); // import { watch } from "node:fs/promises";
 const fs = require('fs');
 
-export const argv = () => Gleam.List.fromArray(Process.argv.slice(1));
-
-export const cwd = () => Process.cwd();
-
 process.on('SIGINT', function () {
 	console.log("\n🏔 Gracefully shutting down Glacier from SIGINT (Ctrl-C)!");
 	process.exit(0);
 });
 
 process.on('warning', e => console.warn(e.stack));
+
+// require('events')
+// const emitter = new events.EventEmitter()
+// emitter.setMaxListeners(1000)
+// or 0 to turn off the limit
+// emitter.setMaxListeners(0)
+
+export const argv = () => Gleam.List.fromArray(Process.argv.slice(1));
+
+export const cwd = () => Process.cwd();
+
 export const start_file_change_watcher = function (file_change_handler_fn) {
 	const base_dir = cwd();
 	(async () => {
