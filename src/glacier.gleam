@@ -76,14 +76,12 @@ pub fn run() {
         case ends_with_dot_gleam, is_in_src_path, is_in_test_path {
           True, True, False -> run_tests(SrcModuleKind, full_module_path)
           True, False, True -> run_tests(TestModuleKind, full_module_path)
-          True, _, _ -> {
-            io.debug(#("compare", full_module_path, get_src_dir()))
+          True, _, _ ->
+            // io.debug(#("compare", full_module_path, get_src_dir()))
             Nil
-          }
-          _, _, _ -> {
-            io.debug(#("unexpected file", full_module_path))
+          _, _, _ ->
+            // io.debug(#("unexpected file", full_module_path))
             Nil
-          }
         }
       })
     }
@@ -99,7 +97,7 @@ fn run_tests(module_kind: ModuleKind, full_module_path) {
         [file_name_to_module_name(full_module_path, SrcModuleKind)],
         [],
       )
-      |> derive_test_modules_off_import_module_dependencies()
+      |> derive_test_modules_from_src_import_dependencies()
     TestModuleKind -> [
       file_name_to_module_name(full_module_path, TestModuleKind),
     ]
@@ -183,6 +181,13 @@ fn detect_unique_import_module_dependencies(
           let unchecked_module_names =
             module_name
             |> module_name_to_file_name(SrcModuleKind)
+            |> fn(module_file) {
+              io.debug(#(
+                "detect_unique_import_module_dependencies",
+                module_file,
+              ))
+              module_file
+            }
             |> parse_module_for_imports
             |> list.append(module_names)
             |> list.filter(for: fn(module_name) {
@@ -202,6 +207,10 @@ fn detect_unique_import_module_dependencies(
 
 fn parse_module_for_imports(module_file_name: String) -> List(String) {
   module_file_name
+  |> fn(module_file) {
+    // io.debug(#("module_file", module_file))
+    module_file
+  }
   |> read_module_file()
   |> string.to_graphemes()
   |> parse_module_string([], ParseModeSearch, "")
@@ -243,11 +252,13 @@ fn parse_module_string(
             collected <> char,
           )
         // Found `import` + whitespaceish: Enter Import
-        ParseModeSearch, "import", char if char == " " || char == "\t" || char == "\r" || char == "\n" -> {
+        ParseModeSearch, "import", char if char == " " || char == "\t" || char == "\n" || char == "\r\n" -> {
           let #(rest_chars, new_import) =
             parse_import_chars(rest_chars, string_builder.new())
-          let new_imports = [string_builder.to_string(new_import), ..imports]
-          parse_module_string(rest_chars, new_imports, ParseModeSearch, "")
+          let new_import = string_builder.to_string(new_import)
+          io.debug(#("detected import", new_import))
+          let updated_imports = [new_import, ..imports]
+          parse_module_string(rest_chars, updated_imports, ParseModeSearch, "")
         }
         // Found `import\r` + "\n": Enter Import
         ParseModeSearch, "import\r", "\n" -> {
@@ -261,6 +272,11 @@ fn parse_module_string(
           parse_module_string(rest_chars, imports, ParseModeSearch, "")
         // In Comment; found `\n`: Exit Comment
         ParseModeInComment, _collected, "\n" ->
+          parse_module_string(rest_chars, imports, ParseModeSearch, "")
+        // In Comment; found `\n`: Exit Comment
+        ParseModeInComment, _collected, "\r" ->
+          parse_module_string(rest_chars, imports, ParseModeSearch, "")
+        ParseModeInComment, _collected, "\r\n" ->
           parse_module_string(rest_chars, imports, ParseModeSearch, "")
         // In Comment; found any other char: Continue Comment
         ParseModeInComment, _collected, _any ->
@@ -285,13 +301,16 @@ fn parse_import_chars(
   chars: List(String),
   import_module: string_builder.StringBuilder,
 ) {
+  // TODO: try pop grapheme
   case chars {
     // Return if end of line
     [] -> #([], import_module)
+    // Return if \r\n
+    ["\r\n", ..rest_chars] -> #(rest_chars, import_module)
     // Return if \n
     ["\n", ..rest_chars] -> #(rest_chars, import_module)
     // Ignore whitespaces
-    [char, ..rest_chars] if char == " " || char == "\t" || char == "\r" ->
+    [char, ..rest_chars] if char == " " || char == "\t" || char == "\r" || char == "\n" || char == "\r\n" ->
       parse_import_chars(rest_chars, import_module)
     // Append for any other character
     [char, ..rest_chars] ->
@@ -299,14 +318,16 @@ fn parse_import_chars(
   }
 }
 
-fn derive_test_modules_off_import_module_dependencies(
+fn derive_test_modules_from_src_import_dependencies(
   src_modules: List(String),
 ) -> List(String) {
   // io.debug(src_modules)
 
+  let project_test_files = find_project_files(in: "test")
+
+  // io.debug(#("project_test_files", project_test_files))
   let all_test_modules =
-    find_project_files(in: "test")
-    // |> io.debug
+    project_test_files
     |> list.map(fn(module_name_dot_gleam) {
       assert Ok(#(module_name, _dot_gleam)) =
         string.split_once(module_name_dot_gleam, ".gleam")
@@ -334,6 +355,10 @@ fn derive_src_imports_off_test_module(test_module_name) {
   // TODO: build sha1 and only re-derive imports if sha1 differs, to improve speed
   test_module_name
   |> module_name_to_file_name(TestModuleKind)
+  |> fn(module_file) {
+    io.debug(#("derive_src_imports_off_test_module", module_file))
+    module_file
+  }
   |> parse_module_for_imports
 }
 
@@ -341,14 +366,12 @@ fn module_name_to_file_name(
   module_name: String,
   module_kind: ModuleKind,
 ) -> String {
-  case module_kind, target() {
-    SrcModuleKind, ErlangTarget -> get_src_dir() <> module_name <> ".gleam"
-    TestModuleKind, ErlangTarget -> get_test_dir() <> module_name <> ".gleam"
-    SrcModuleKind, JavaScriptTarget -> get_src_dir() <> module_name <> ".gleam"
-    // There must be a bug somewhere which requires this inconsistency:
-    // => TODO: unify the pathes js ffi and erlang ffi return
-    TestModuleKind, JavaScriptTarget -> module_name <> ".gleam"
+  let file_name = case module_kind {
+    SrcModuleKind -> get_src_dir() <> module_name <> ".gleam"
+    TestModuleKind -> get_test_dir() <> module_name <> ".gleam"
   }
+
+  file_name
 }
 
 fn file_name_to_module_name(module_name: String, module_kind: ModuleKind) {
@@ -394,11 +417,11 @@ pub fn get_cwd() -> String {
 }
 
 fn get_src_dir() -> String {
-  do_get_src_dir()
+  get_cwd() <> "/src/"
 }
 
 fn get_test_dir() -> String {
-  do_get_test_dir()
+  get_cwd() <> "/test/"
 }
 
 if erlang {
@@ -439,14 +462,6 @@ if erlang {
     in: String,
   ) -> List(String) =
     "glacier_ffi" "find_files_recursive"
-
-  fn do_get_src_dir() -> String {
-    get_cwd() <> "/src/"
-  }
-
-  fn do_get_test_dir() -> String {
-    get_cwd() <> "/test/"
-  }
 }
 
 if javascript {
@@ -462,7 +477,11 @@ if javascript {
   ) -> Nil =
     "./glacier_ffi.mjs" "start_file_change_watcher"
 
-  external fn read_module_file(module_path: String) -> String =
+  fn read_module_file(module_path: String) -> String {
+    do_read_module_file(module_path)
+  }
+
+  external fn do_read_module_file(module_path: String) -> String =
     "./glacier_ffi.mjs" "read_file"
 
   external fn do_get_cwd() -> String =
@@ -473,6 +492,11 @@ if javascript {
 
   fn do_find_project_files(in: String) -> List(String) {
     do_find_files_recursive([".gleam"], in)
+    |> list.map(fn(file_name) {
+      assert Ok(#(_test_prefix, file_name)) =
+        string.split_once(file_name, "test/")
+      file_name
+    })
   }
 
   external fn do_find_files_recursive(
@@ -480,12 +504,4 @@ if javascript {
     in: String,
   ) -> List(String) =
     "./glacier_ffi.mjs" "find_files_recursive"
-
-  fn do_get_src_dir() -> String {
-    get_cwd() <> "/src/"
-  }
-
-  fn do_get_test_dir() -> String {
-    get_cwd() <> "/test/"
-  }
 }

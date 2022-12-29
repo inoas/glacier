@@ -30,6 +30,8 @@ pub fn run(for test_modules: List(String)) -> Nil {
 }
 
 fn find_matching_test_module_files(test_modules) {
+  // io.debug(test_modules)
+
   test_modules
   |> list.map(fn(module_name) {
     let test_module_has_suffix = case target() {
@@ -52,8 +54,9 @@ fn find_matching_test_module_files(test_modules) {
   |> list.filter(fn(module_name) {
     let absolute_module_file = case target() {
       ErlangTarget -> get_cwd() <> "/test/" <> module_name
-      JavaScriptTarget -> get_cwd() <> "/" <> module_name
+      JavaScriptTarget -> get_cwd() <> "/test/" <> module_name
     }
+    // io.debug(#("absolute_module_file", absolute_module_file))
     file_exists(absolute_module_file)
     |> function.tap(fn(module_file_exists: Bool) {
       case module_file_exists {
