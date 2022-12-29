@@ -55,7 +55,7 @@ to:
 
 pub fn run() {
   let start_args = start_args()
-  io.debug(start_args)
+  // io.debug(#("start_args", start_args))
   let is_incremental = list.contains(start_args, "--glacier")
   let is_empty_args = start_args == []
   case is_empty_args, is_incremental {
@@ -68,16 +68,21 @@ pub fn run() {
         custom: shellout_lookups,
       )
       |> io.println
-      file_change_watcher(fn(full_module_path: String) {
+      start_file_change_watcher(fn(full_module_path: String) -> Nil {
         let ends_with_dot_gleam = string.ends_with(full_module_path, ".gleam")
-        let is_in_src_path =
-          string.starts_with(full_module_path, get_cwd() <> "/src")
+        let is_in_src_path = string.starts_with(full_module_path, get_src_dir())
         let is_in_test_path =
-          string.starts_with(full_module_path, get_cwd() <> "/test")
+          string.starts_with(full_module_path, get_test_dir())
         case ends_with_dot_gleam, is_in_src_path, is_in_test_path {
           True, True, False -> run_tests(SrcModuleKind, full_module_path)
           True, False, True -> run_tests(TestModuleKind, full_module_path)
-          _, _, _ -> Nil
+          True, _, _ -> {
+            io.debug(#("compare", full_module_path, get_src_dir()))
+            Nil
+          }
+          _, _, _ ->
+            // io.debug(#("unexpected file", full_module_path))
+            Nil
         }
       })
     }
@@ -155,8 +160,8 @@ fn run_tests(module_kind: ModuleKind, full_module_path) {
   }
 }
 
-fn file_change_watcher(file_change_handler: fn(String) -> Nil) -> Nil {
-  do_file_change_watcher(file_change_handler)
+fn start_file_change_watcher(file_change_handler: fn(String) -> Nil) -> Nil {
+  do_start_file_change_watcher(file_change_handler)
   Nil
 }
 
@@ -335,15 +340,15 @@ fn module_name_to_file_name(
   module_kind: ModuleKind,
 ) -> String {
   case module_kind {
-    SrcModuleKind -> get_cwd() <> "/src/" <> module_name <> ".gleam"
-    TestModuleKind -> get_cwd() <> "/test/" <> module_name <> ".gleam"
+    SrcModuleKind -> get_src_dir() <> module_name <> ".gleam"
+    TestModuleKind -> get_test_dir() <> module_name <> ".gleam"
   }
 }
 
 fn file_name_to_module_name(module_name: String, module_kind: ModuleKind) {
   assert Ok(#(_base_path, module_name_dot_gleam)) = case module_kind {
-    SrcModuleKind -> string.split_once(module_name, get_cwd() <> "/src/")
-    TestModuleKind -> string.split_once(module_name, get_cwd() <> "/test/")
+    SrcModuleKind -> string.split_once(module_name, get_src_dir())
+    TestModuleKind -> string.split_once(module_name, get_test_dir())
   }
 
   case string.ends_with(module_name, ".erl") {
@@ -380,6 +385,14 @@ fn get_cwd() -> String {
   do_get_cwd()
 }
 
+fn get_src_dir() -> String {
+  do_get_src_dir()
+}
+
+fn get_test_dir() -> String {
+  do_get_test_dir()
+}
+
 if erlang {
   import gleam/erlang
   import gleam/erlang/file
@@ -392,7 +405,7 @@ if erlang {
     erlang.start_arguments()
   }
 
-  external fn do_file_change_watcher(
+  external fn do_start_file_change_watcher(
     file_change_handler: fn(String) -> Nil,
   ) -> Nil =
     "glacier_ffi" "start_file_change_watcher"
@@ -414,6 +427,14 @@ if erlang {
     in: String,
   ) -> List(String) =
     "glacier_ffi" "find_project_files"
+
+  fn do_get_src_dir() -> String {
+    get_cwd() <> "/src/"
+  }
+
+  fn do_get_test_dir() -> String {
+    get_cwd() <> "/test/"
+  }
 }
 
 if javascript {
@@ -421,21 +442,20 @@ if javascript {
     JavaScriptTarget
   }
 
-  fn do_start_args() -> List(String) {
-    todo
-  }
+  external fn do_start_args() -> List(String) =
+    "./glacier_ffi.mjs" "argv"
 
-  fn do_file_change_watcher(file_change_handler: fn(String) -> Nil) -> Nil {
-    todo
-  }
+  external fn do_start_file_change_watcher(
+    file_change_handler: fn(String) -> Nil,
+  ) -> Nil =
+    "./glacier_ffi.mjs" "start_file_change_watcher"
 
   fn read_module_file(module_path: String) -> String {
     todo
   }
 
-  fn do_get_cwd() -> String {
-    todo
-  }
+  external fn do_get_cwd() -> String =
+    "./glacier_ffi.mjs" "cwd"
 
   fn do_file_exists(absolute_file_name: String) -> Bool {
     todo
@@ -443,5 +463,13 @@ if javascript {
 
   fn do_find_project_files(matching: String, in: String) -> List(String) {
     todo
+  }
+
+  fn do_get_src_dir() -> String {
+    "src/"
+  }
+
+  fn do_get_test_dir() -> String {
+    "test/"
   }
 }
