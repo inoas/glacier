@@ -76,9 +76,6 @@ pub fn run() {
         case ends_with_dot_gleam, is_in_src_path, is_in_test_path {
           True, True, False -> run_tests(SrcModuleKind, full_module_path)
           True, False, True -> run_tests(TestModuleKind, full_module_path)
-          True, _, _ ->
-            // io.debug(#("compare", full_module_path, get_src_dir()))
-            Nil
           _, _, _ ->
             // io.debug(#("unexpected file", full_module_path))
             Nil
@@ -145,16 +142,20 @@ fn run_tests(module_kind: ModuleKind, full_module_path) {
         "--",
         ..test_modules
       ]
-      assert Ok(result) =
+      case
         shellout.command(
           run: "gleam",
           with: args,
           in: ".",
           opt: [shellout.LetBeStdout, shellout.LetBeStderr],
         )
-      result
-      |> io.print
-      Nil
+      {
+        Ok(msg) -> {
+          io.print(msg)
+          Nil
+        }
+        Error(_error_tuple) -> Nil
+      }
     }
   }
 }
@@ -182,10 +183,10 @@ fn detect_unique_import_module_dependencies(
             module_name
             |> module_name_to_file_name(SrcModuleKind)
             |> fn(module_file) {
-              io.debug(#(
-                "detect_unique_import_module_dependencies",
-                module_file,
-              ))
+              // io.debug(#(
+              //   "detect_unique_import_module_dependencies",
+              //   module_file,
+              // ))
               module_file
             }
             |> parse_module_for_imports
@@ -256,7 +257,7 @@ fn parse_module_string(
           let #(rest_chars, new_import) =
             parse_import_chars(rest_chars, string_builder.new())
           let new_import = string_builder.to_string(new_import)
-          io.debug(#("detected import", new_import))
+          // io.debug(#("detected import", new_import))
           let updated_imports = [new_import, ..imports]
           parse_module_string(rest_chars, updated_imports, ParseModeSearch, "")
         }
@@ -356,7 +357,7 @@ fn derive_src_imports_off_test_module(test_module_name) {
   test_module_name
   |> module_name_to_file_name(TestModuleKind)
   |> fn(module_file) {
-    io.debug(#("derive_src_imports_off_test_module", module_file))
+    // io.debug(#("derive_src_imports_off_test_module", module_file))
     module_file
   }
   |> parse_module_for_imports
