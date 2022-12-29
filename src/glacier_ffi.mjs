@@ -36,9 +36,27 @@ export const file_exists = function (absolute_file_name) {
 	return false;
 };
 
-export const find_project_files = function () {
-	// find_project_files(Pattern, In) ->
-	//   Results = filelib:wildcard(binary_to_list(Pattern), binary_to_list(In)),
-	//   lists:map(fun list_to_binary/1, Results).
-	return Gleam.List.fromArray([]);
+const path = require("path");
+export const find_files_recursive = function (file_exts_list, directory) {
+	file_exts_list = file_exts_list.toArray();
+	// console.log(file_exts_list);
+	let files = [];
+	const getFilesRecursively = (directory) => {
+		const filesInDirectory = fs.readdirSync(directory);
+		for (const file of filesInDirectory) {
+			const absolute = path.join(directory, file);
+			if (fs.statSync(absolute).isDirectory()) {
+				getFilesRecursively(absolute);
+			} else {
+				files.push(absolute);
+			}
+		}
+	};
+	getFilesRecursively(directory);
+
+	files = files.filter(function(absolute_file_name) {
+		return absolute_file_name.endsWith(file_exts_list);
+	});
+
+	return Gleam.List.fromArray(files);
 };

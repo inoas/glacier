@@ -76,10 +76,9 @@ pub fn run() {
         case ends_with_dot_gleam, is_in_src_path, is_in_test_path {
           True, True, False -> run_tests(SrcModuleKind, full_module_path)
           True, False, True -> run_tests(TestModuleKind, full_module_path)
-          True, _, _ -> {
-            io.debug(#("compare", full_module_path, get_src_dir()))
+          True, _, _ ->
+            // io.debug(#("compare", full_module_path, get_src_dir()))
             Nil
-          }
           _, _, _ ->
             // io.debug(#("unexpected file", full_module_path))
             Nil
@@ -304,7 +303,8 @@ fn derive_test_modules_off_import_module_dependencies(
   // io.debug(src_modules)
 
   let all_test_modules =
-    find_project_files(matching: "**/*.{gleam}", in: "test")
+    find_project_files(in: "test")
+    |> io.debug
     |> list.map(fn(module_name_dot_gleam) {
       assert Ok(#(module_name, _dot_gleam)) =
         string.split_once(module_name_dot_gleam, ".gleam")
@@ -339,9 +339,11 @@ fn module_name_to_file_name(
   module_name: String,
   module_kind: ModuleKind,
 ) -> String {
-  case module_kind {
-    SrcModuleKind -> get_src_dir() <> module_name <> ".gleam"
-    TestModuleKind -> get_test_dir() <> module_name <> ".gleam"
+  case module_kind, target() {
+    SrcModuleKind, ErlangTarget -> get_src_dir() <> module_name <> ".gleam"
+    TestModuleKind, ErlangTarget -> get_test_dir() <> module_name <> ".gleam"
+    SrcModuleKind, JavaScriptTarget -> get_src_dir() <> module_name <> ".gleam"
+    TestModuleKind, JavaScriptTarget -> module_name <> ".gleam"
   }
 }
 
@@ -369,9 +371,9 @@ fn file_exists(absolute_file_name: String) -> Bool {
   do_file_exists(absolute_file_name)
 }
 
-fn find_project_files(matching matching: String, in in: String) -> List(String) {
-  io.debug(#("find_project_files", matching, in))
-  do_find_project_files(matching, in)
+fn find_project_files(in in: String) -> List(String) {
+  // io.debug(#("find_project_files", in))
+  do_find_project_files(in)
 }
 
 fn target() -> Target {
@@ -423,11 +425,15 @@ if erlang {
   external fn do_file_exists(absolute_file_name: String) -> Bool =
     "filelib" "is_regular"
 
-  external fn do_find_project_files(
+  fn do_find_project_files(in: String) -> List(String) {
+    do_find_files_recursive(matching: "**/*.{gleam}", in: in)
+  }
+
+  external fn do_find_files_recursive(
     matching: String,
     in: String,
   ) -> List(String) =
-    "glacier_ffi" "find_project_files"
+    "./glacier_ffi.mjs" "find_files_recursive"
 
   fn do_get_src_dir() -> String {
     get_cwd() <> "/src/"
@@ -460,11 +466,15 @@ if javascript {
   external fn do_file_exists(absolute_file_name: String) -> Bool =
     "./glacier_ffi.mjs" "file_exists"
 
-  external fn do_find_project_files(
-    matching: String,
+  fn do_find_project_files(in: String) -> List(String) {
+    do_find_files_recursive([".gleam"], in)
+  }
+
+  external fn do_find_files_recursive(
+    file_exists: List(String),
     in: String,
   ) -> List(String) =
-    "./glacier_ffi.mjs" "find_project_files"
+    "./glacier_ffi.mjs" "find_files_recursive"
 
   fn do_get_src_dir() -> String {
     "src/"

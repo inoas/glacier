@@ -1,5 +1,4 @@
 import gleam/io
-import gleam/int
 import gleam/list
 import gleam/string
 import gleam/function
@@ -69,7 +68,11 @@ if erlang {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   import gleam/list
+=======
+  import gleam/int
+>>>>>>> 2c161a5 (js wip)
   import gleam/result
   import gleam/string
 =======
