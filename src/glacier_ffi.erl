@@ -23,7 +23,7 @@ start_file_change_watcher(Callback) ->
 process_file_update_and_loop(SrcPath, TestPath, Callback) ->
     receive
         {_Pid, {fs, file_event}, {Path, Changes}} ->
-            case lists:member(modified, Changes)
+            case lists:member(modified, Changes) orelse lists:member(created, Changes) orelse lists:member(renamed, Changes)
             of
                 true ->
                     % io:format("~p ", [Changes]),

@@ -76,12 +76,14 @@ pub fn run() {
         case ends_with_dot_gleam, is_in_src_path, is_in_test_path {
           True, True, False -> run_tests(SrcModuleKind, full_module_path)
           True, False, True -> run_tests(TestModuleKind, full_module_path)
-          True, _, _ ->
-            // io.debug(#("compare", full_module_path, get_src_dir()))
+          True, _, _ -> {
+            io.debug(#("compare", full_module_path, get_src_dir()))
             Nil
-          _, _, _ ->
-            // io.debug(#("unexpected file", full_module_path))
+          }
+          _, _, _ -> {
+            io.debug(#("unexpected file", full_module_path))
             Nil
+          }
         }
       })
     }
@@ -480,10 +482,10 @@ if javascript {
     "./glacier_ffi.mjs" "find_files_recursive"
 
   fn do_get_src_dir() -> String {
-    "src/"
+    get_cwd() <> "/src/"
   }
 
   fn do_get_test_dir() -> String {
-    "test/"
+    get_cwd() <> "/test/"
   }
 }
