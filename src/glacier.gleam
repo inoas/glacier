@@ -343,6 +343,8 @@ fn module_name_to_file_name(
     SrcModuleKind, ErlangTarget -> get_src_dir() <> module_name <> ".gleam"
     TestModuleKind, ErlangTarget -> get_test_dir() <> module_name <> ".gleam"
     SrcModuleKind, JavaScriptTarget -> get_src_dir() <> module_name <> ".gleam"
+    // There must be a bug somewhere which requires this inconsistency:
+    // => TODO: unify the pathes js ffi and erlang ffi return
     TestModuleKind, JavaScriptTarget -> module_name <> ".gleam"
   }
 }
