@@ -31,7 +31,7 @@ To enable this behavior, all you have to do is add *Glacier* as a dev dependency
 
 ## TODO
 
-- Handling of JavaScript src and test modules for NODEJS: <https://nodejs.org/docs/latest/api/fs.html#fspromiseswatchfilename-options>.
+- WIP: Handling of JavaScript src and test modules for NODEJS: <https://nodejs.org/docs/latest/api/fs.html#fspromiseswatchfilename-options>.
 - Introduce some delay between the file watcher picking up a change and the test running, so that if you find-replace-save-all via an editor it does not try to run the tests 10 times. This requires some medium large changes as the code to detect imports and dependent imports needs to run for 1..n modules and if test modules are affected it needs to be handled separatly (added afterwards distinct, unique).
 - Handling of Elixir src and test modules.
 - Handling of JavaScript src and test modules for DENO: <https://deno.land/api@v1.29.1?s=Deno.watchFs>.
