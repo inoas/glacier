@@ -386,7 +386,8 @@ fn start_args() -> List(String) {
   do_start_args()
 }
 
-fn get_cwd() -> String {
+// needs pub or else throws warning it shouldn't
+pub fn get_cwd() -> String {
   do_get_cwd()
 }
 
