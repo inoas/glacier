@@ -370,6 +370,7 @@ fn file_exists(absolute_file_name: String) -> Bool {
 }
 
 fn find_project_files(matching matching: String, in in: String) -> List(String) {
+  io.debug(#("find_project_files", matching, in))
   do_find_project_files(matching, in)
 }
 
@@ -450,20 +451,20 @@ if javascript {
   ) -> Nil =
     "./glacier_ffi.mjs" "start_file_change_watcher"
 
-  fn read_module_file(module_path: String) -> String {
-    todo
-  }
+  external fn read_module_file(module_path: String) -> String =
+    "./glacier_ffi.mjs" "read_file"
 
   external fn do_get_cwd() -> String =
     "./glacier_ffi.mjs" "cwd"
 
-  fn do_file_exists(absolute_file_name: String) -> Bool {
-    todo
-  }
+  external fn do_file_exists(absolute_file_name: String) -> Bool =
+    "./glacier_ffi.mjs" "file_exists"
 
-  fn do_find_project_files(matching: String, in: String) -> List(String) {
-    todo
-  }
+  external fn do_find_project_files(
+    matching: String,
+    in: String,
+  ) -> List(String) =
+    "./glacier_ffi.mjs" "find_project_files"
 
   fn do_get_src_dir() -> String {
     "src/"
