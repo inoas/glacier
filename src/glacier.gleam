@@ -435,7 +435,7 @@ if erlang {
     matching: String,
     in: String,
   ) -> List(String) =
-    "./glacier_ffi.mjs" "find_files_recursive"
+    "glacier_ffi" "find_files_recursive"
 
   fn do_get_src_dir() -> String {
     get_cwd() <> "/src/"
