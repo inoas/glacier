@@ -1,5 +1,4 @@
 import gleam/io
-import gleam/int
 import gleam/list
 import gleam/string
 import gleam/function
@@ -64,6 +63,7 @@ fn find_matching_test_module_files(test_modules) {
 }
 
 if erlang {
+  import gleam/int
   import gleam/result
   import gleam/dynamic.{Dynamic}
 
