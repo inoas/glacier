@@ -304,7 +304,7 @@ fn derive_test_modules_off_import_module_dependencies(
 
   let all_test_modules =
     find_project_files(in: "test")
-    |> io.debug
+    // |> io.debug
     |> list.map(fn(module_name_dot_gleam) {
       assert Ok(#(module_name, _dot_gleam)) =
         string.split_once(module_name_dot_gleam, ".gleam")
