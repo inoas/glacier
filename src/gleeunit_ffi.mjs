@@ -51,8 +51,11 @@ export async function main(test_modules, halts_on_error) {
   }
 
   console.log("\n" + `${passes + failures} tests, ${failures} failures`);
+
 	if (halts_on_error) {
 		process.exit(failures ? 1 : 0);
+	} else {
+		process.exit(0);
 	}
 }
 
