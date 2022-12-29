@@ -30,8 +30,6 @@ pub fn run(for test_modules: List(String)) -> Nil {
 }
 
 fn find_matching_test_module_files(test_modules) {
-  // io.debug(test_modules)
-
   test_modules
   |> list.map(fn(module_name) {
     let test_module_has_suffix = case target() {
@@ -52,14 +50,15 @@ fn find_matching_test_module_files(test_modules) {
     }
   })
   |> list.filter(fn(module_name) {
-    let absolute_module_file = case target() {
-      ErlangTarget -> get_cwd() <> "/test/" <> module_name
-      JavaScriptTarget -> get_cwd() <> "/test/" <> module_name
+    // FIXME: REMOVE DIRTY HACK
+    let absolute_module_file = case string.starts_with(module_name, "test/") {
+      True -> get_cwd() <> "/" <> module_name
+      False -> get_cwd() <> "/test/" <> module_name
     }
-    // io.debug(#("absolute_module_file", absolute_module_file))
+
     file_exists(absolute_module_file)
-    |> function.tap(fn(module_file_exists: Bool) {
-      case module_file_exists {
+    |> function.tap(fn(exists) {
+      case exists {
         True -> Nil
         // TODO: gleam 0.26 io.print_error
         False -> io.print("Error: Could not find " <> absolute_module_file)
@@ -207,6 +206,7 @@ if erlang {
 
   fn do_detect_all_test_modules() -> List(String) {
     find_files(matching: "**/*.{erl,gleam}", in: "test")
+    // |> io.debug
   }
 
   external fn find_files(matching: String, in: String) -> List(String) =
@@ -271,7 +271,7 @@ if javascript {
     halts_on_error halts_on_error: Bool,
   ) -> Nil {
     let test_modules = find_matching_test_module_files(test_modules)
-    // io.debug(test_modules)
+
     do_run_suite_ffi(test_modules, halts_on_error)
   }
 
