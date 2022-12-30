@@ -28,20 +28,20 @@ export const cwd = function () {
 };
 
 export const start_file_change_watcher = function (file_change_handler_fn) {
+	const watch_directory = async function (directory, events, file_change_handler_fn) {
+		const watcher = NodeFsPromises.watch(directory, { persistent: true, recursive: true });
+		for await (const event of watcher) {
+			if (events.includes(event.eventType)) {
+				const touched_file = directory + "/" + event.filename
+				console.log(touched_file);
+				file_change_handler_fn(touched_file);
+			}
+		}
+	};
   watch_directory(cwd() + "/src", ["change"], file_change_handler_fn);
   watch_directory(cwd() + "/test", ["change"], file_change_handler_fn);
 };
 
-async function watch_directory(directory, events, file_change_handler_fn) {
-  const watcher = NodeFsPromises.watch(directory, { persistent: true, recursive: true });
-  for await (const event of watcher) {
-    if (events.includes(event.eventType)) {
-      const touched_file = directory + "/" + event.filename
-      console.log(touched_file);
-      file_change_handler_fn(touched_file);
-    }
-  }
-};
 
 export const read_file = function (absolute_file_name) {
   // try {
