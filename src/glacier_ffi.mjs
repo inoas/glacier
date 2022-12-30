@@ -21,8 +21,8 @@ export const argv = () => Gleam.List.fromArray(Process.argv.slice(1));
 export const cwd = () => Process.cwd();
 
 export const start_file_change_watcher = function (file_change_handler_fn) {
-  watch_dir(cwd(), "/src", ["change", "add", "rename", "created", "modified", "renamed"], file_change_handler_fn);
-  watch_dir(cwd(), "/test", ["change", "add", "rename", "created", "modified", "renamed"], file_change_handler_fn);
+  watch_dir(cwd(), "/src", ["change"], file_change_handler_fn);
+  watch_dir(cwd(), "/test", ["change"], file_change_handler_fn);
 };
 
 async function watch_dir(base_dir, sub_dir, events, file_change_handler_fn) {
@@ -30,8 +30,8 @@ async function watch_dir(base_dir, sub_dir, events, file_change_handler_fn) {
     const watcher = watch(base_dir + sub_dir, { persistent: true, recursive: true });
     for await (const event of watcher) {
       if (events.includes(event.eventType)) {
-				let touched_file = base_dir + sub_dir + "/" + event.filename
-				// console.log(touched_file);
+        let touched_file = base_dir + sub_dir + "/" + event.filename
+        console.log(touched_file);
         file_change_handler_fn(touched_file);
       }
     }
