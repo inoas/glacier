@@ -1,8 +1,8 @@
-import * as Fs from "node:fs";
-import * as FsPromises from "node:fs/promises";
 import * as Gleam from "./gleam.mjs";
+import * as NodeFs from "node:fs";
+import * as NodeFsPromises from "node:fs/promises";
+import * as NodePath from "node:path";
 import * as NodeProcess from "node:process";
-import * as Path from "node:path";
 
 process.on('SIGINT', function () {
   console.log("\n🏔 Gracefully shutting down Glacier from SIGINT (Ctrl-C)!");
@@ -33,7 +33,7 @@ export const start_file_change_watcher = function (file_change_handler_fn) {
 };
 
 async function watch_directory(directory, events, file_change_handler_fn) {
-  const watcher = FsPromises.watch(directory, { persistent: true, recursive: true });
+  const watcher = NodeFsPromises.watch(directory, { persistent: true, recursive: true });
   for await (const event of watcher) {
     if (events.includes(event.eventType)) {
       let touched_file = directory + "/" + event.filename
@@ -45,7 +45,7 @@ async function watch_directory(directory, events, file_change_handler_fn) {
 
 export const read_file = function (absolute_file_name) {
   // try {
-  const data = Fs.readFileSync(absolute_file_name, 'utf8');
+  const data = NodeFs.readFileSync(absolute_file_name, 'utf8');
   return data;
   // } catch (err) {
   //   console.error(err);
@@ -53,7 +53,7 @@ export const read_file = function (absolute_file_name) {
 };
 
 export const file_exists = function (absolute_file_name) {
-  if (Fs.existsSync(absolute_file_name)) {
+  if (NodeFs.existsSync(absolute_file_name)) {
     return true;
   }
   return false;
@@ -63,10 +63,10 @@ export const find_files_recursive_by_exts = function (directory, file_exts_list)
   file_exts_list = file_exts_list.toArray();
   let files = [];
   /* mut files */ const detect_files_recursive = function (directory) {
-    const files_in_directory = Fs.readdirSync(directory);
+    const files_in_directory = NodeFs.readdirSync(directory);
     for (const file of files_in_directory) {
-      const absolute_path = Path.join(directory, file);
-      if (Fs.statSync(absolute_path).isDirectory()) {
+      const absolute_path = NodePath.join(directory, file);
+      if (NodeFs.statSync(absolute_path).isDirectory()) {
         detect_files_recursive(absolute_path);
       } else {
         files.push(absolute_path);
