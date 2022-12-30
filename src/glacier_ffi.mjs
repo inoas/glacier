@@ -36,7 +36,7 @@ async function watch_directory(directory, events, file_change_handler_fn) {
   const watcher = NodeFsPromises.watch(directory, { persistent: true, recursive: true });
   for await (const event of watcher) {
     if (events.includes(event.eventType)) {
-      let touched_file = directory + "/" + event.filename
+      const touched_file = directory + "/" + event.filename
       console.log(touched_file);
       file_change_handler_fn(touched_file);
     }
