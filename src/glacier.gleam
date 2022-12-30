@@ -471,7 +471,7 @@ if javascript {
   }
 
   external fn do_start_args() -> List(String) =
-    "./glacier_ffi.mjs" "argv"
+    "./glacier_ffi.mjs" "start_args"
 
   external fn do_start_file_change_watcher(
     file_change_handler: fn(String) -> Nil,
@@ -491,8 +491,8 @@ if javascript {
   external fn do_file_exists(absolute_file_name: String) -> Bool =
     "./glacier_ffi.mjs" "file_exists"
 
-  fn do_find_project_files(in: String) -> List(String) {
-    do_find_files_recursive([".gleam"], in)
+  fn do_find_project_files(dir: String) -> List(String) {
+    do_find_files_recursive(dir, [".gleam"])
     |> list.map(fn(file_name) {
       assert Ok(#(_test_prefix, file_name)) =
         string.split_once(file_name, "test/")
@@ -501,8 +501,8 @@ if javascript {
   }
 
   external fn do_find_files_recursive(
-    file_exists: List(String),
     in: String,
+    file_exists: List(String),
   ) -> List(String) =
-    "./glacier_ffi.mjs" "find_files_recursive"
+    "./glacier_ffi.mjs" "find_files_recursive_by_exts"
 }
