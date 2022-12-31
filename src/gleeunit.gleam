@@ -34,7 +34,8 @@ fn find_matching_test_module_files(test_module_files) {
         True -> Nil
         // TODO: gleam 0.26 io.print_error
         // TODO: exit/halt via erlang/node
-        False -> io.print("Error: Could not find " <> absolute_module_file_name)
+        False ->
+          io.println("Error: Could not find " <> absolute_module_file_name)
       }
     })
   })
