@@ -6,7 +6,7 @@ pub fn function_5() {
 }
 
 pub fn function_6() {
-  5
+  6
 }
 
 pub fn function_a() {
