@@ -32,7 +32,7 @@ To enable this behavior, all you have to do is add *Glacier* as a dev dependency
 - Save import lists per module into an in-memory hash-table. Before a file gets parsed for its imports, build the hash and check if a cached version already exists.
 - Use set instead of lists in some places?
 - Once gleam does only recompile changed modules: Do not test dependencies if they had been tested recently, aka the first time a module it saved all its dependencies are tested but afterwards only if they changed by keeping a cache table with the module name and an mtime it last run the tests for those modules.
-- Backport gleeunit changes.
+- Backport gleeunit changes. Make this lib depend on the backported version of gleeunit instead of including it.
 - Handling of Elixir src and test modules.
 
 ## Known Caveats
