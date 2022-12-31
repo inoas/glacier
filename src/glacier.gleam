@@ -11,7 +11,7 @@ type Target {
   JavaScriptTarget
 }
 
-type ModuleKind {
+pub type ModuleKind {
   SrcModuleKind
   TestModuleKind
 }
@@ -55,7 +55,6 @@ to:
 
 pub fn run() {
   let start_args = start_args()
-  // io.debug(#("start_args", start_args))
   let is_incremental = list.contains(start_args, "--glacier")
   let is_empty_args = start_args == []
   case is_empty_args, is_incremental {
@@ -68,41 +67,37 @@ pub fn run() {
         custom: shellout_lookups,
       )
       |> io.println
-      start_file_change_watcher(fn(full_module_path: String) -> Nil {
-        let ends_with_dot_gleam = string.ends_with(full_module_path, ".gleam")
-        let is_in_src_path = string.starts_with(full_module_path, get_src_dir())
-        let is_in_test_path =
-          string.starts_with(full_module_path, get_test_dir())
-        case ends_with_dot_gleam, is_in_src_path, is_in_test_path {
-          True, True, False -> run_tests(SrcModuleKind, full_module_path)
-          True, False, True -> run_tests(TestModuleKind, full_module_path)
-          _, _, _ ->
-            // io.debug(#("unexpected file", full_module_path))
-            Nil
-        }
+      start_file_change_watcher(fn(modules: List(#(ModuleKind, String))) -> Nil {
+        run_tests(modules)
       })
     }
     _, _ -> gleeunit.run(for: start_args)
   }
-  // io.debug(test_modules)
 }
 
-fn run_tests(module_kind: ModuleKind, full_module_path) {
-  let test_modules = case module_kind {
-    SrcModuleKind ->
-      detect_unique_import_module_dependencies(
-        [file_name_to_module_name(full_module_path, SrcModuleKind)],
-        [],
-      )
-      |> derive_test_modules_from_src_import_dependencies()
-    TestModuleKind -> [
-      file_name_to_module_name(full_module_path, TestModuleKind),
-    ]
-    unexpected_atom -> {
-      io.debug(#("UNEXPECTED ATOM", unexpected_atom, "FOR", full_module_path))
-      []
-    }
-  }
+fn run_tests(modules: List(#(ModuleKind, String))) {
+  let test_modules =
+    list.fold(
+      over: modules,
+      from: [],
+      with: fn(test_modules_acc: List(String), module: #(ModuleKind, String)) {
+        let module_kind = module.0
+        let full_module_path = module.1
+        let test_modules = case module_kind {
+          SrcModuleKind ->
+            detect_unique_import_module_dependencies(
+              [file_name_to_module_name(full_module_path, SrcModuleKind)],
+              [],
+            )
+            |> derive_test_modules_from_src_import_dependencies()
+            |> list.map(fn(test_module) { "test/" <> test_module <> ".gleam" })
+          TestModuleKind -> [to_relative_path(full_module_path)]
+        }
+        list.append(test_modules_acc, test_modules)
+      },
+    )
+    |> list.unique()
+
   case test_modules {
     [] -> {
       "🏔 Did not detect any matching test modules!"
@@ -160,7 +155,9 @@ fn run_tests(module_kind: ModuleKind, full_module_path) {
   }
 }
 
-fn start_file_change_watcher(file_change_handler: fn(String) -> Nil) -> Nil {
+fn start_file_change_watcher(
+  file_change_handler: fn(List(#(ModuleKind, String))) -> Nil,
+) -> Nil {
   do_start_file_change_watcher(file_change_handler)
   Nil
 }
@@ -182,13 +179,6 @@ fn detect_unique_import_module_dependencies(
           let unchecked_module_names =
             module_name
             |> module_name_to_file_name(SrcModuleKind)
-            |> fn(module_file) {
-              // io.debug(#(
-              //   "detect_unique_import_module_dependencies",
-              //   module_file,
-              // ))
-              module_file
-            }
             |> parse_module_for_imports
             |> list.append(module_names)
             |> list.filter(for: fn(module_name) {
@@ -219,9 +209,9 @@ fn parse_module_for_imports(module_file_name: String) -> List(String) {
 }
 
 type ParseMode {
-  ParseModeSearch
   ParseModeInComment
   ParseModeInString
+  ParseModeSearch
 }
 
 fn parse_module_string(
@@ -322,11 +312,7 @@ fn parse_import_chars(
 fn derive_test_modules_from_src_import_dependencies(
   src_modules: List(String),
 ) -> List(String) {
-  // io.debug(src_modules)
-
   let project_test_files = find_project_files(in: "test")
-
-  // io.debug(#("project_test_files", project_test_files))
   let all_test_modules =
     project_test_files
     |> list.map(fn(module_name_dot_gleam) {
@@ -334,7 +320,6 @@ fn derive_test_modules_from_src_import_dependencies(
         string.split_once(module_name_dot_gleam, ".gleam")
       module_name
     })
-
   let dirty_test_modules =
     all_test_modules
     |> list.filter(fn(test_module) {
@@ -347,19 +332,12 @@ fn derive_test_modules_from_src_import_dependencies(
         },
       )
     })
-
-  // io.debug(#("dirty_test_modules", dirty_test_modules))
   dirty_test_modules
 }
 
 fn derive_src_imports_off_test_module(test_module_name) {
-  // TODO: build sha1 and only re-derive imports if sha1 differs, to improve speed
   test_module_name
   |> module_name_to_file_name(TestModuleKind)
-  |> fn(module_file) {
-    // io.debug(#("derive_src_imports_off_test_module", module_file))
-    module_file
-  }
   |> parse_module_for_imports
 }
 
@@ -367,12 +345,10 @@ fn module_name_to_file_name(
   module_name: String,
   module_kind: ModuleKind,
 ) -> String {
-  let file_name = case module_kind {
+  case module_kind {
     SrcModuleKind -> get_src_dir() <> module_name <> ".gleam"
     TestModuleKind -> get_test_dir() <> module_name <> ".gleam"
   }
-
-  file_name
 }
 
 fn file_name_to_module_name(module_name: String, module_kind: ModuleKind) {
@@ -380,7 +356,6 @@ fn file_name_to_module_name(module_name: String, module_kind: ModuleKind) {
     SrcModuleKind -> string.split_once(module_name, get_src_dir())
     TestModuleKind -> string.split_once(module_name, get_test_dir())
   }
-
   case string.ends_with(module_name, ".erl") {
     True -> {
       assert Ok(#(module_name, _dot_gleam)) =
@@ -400,7 +375,6 @@ fn file_exists(absolute_file_name: String) -> Bool {
 }
 
 fn find_project_files(in in: String) -> List(String) {
-  // io.debug(#("find_project_files", in))
   do_find_project_files(in)
 }
 
@@ -412,8 +386,7 @@ fn start_args() -> List(String) {
   do_start_args()
 }
 
-// needs pub or else throws warning it shouldn't
-pub fn get_cwd() -> String {
+fn get_cwd() -> String {
   do_get_cwd()
 }
 
@@ -423,6 +396,12 @@ fn get_src_dir() -> String {
 
 fn get_test_dir() -> String {
   get_cwd() <> "/test/"
+}
+
+fn to_relative_path(absolute_file_path path: String) -> String {
+  assert Ok(#(_pre_path, relative_file_name)) =
+    string.split_once(path, get_cwd() <> "/")
+  relative_file_name
 }
 
 if erlang {
@@ -438,12 +417,11 @@ if erlang {
   }
 
   external fn do_start_file_change_watcher(
-    file_change_handler: fn(String) -> Nil,
+    file_change_handler: fn(List(#(ModuleKind, String))) -> Nil,
   ) -> Nil =
     "glacier_ffi" "start_file_change_watcher"
 
   fn read_module_file(module_path: String) -> String {
-    // io.debug("Reading module file " <> module_path)
     assert Ok(contents) = file.read(module_path)
     contents
   }
@@ -455,12 +433,12 @@ if erlang {
     "filelib" "is_regular"
 
   fn do_find_project_files(in: String) -> List(String) {
-    do_find_files_recursive(matching: "**/*.{gleam}", in: in)
+    do_find_files_recursive(in: in, matching: "**/*.{gleam}")
   }
 
   external fn do_find_files_recursive(
-    matching: String,
     in: String,
+    matching: String,
   ) -> List(String) =
     "glacier_ffi" "find_files_recursive"
 }
@@ -474,7 +452,7 @@ if javascript {
     "./glacier_ffi.mjs" "start_args"
 
   external fn do_start_file_change_watcher(
-    file_change_handler: fn(String) -> Nil,
+    file_change_handler: fn(List(#(ModuleKind, String))) -> Nil,
   ) -> Nil =
     "./glacier_ffi.mjs" "start_file_change_watcher"
 

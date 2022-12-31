@@ -35,10 +35,6 @@ export async function main(test_modules, halts_on_error) {
 	// console.log(test_modules)
 
 	for await (let path of test_modules) {
-		// FIXME: REMOVE DIRTY HACK
-		if (path.startsWith("test/") == false) {
-			path = "test/" + path;
-		}
 		let js_path = path.slice("test/".length).replace(".gleam", ".mjs");
 		let module = await import(joinPath(dist, js_path));
 		for (let fnName of Object.keys(module)) {

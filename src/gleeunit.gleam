@@ -1,12 +1,6 @@
 import gleam/io
 import gleam/list
-import gleam/string
 import gleam/function
-
-type Target {
-  ErlangTarget
-  JavaScriptTarget
-}
 
 /// Find and run all test functions for the current project using Erlang's EUnit
 /// test framework.
@@ -23,45 +17,24 @@ pub fn main() -> Nil {
 
 /// Runs a specific list of test modules
 ///
-pub fn run(for test_modules: List(String)) -> Nil {
-  test_modules
+pub fn run(for test_module_files: List(String)) -> Nil {
+  test_module_files
   |> find_matching_test_module_files
   |> run_suite(halts_on_error: False)
 }
 
-fn find_matching_test_module_files(test_modules) {
-  test_modules
-  |> list.map(fn(module_name) {
-    let test_module_has_suffix = case target() {
-      ErlangTarget ->
-        string.ends_with(module_name, ".gleam") || string.ends_with(
-          module_name,
-          ".erl",
-        )
-      JavaScriptTarget ->
-        string.ends_with(module_name, ".gleam") || string.ends_with(
-          module_name,
-          ".mjs",
-        )
-    }
-    case test_module_has_suffix {
-      True -> module_name
-      False -> module_name <> ".gleam"
-    }
-  })
+fn find_matching_test_module_files(test_module_files) {
+  test_module_files
   |> list.filter(fn(module_name) {
-    // FIXME: REMOVE DIRTY HACK
-    let absolute_module_file = case string.starts_with(module_name, "test/") {
-      True -> get_cwd() <> "/" <> module_name
-      False -> get_cwd() <> "/test/" <> module_name
-    }
+    let absolute_module_file_name = get_cwd() <> "/" <> module_name
 
-    file_exists(absolute_module_file)
+    file_exists(absolute_module_file_name)
     |> function.tap(fn(exists) {
       case exists {
         True -> Nil
         // TODO: gleam 0.26 io.print_error
-        False -> io.print("Error: Could not find " <> absolute_module_file)
+        // TODO: exit/halt via erlang/node
+        False -> io.print("Error: Could not find " <> absolute_module_file_name)
       }
     })
   })
@@ -75,34 +48,36 @@ fn get_cwd() -> String {
   do_get_cwd()
 }
 
-fn target() -> Target {
-  do_target()
-}
-
 fn file_exists(absolute_file_name: String) -> Bool {
   do_file_exists(absolute_file_name)
 }
 
 fn run_suite(
-  test_modules: List(String),
+  test_module_files: List(String),
   halts_on_error halts_on_error: Bool,
 ) -> Nil {
-  do_run_suite(test_modules, halts_on_error)
+  do_run_suite(test_module_files, halts_on_error)
 }
 
 if erlang {
+  import gleam/dynamic.{Dynamic}
   import gleam/int
   import gleam/result
-  import gleam/dynamic.{Dynamic}
+  import gleam/string
 
   fn do_run_suite(
-    test_modules: List(String),
+    test_module_files: List(String),
     halts_on_error halts_on_error: Bool,
   ) -> Nil {
     let options = [Verbose, NoTty, Report(#(GleeunitProgress, [Colored(True)]))]
 
     let result =
-      test_modules
+      test_module_files
+      |> list.map(fn(test_module_file: String) {
+        assert Ok(#(_test_prefix, test_module_file)) =
+          string.split_once(test_module_file, "test/")
+        test_module_file
+      })
       |> list.map(gleam_to_erlang_module_name)
       |> list.map(dangerously_convert_string_to_atom(_, Utf8))
       |> run_eunit(options)
@@ -120,6 +95,7 @@ if erlang {
       False, 1 -> Nil
       False, unhandled_exit_code -> {
         "Unexpected Error Code: " <> int.to_string(unhandled_exit_code)
+        // TODO: Gleam 0.26 io.print_errorln
         |> io.println
         Nil
       }
@@ -138,7 +114,9 @@ if erlang {
 
   fn do_detect_all_test_modules() -> List(String) {
     find_files(matching: "**/*.{erl,gleam}", in: "test")
-    // |> io.debug
+    |> list.map(fn(test_module_file_name: String) {
+      "test/" <> test_module_file_name
+    })
   }
 
   external fn find_files(matching: String, in: String) -> List(String) =
@@ -175,10 +153,6 @@ if erlang {
 
   external fn do_get_cwd() -> String =
     "glacier_ffi" "get_cwd_as_binary"
-
-  fn do_target() -> Target {
-    ErlangTarget
-  }
 }
 
 if javascript {
@@ -186,9 +160,8 @@ if javascript {
     test_modules: List(String),
     halts_on_error halts_on_error: Bool,
   ) -> Nil {
-    let test_modules = find_matching_test_module_files(test_modules)
-
-    do_run_suite_ffi(test_modules, halts_on_error)
+    find_matching_test_module_files(test_modules)
+    |> do_run_suite_ffi(halts_on_error)
   }
 
   external fn do_run_suite_ffi(
@@ -209,8 +182,4 @@ if javascript {
 
   external fn do_get_cwd() -> String =
     "./gleeunit_ffi.mjs" "cwd"
-
-  fn do_target() -> Target {
-    JavaScriptTarget
-  }
 }
