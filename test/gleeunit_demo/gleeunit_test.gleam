@@ -5,9 +5,9 @@ pub fn main() {
 }
 
 pub fn some_test() {
-  assert 2 = 1 + 1
+  assert 2 = 1 + 4
 }
 
 pub fn some_other_test() {
-  assert 1 = 1 - 0
+  assert 1 = 1 - 3
 }
