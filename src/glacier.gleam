@@ -100,13 +100,13 @@ fn run_tests(modules: List(#(ModuleKind, String))) {
 
   case test_modules {
     [] -> {
-      "🏔 Did not detect any matching test modules!"
+      "🏔 Did not detect any matching test modules!\n\n"
       |> shellout.style(
         with: shellout.display(["bold"])
         |> map.merge(shellout.color(["lightblue"])),
         custom: shellout_lookups,
       )
-      |> io.println
+      |> io.print
       Nil
     }
     test_modules -> {
@@ -146,7 +146,7 @@ fn run_tests(modules: List(#(ModuleKind, String))) {
         )
       {
         Ok(msg) -> {
-          io.print(msg)
+          io.print(msg <> "\n")
           Nil
         }
         Error(_error_tuple) -> Nil
