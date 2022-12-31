@@ -83,19 +83,20 @@ export async function main(test_modules, halts_on_error) {
         let moduleName = js_path.slice(0, -4);
         let line = error.line ? `:${error.line}` : "";
         failures++;
-        failureMsgs.push(`❌ ${failures}. ${moduleName}.${fnName}${line}: ${error}\n`);
+        failureMsgs.push(`❌ ${failures}. ${moduleName}.${fnName}${line}\n${error}\n`);
       }
     }
   }
 
-  process.stdout.write("\n\n" + failureMsgs.join("\n"));
+	process.stdout.write("\n")
   let result_info = `${passes + failures} tests, ${failures} failures`;
   if (failures == 0) {
     result_info = `\u001b[32m${result_info}\u001b[0m`;
   } else {
+		process.stdout.write("\n" + failureMsgs.join("\n") + "\n");
     result_info = `\u001b[31m${result_info}\u001b[0m`;
   }
-  console.log("\n" + result_info);
+  console.log(result_info);
 
   if (halts_on_error) {
     process.exit(failures ? 1 : 0);
