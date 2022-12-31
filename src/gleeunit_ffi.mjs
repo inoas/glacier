@@ -52,7 +52,7 @@ export async function main(test_modules, halts_on_error) {
         let moduleName = js_path.slice(0, -4);
         let line = error.line ? `:${error.line}` : "";
         failures++;
-        failureMsgs.push(`❌ ${failures}. ${moduleName}.${fnName}${line}\n${error}\n`);
+        failureMsgs.push(`❌ ${failures}) ${moduleName}.${fnName}${line}\n${error}\n`);
       }
     }
   }
@@ -62,7 +62,8 @@ export async function main(test_modules, halts_on_error) {
   if (failures == 0) {
     result_info = `\u001b[32m${result_info}\u001b[0m`;
   } else {
-		process.stdout.write("\n" + failureMsgs.join("\n") + "\n");
+		process.stdout.write("Failures:\n\n");
+		process.stdout.write(failureMsgs.join("\n") + "\n");
     result_info = `\u001b[31m${result_info}\u001b[0m`;
   }
   console.log(result_info);
