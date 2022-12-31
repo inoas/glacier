@@ -13,15 +13,11 @@ It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit)
 *Glacier* differs from *Gleeunit* insofar, that it let's you:
 
 1. Pass in an interactive flag `gleam test -- --glacier`; save a module and only related tests will rerun.
-2. Pass in a specific unit test modules to rerun `gleam test -- my_app_module_a_test.gleam my_app_module_b_test.gleam`.
+2. Pass in a specific unit test modules to rerun `gleam test -- test/my_module_test.gleam`.
 3. If `gleam test` is passed without any `--`-arguments it behaves the same as *Gleeunit*.
-4. You can still pass in `--target erlang` or `--target javascript`, like so: `gleam test --target erlang -- --glacier`.
+4. You can still pass in `--target erlang` or `--target javascript`, like so: `gleam test --target erlang -- --glacier` or like `gleam test --target javascript -- test/my_module_test.gleam`.
 
 To enable this behavior, all you have to do is add *Glacier* as a dev dependency, aka `gleam add glacier`, open `./test/YOUR_PROJECT.gleam` and replace `gleeunit.main()` with `glacier.main()`.
-
-## Status
-
-![Under construction](https://web.archive.org/web/20090829023556im_/http://geocities.com/okitsugu/underconstruction.gif)
 
 ## How does it work?
 
@@ -31,14 +27,13 @@ To enable this behavior, all you have to do is add *Glacier* as a dev dependency
 
 ## TODO
 
-- WIP: Handling of JavaScript src and test modules for NODEJS: <https://nodejs.org/docs/latest/api/fs.html#fspromiseswatchfilename-options>.
-- Introduce some delay between the file watcher picking up a change and the test running, so that if you find-replace-save-all via an editor it does not try to run the tests 10 times. This requires some medium large changes as the code to detect imports and dependent imports needs to run for 1..n modules and if test modules are affected it needs to be handled separatly (added afterwards distinct, unique).
-- Handling of Elixir src and test modules.
+- Erlang: Introduce some delay between the file watcher picking up a change and the test running, so that if you find-replace-save-all via an editor it does not try to run the tests 10 times. This requires some medium large changes as the code to detect imports and dependent imports needs to run for 1..n modules and if test modules are affected it needs to be handled separately (added afterwards distinct, unique).
 - Handling of JavaScript src and test modules for DENO: <https://deno.land/api@v1.29.1?s=Deno.watchFs>.
 - Save import lists per module into an in-memory hash-table. Before a file gets parsed for its imports, build the hash and check if a cached version already exists.
 - Use set instead of lists in some places?
 - Once gleam does only recompile changed modules: Do not test dependencies if they had been tested recently, aka the first time a module it saved all its dependencies are tested but afterwards only if they changed by keeping a cache table with the module name and an mtime it last run the tests for those modules.
 - Backport gleeunit changes.
+- Handling of Elixir src and test modules.
 
 ## Known Caveats
 
@@ -68,3 +63,11 @@ cd glacier
 gleam run   # Show instructions how to use the library stand alone
 gleam test  # Run the tests on this library
 ```
+
+## Status
+
+Alpha quality, thus while this is still...
+
+![Under construction](https://web.archive.org/web/20090829023556im_/http://geocities.com/okitsugu/underconstruction.gif)
+
+...it should be working now.
