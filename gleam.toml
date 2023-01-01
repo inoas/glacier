@@ -35,6 +35,7 @@ gleam_stdlib = "~> 0.25"
 
 [documentation]
 pages = [
+	{ title = "CHANGELOG", path = "changelog.html", source = "CHANGELOG.md" },
 	{ title = "LICENSE", path = "license.html", source = "LICENSE" },
 ]
 >>>>>>> aaacb84 (license)

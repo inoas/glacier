@@ -1,5 +1,6 @@
 # Changelog
 
+<<<<<<< HEAD
 ## v0.8.0 - 2022-12-17
 
 - `should.be_ok` and `should.be_error` now return the contained value when the
@@ -56,3 +57,10 @@
 ## v0.1.0 - 2021-10-31
 
 - Initial release.
+=======
+## 0.2.0
+
+- Renamed internal gleeunit fork to gleeunit2 to avoid colissions
+- Fixedup readme
+- Added logo and shields
+>>>>>>> 562c9cc (readme)
