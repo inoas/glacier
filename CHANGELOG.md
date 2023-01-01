@@ -74,6 +74,7 @@
 - Renamed internal gleeunit fork to gleeunit2 to avoid collisions.
 - JavaScript: File renames are picked up by the watcher.
 - Fixed `README.md`.
+<<<<<<< HEAD
 - Added logo and shields badges.
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -83,3 +84,6 @@
 >>>>>>> bcecbbb (changelog)
 =======
 >>>>>>> e9b4180 (changeog)
+=======
+- Fixed the logo to work across hexpm and github and shields badges.
+>>>>>>> 2906b35 (changelog)
