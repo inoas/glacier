@@ -1,7 +1,7 @@
-import gleeunit
+import gleeunit2
 
 pub fn main() {
-  gleeunit.main()
+  gleeunit2.main()
 }
 
 pub fn some_test() {

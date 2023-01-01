@@ -6,16 +6,16 @@
 
 if erlang {
   pub external fn equal(a, a) -> Nil =
-    "gleeunit_ffi" "should_equal"
+    "gleeunit2_ffi" "should_equal"
 
   pub external fn not_equal(a, a) -> Nil =
-    "gleeunit_ffi" "should_not_equal"
+    "gleeunit2_ffi" "should_not_equal"
 
   pub external fn be_ok(Result(a, b)) -> a =
-    "gleeunit_ffi" "should_be_ok"
+    "gleeunit2_ffi" "should_be_ok"
 
   pub external fn be_error(Result(a, b)) -> b =
-    "gleeunit_ffi" "should_be_error"
+    "gleeunit2_ffi" "should_be_error"
 }
 
 if javascript {
@@ -28,7 +28,7 @@ if javascript {
     "../gleam.mjs" "inspect"
 
   external fn crash(String) -> anything =
-    "../gleeunit_ffi.mjs" "crash"
+    "../gleeunit2_ffi.mjs" "crash"
 
   pub fn equal(a, b) {
     case a == b {

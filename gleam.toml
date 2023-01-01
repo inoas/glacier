@@ -11,7 +11,7 @@ gleam_stdlib = "~> 0.19"
 # some_test_package = "~> 1.0.0"
 =======
 name = "glacier"
-version = "0.1.3"
+version = "0.2.0"
 
 licences = ["Apache-2.0"]
 description = "Glacier brings incremental interactive unit testing to Gleam. It is meant as a drop-in replacement for Gleeunit and it relies on it, internally."
@@ -35,6 +35,6 @@ gleam_stdlib = "~> 0.25"
 
 [documentation]
 pages = [
-	{ title = "License", path = "license.html", source = "LICENSE" },
+	{ title = "LICENSE", path = "license.html", source = "LICENSE" },
 ]
 >>>>>>> aaacb84 (license)

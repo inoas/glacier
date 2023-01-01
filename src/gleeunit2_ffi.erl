@@ -1,4 +1,4 @@
--module(gleeunit_ffi).
+-module(gleeunit2_ffi).
 
 -export([find_files/2, should_equal/2, should_not_equal/2, should_be_ok/1,
          should_be_error/1, get_cwd/0, get_cwd_as_binary/0]).

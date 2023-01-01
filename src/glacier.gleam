@@ -3,7 +3,7 @@ import gleam/list
 import gleam/map
 import gleam/string
 import gleam/string_builder
-import gleeunit
+import gleeunit2
 import shellout
 
 type Target {
@@ -58,7 +58,7 @@ pub fn run() {
   let is_incremental = list.contains(start_args, "--glacier")
   let is_empty_args = start_args == []
   case is_empty_args, is_incremental {
-    True, _ -> gleeunit.main()
+    True, _ -> gleeunit2.main()
     _, True -> {
       "🏔 Glacier is watching for changes…"
       |> shellout.style(
@@ -71,7 +71,7 @@ pub fn run() {
         run_tests(modules)
       })
     }
-    _, _ -> gleeunit.run(for: start_args)
+    _, _ -> gleeunit2.run(for: start_args)
   }
 }
 
@@ -100,13 +100,13 @@ fn run_tests(modules: List(#(ModuleKind, String))) {
 
   case test_modules {
     [] -> {
-      "🏔 Did not detect any matching test modules!\n\n"
+      "🏔 Did not detect any matching test modules!"
       |> shellout.style(
         with: shellout.display(["bold"])
         |> map.merge(shellout.color(["lightblue"])),
         custom: shellout_lookups,
       )
-      |> io.print
+      |> io.println
       Nil
     }
     test_modules -> {
@@ -146,7 +146,7 @@ fn run_tests(modules: List(#(ModuleKind, String))) {
         )
       {
         Ok(msg) -> {
-          io.print(msg <> "\n")
+          io.print(msg)
           Nil
         }
         Error(_error_tuple) -> Nil

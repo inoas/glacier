@@ -113,7 +113,11 @@ if erlang {
     test_module_files: List(String),
     halts_on_error halts_on_error: Bool,
   ) -> Nil {
-    let options = [Verbose, NoTty, Report(#(GleeunitProgress, [Colored(True)]))]
+    let options = [
+      Verbose,
+      NoTty,
+      Report(#(Gleeunit2Progress, [Colored(True)])),
+    ]
 
     let result =
 <<<<<<< HEAD
@@ -199,6 +203,7 @@ if erlang {
   }
 
   external fn find_files(matching: String, in: String) -> List(String) =
+<<<<<<< HEAD:src/gleeunit.gleam
 <<<<<<< HEAD
 =======
     |> glacier_helpers.string_replace(".gleam", "")
@@ -216,6 +221,9 @@ if erlang {
 =======
 >>>>>>> c36ab77 (polish)
     "gleeunit_ffi" "find_files"
+=======
+    "gleeunit2_ffi" "find_files"
+>>>>>>> bc4b674 (prep version 0.2.0):src/gleeunit2.gleam
 
   external type Atom
 
@@ -227,17 +235,17 @@ if erlang {
     "erlang" "binary_to_atom"
 
   type ReportModuleName {
-    GleeunitProgress
+    Gleeunit2Progress
   }
 
-  type GleeunitProgressOption {
+  type Gleeunit2ProgressOption {
     Colored(Bool)
   }
 
   type EunitOption {
     Verbose
     NoTty
-    Report(#(ReportModuleName, List(GleeunitProgressOption)))
+    Report(#(ReportModuleName, List(Gleeunit2ProgressOption)))
   }
 
   external fn run_eunit(List(Atom), List(EunitOption)) -> Dynamic =
@@ -263,18 +271,18 @@ if javascript {
     test_modules: List(String),
     halts_on_error: Bool,
   ) -> Nil =
-    "./gleeunit_ffi.mjs" "main"
+    "./gleeunit2_ffi.mjs" "main"
 
   fn do_detect_all_test_modules() -> List(String) {
     find_files(exts: [".gleam"], in: "test")
   }
 
   external fn find_files(exts: List(String), in: String) -> List(String) =
-    "./gleeunit_ffi.mjs" "find_files_recursive"
+    "./gleeunit2_ffi.mjs" "find_files_recursive"
 
   external fn do_file_exists(absolute_file_name: String) -> Bool =
-    "./gleeunit_ffi.mjs" "file_exists"
+    "./gleeunit2_ffi.mjs" "file_exists"
 
   external fn do_get_cwd() -> String =
-    "./gleeunit_ffi.mjs" "cwd"
+    "./gleeunit2_ffi.mjs" "cwd"
 }

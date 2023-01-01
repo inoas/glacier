@@ -1,4 +1,4 @@
-import gleeunit/should
+import gleeunit2/should
 
 pub fn should_test() {
   1
