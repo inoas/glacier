@@ -111,7 +111,7 @@ Deno is not yet supported.
 
 Documentation can be found at <https://hexdocs.pm/glacier>.
 
-## How does it work?
+### How does it work?
 
 1. `gleam test` passes through `glacier.run()` and simply executes `gleeunit.main()` as if *Gleeunit* was used directly.
 2. `gleam test -- test_module_a test_module_b` passes through `glacier.run()` and executes `gleeunit.test_modules(modules_list)` where `modules_list` is `["foo", "bar"]`. The given modules are checked if they exist as either `.gleam` or `.erl` test module files and then *Gleeunit* runs these test modules.
@@ -176,7 +176,7 @@ gleam test --target javascript -- --glacier
 >>>>>>> 3df3ccd (readme)
 =======
 
-## Possible improvements
+### Possible improvements
 
 <<<<<<< HEAD
 Alpha quality, thus while this is still...
