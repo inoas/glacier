@@ -14,7 +14,7 @@ It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit)
 
 ## Quick start
 
-1. Run `gleam add glacier`.
+1. Run `gleam add glacier --dev`.
 2. Open `./test/YOUR_PROJECT.gleam` and replace `import gleeunit` with `import glacier` and `gleeunit.main()` with `glacier.main()`.
 3. Run `gleam test --target erlang -- --glacier` or `gleam test --target javascript -- --glacier`.
 4. Save a `src` or `test` module and watch associated tests to re-run.
@@ -30,7 +30,7 @@ It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit)
 3. If `gleam test` is passed without any `--`-arguments it behaves the same as **Gleeunit**.
 4. You can still pass in `--target erlang` or `--target javascript` like so `gleam test --target erlang -- --glacier`, or like `gleam test --target javascript -- test/my_module_test.gleam`.
 
-To enable this behavior, all you have to do is add **Glacier** as a dev dependency, aka `gleam add glacier`, open `./test/YOUR_PROJECT.gleam` and replace `gleeunit.main()` with `glacier.main()`.
+To enable this behavior, all you have to do is add **Glacier** as a dev dependency, aka `gleam add glacier --dev`, open `./test/YOUR_PROJECT.gleam` and replace `gleeunit.main()` with `glacier.main()`.
 
 *Note: `gleam test` must only be executed from the base project directory!*
 
@@ -68,7 +68,7 @@ Depends on [`fsPromises.watch`](https://nodejs.org/api/fs.html#fspromiseswatchfi
 
 This package is available on [hex.pm](https://hex.pm) can be added to your Gleam project:
 
-Run `gleam add glacier`.
+Run `gleam add glacier --dev`.
 
 ### Usage
 

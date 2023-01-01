@@ -1,5 +1,5 @@
 name = "glacier"
-version = "0.2.5"
+version = "0.2.6"
 
 licences = ["Apache-2.0"]
 description = "Glacier brings incremental interactive unit testing to Gleam. It is meant as a drop-in replacement for Gleeunit and it relies on it, internally."
