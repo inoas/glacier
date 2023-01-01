@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.4
+
+- More compatibility changes to run `glacier` alongside `gleeunit`:
+  Added `glacier/should` which is a renamed `gleeunit/should`.
+
 ## 0.2.3
 
 - Remove code that did nothing.
