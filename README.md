@@ -1,12 +1,12 @@
 # Glacier · Gleam Incremental Interactive Unit Testing
 
+[![Package Version](https://img.shields.io/hexpm/v/glacier)](https://hex.pm/packages/glacier)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/glacier/)
+
 <figure style="margin-bottom: 1em">
 	<img src="https://raw.githubusercontent.com/inoas/glacier/main/glacier-logo.png" alt="photo of a Lychee" width="500" style="max-height: 10em"/>
   <figcaption><a href="https://en.wikipedia.org/wiki/Glacier"><i><small>Glacier: A persistent body of dense ice that is constantly moving under its own weight.</small></i></a></figcaption>
 </figure>
-
-[![Package Version](https://img.shields.io/hexpm/v/glacier)](https://hex.pm/packages/glacier)
-[![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/glacier/)
 
 ## Introduction
 
