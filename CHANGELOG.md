@@ -4,6 +4,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## v0.8.0 - 2022-12-17
 
 - `should.be_ok` and `should.be_error` now return the contained value when the
@@ -64,6 +65,13 @@
 =======
 =======
 =======
+=======
+## 0.2.4
+
+- More compatibility changes to run `glacier` alongside `gleeunit`:
+  Added `glacier/should` which is a renamed `gleeunit/should`.
+
+>>>>>>> d33c986 (0.2.4)
 ## 0.2.3
 
 - Remove code that did nothing.

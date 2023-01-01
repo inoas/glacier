@@ -1,3 +1,5 @@
+//// Based on gleeunit/should, verbatim, renamed to avoid conflicts.
+////
 //// A module for testing your Gleam code. The functions found here are
 //// compatible with the Erlang eunit test framework.
 ////

@@ -1,4 +1,4 @@
-import gleeunit2/should
+import glacier/should
 
 pub fn should_test() {
   1

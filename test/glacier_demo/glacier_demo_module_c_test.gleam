@@ -1,4 +1,4 @@
-import gleeunit2/should
+import glacier/should
 import glacier_demo/glacier_demo_module_c
 
 pub fn function_5_test() {
