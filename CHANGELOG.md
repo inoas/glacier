@@ -61,14 +61,18 @@
 ## 0.2.0
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 - Renamed internal gleeunit fork to gleeunit2 to avoid colissions
 - Fixedup readme
 - Added logo and shields
 >>>>>>> 562c9cc (readme)
 =======
 - Added changelog file.
+=======
+- Added `CHANGELOG.md`.
+>>>>>>> a630773 (changelog)
 - Renamed internal gleeunit fork to gleeunit2 to avoid collisions.
-- Fixed readme.
+- Fixed `README.md`.
 - Added logo and shields badges.
 <<<<<<< HEAD
 >>>>>>> b41980d (changelog)
