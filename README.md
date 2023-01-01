@@ -60,6 +60,12 @@ Run the tests by entering `gleam test` in the command line.
   <figcaption><i><small>Glacier: <a href="https://en.wikipedia.org/wiki/Glacier">«A persistent body of dense ice that is constantly moving under its own weight.»</a></small></i></figcaption>
 </figure>
 
+## Quick start
+
+1. Run `gleam add glacier`.
+2. Open `./test/YOUR_PROJECT.gleam` and replace `import gleeunit` with `import glacier` and `gleeunit.main()` with `glacier.main()`.
+3. Run `gleam test --target erlang -- --glacier` or `gleam test --target javascript -- --glacier`.
+
 ## Introduction
 
 **Glacier** brings incremental interactive unit testing to [Gleam](https://gleam.run).
