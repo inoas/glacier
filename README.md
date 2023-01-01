@@ -60,7 +60,7 @@ Deno is not yet supported.
 
 Documentation can be found at <https://hexdocs.pm/glacier>.
 
-## How does it work?
+### How does it work?
 
 1. `gleam test` passes through `glacier.run()` and simply executes `gleeunit.main()` as if *Gleeunit* was used directly.
 2. `gleam test -- test_module_a test_module_b` passes through `glacier.run()` and executes `gleeunit.test_modules(modules_list)` where `modules_list` is `["foo", "bar"]`. The given modules are checked if they exist as either `.gleam` or `.erl` test module files and then *Gleeunit* runs these test modules.
@@ -80,7 +80,7 @@ gleam test --target erlang -- --glacier
 gleam test --target javascript -- --glacier
 ```
 
-## Possible improvements
+### Possible improvements
 
 - Erlang: Introduce some delay between the file watcher picking up a change and the test running, so that if you find-replace-save-all via an editor it does not try to run the tests 10 times. This requires some medium large changes as the code to detect imports and dependent imports needs to run for 1..n modules and if test modules are affected it needs to be handled separately (added afterwards distinct, unique).
 - Gleam 0.26+: Handling of JavaScript src and test modules for DENO: <https://deno.land/api@v1.29.1?s=Deno.watchFs>.
