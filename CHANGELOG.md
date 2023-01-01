@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.5
+
+- Readme: Explain that `gleeunit` is optional if `glacier` is installed if `gleeunit/should` is replaced by `glacier/should`.
+
 ## 0.2.4
 
 - More compatibility changes to run `glacier` alongside `gleeunit`:
