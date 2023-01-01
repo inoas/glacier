@@ -6,6 +6,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## v0.8.0 - 2022-12-17
 
 - `should.be_ok` and `should.be_error` now return the contained value when the
@@ -68,6 +69,12 @@
 =======
 =======
 =======
+=======
+## 0.2.6
+
+- Instruct to use `gleam add glacier --dev` to add as a dev dependency, only.
+
+>>>>>>> 46ba1c4 (instruct to add dev deps)
 ## 0.2.5
 
 - Readme: Explain that `gleeunit` is optional if `glacier` is installed if `gleeunit/should` is replaced by `glacier/should`.
