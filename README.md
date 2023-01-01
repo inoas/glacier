@@ -94,7 +94,7 @@ git clone https://github.com/inoas/glacier.git
 cd glacier
 ```
 
-### Erlang
+### Target Erlang
 
 ```sh
 # Traditional test runs
@@ -106,7 +106,7 @@ gleam test --target erlang -- --glacier
 # Re-save ./src/glacier_demo/glacier_demo_module_a.gleam
 ```
 
-### JavaScript
+### Target JavaScript/NodeJS
 
 ```sh
 # Traditional test runs
