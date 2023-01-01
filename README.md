@@ -169,6 +169,8 @@ gleam run
 # Run the tests on this library:
 gleam test --target erlang
 gleam test --target javascript
+gleam test --target erlang -- test/glacier_demo/glacier_demo_module_a_test.gleam
+gleam test --target javascript -- test/glacier_demo/glacier_demo_module_a_test.gleam
 gleam test --target erlang -- --glacier
 gleam test --target javascript -- --glacier
 ```
