@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/hexpm/l/glacier?color=ffaff3&label=%F0%9F%93%83)](https://github.com/inoas/glacier/blob/main/LICENSE)
 
 <figure>
-	<img src="https://raw.githubusercontent.com/inoas/glacier/main/glacier-logo.png" alt="Glacier Logo" width="480" style="max-height: 10em"/>
+	<img src="https://raw.githubusercontent.com/inoas/glacier/main/glacier-logo.png" alt="Glacier Logo" style="max-height: 33vh; width: auto; height: auto" width="480" height="480"/>
   <figcaption><a href="https://en.wikipedia.org/wiki/Glacier"><i><small>Glacier: A persistent body of dense ice that is constantly moving under its own weight.</small></i></a></figcaption>
 </figure>
 
@@ -22,6 +22,8 @@ It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit)
 4. You can still pass in `--target erlang` or `--target javascript` like so `gleam test --target erlang -- --glacier`, or like `gleam test --target javascript -- test/my_module_test.gleam`.
 
 To enable this behavior, all you have to do is add *Glacier* as a dev dependency, aka `gleam add glacier`, open `./test/YOUR_PROJECT.gleam` and replace `gleeunit.main()` with `glacier.main()`.
+
+*Note: gleam test must only be executed from the base project directory!*
 
 ### Testing against Erlang & JavaScript
 
@@ -41,11 +43,15 @@ This package is available on [hex.pm](https://hex.pm) can be added to your Gleam
    - Save any test module (within `./test`) file to re-run that single test
    - Save any src module (within `./src`) to run all associated tests. Associated tests are test modules where the module is imported or where any of the module's imports and their import's imports (import chain) are imported into.
 
-... and its documentation can be found at <https://hexdocs.pm/glacier>.
-
-### Supported Erlang/OTP and JavaScript versions
+### Supported Erlang/OTP and JavaScript/NodeJS versions
 
 Development and testing only happens on very recent stable Erlang/OTP and recent NodeJS LTS versions, it thus may or may not run on previous versions.
+
+Deno is not yet supported.
+
+### Documentation
+
+Documentation can be found at <https://hexdocs.pm/glacier>.
 
 ## How does it work?
 
