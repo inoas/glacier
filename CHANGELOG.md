@@ -72,10 +72,14 @@
 - Added `CHANGELOG.md`.
 >>>>>>> a630773 (changelog)
 - Renamed internal gleeunit fork to gleeunit2 to avoid collisions.
+- JavaScript: File renames are picked up by the watcher.
 - Fixed `README.md`.
 - Added logo and shields badges.
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> b41980d (changelog)
 =======
 - JavaScript: File renames are picked up by the watcher.
 >>>>>>> bcecbbb (changelog)
+=======
+>>>>>>> e9b4180 (changeog)
