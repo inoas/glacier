@@ -33,7 +33,7 @@ Run `gleam test --target erlang -- --glacier` and `gleam test --target javascrip
 
 ### Requirements
 
-#### Erlang
+#### Target Erlang
 
 Depends on [fs](https://hexdocs.pm/fs/):
 
@@ -41,7 +41,7 @@ Depends on [fs](https://hexdocs.pm/fs/):
 - Mac: Should work out of the box.
 - Windows: Should work out of the box.
 
-#### JavaScript/NodeJS
+#### Target JavaScript/NodeJS
 
 Depends on [`fsPromises.watch`](https://nodejs.org/api/fs.html#fspromiseswatchfilename-options):
 
