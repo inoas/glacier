@@ -82,7 +82,7 @@ To enable this behavior, all you have to do is add *Glacier* as a dev dependency
 
 ## Installation & Usage
 
-For Erlang this library depends on [fs](https://hexdocs.pm/fs/). Because of this on Linux you will need [`inotify-tools` to be installed](https://github.com/synrc/fs#backends). On Mac and Windows it should work out of the box.
+For Erlang this library depends on [fs](https://hexdocs.pm/fs/). Because of this on Linux you will need [`inotify`](https://en.wikipedia.org/wiki/Inotify) [to be installed](https://github.com/synrc/fs#backends). On Mac and Windows it should work out of the box.
 
 For JavaScript/NodeJS this library depends on [`fsPromises.watch`](https://nodejs.org/api/fs.html#fspromiseswatchfilename-options) and thus [relies](https://nodejs.org/docs/latest-v18.x/api/fs.html#fs_caveats) on [`inotify`](https://en.wikipedia.org/wiki/Inotify) for Linux. On Mac and Windows it should work out of the box.
 
