@@ -29,17 +29,24 @@ To enable this behavior, all you have to do is add *Glacier* as a dev dependency
 
 - Simply run `gleam test --target erlang -- --glacier` and `gleam test --target javascript -- --glacier` in two tabs side by side.
 
-## Installation & Usage
+## Requirements, Installation & Usage
+
+### Requirements
 
 For Erlang this library depends on [fs](https://hexdocs.pm/fs/). Because of this on Linux you will need [`inotify`](https://en.wikipedia.org/wiki/Inotify) [to be installed](https://github.com/synrc/fs#backends). On Mac and Windows it should work out of the box.
 
 For JavaScript/NodeJS this library depends on [`fsPromises.watch`](https://nodejs.org/api/fs.html#fspromiseswatchfilename-options) and thus [relies](https://nodejs.org/docs/latest-v18.x/api/fs.html#fs_caveats) on [`inotify`](https://en.wikipedia.org/wiki/Inotify) for Linux. On Mac and Windows it should work out of the box.
 
+### Installation
+
 This package is available on [hex.pm](https://hex.pm) can be added to your Gleam project:
 
-1. Run `gleam add glacier`
-2. Open `./test/YOUR_PROJECT.gleam` and replace `import gleeunit` with `import glacier` and `gleeunit.main()` with `glacier.main()`
-3. Run `gleam test -- --glacier`
+Run `gleam add glacier`
+
+### Usage
+
+1. Open `./test/YOUR_PROJECT.gleam` and replace `import gleeunit` with `import glacier` and `gleeunit.main()` with `glacier.main()`
+2. Run `gleam test -- --glacier`
    - Save any test module (within `./test`) file to re-run that single test
    - Save any src module (within `./src`) to run all associated tests. Associated tests are test modules where the module is imported or where any of the module's imports and their import's imports (import chain) are imported into.
 
