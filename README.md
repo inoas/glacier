@@ -107,7 +107,7 @@ Development and testing only happens on very recent stable Erlang/OTP and recent
 
 Deno is not yet supported.
 
-### Documentation
+## Documentation
 
 Documentation can be found at <https://hexdocs.pm/glacier>.
 
