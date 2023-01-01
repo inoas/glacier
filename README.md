@@ -32,7 +32,7 @@ It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit)
 
 To enable this behavior, all you have to do is add **Glacier** as a dev dependency, aka `gleam add glacier`, open `./test/YOUR_PROJECT.gleam` and replace `gleeunit.main()` with `glacier.main()`.
 
-*Note: gleam test must only be executed from the base project directory!*
+*Note: `gleam test` must only be executed from the base project directory!*
 
 ### Testing against Erlang & JavaScript
 
