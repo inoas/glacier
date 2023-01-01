@@ -127,6 +127,7 @@ Run `gleam add glacier`.
 2. Run `gleam test -- --glacier`, then:
    - Save any test module (within `./test`) file to re-run that single test
    - Save any src module (within `./src`) to run all associated tests. Associated tests are test modules where the module is imported or where any of the module's imports and their import's imports (import chain) are imported into.
+3. Optional: You may find and replace all `import gleeunit/should` with `import glacier/should` and remove `gleeunit` from your dependencies in `gleam.toml`.
 
 ## Documentation
 
