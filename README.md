@@ -65,6 +65,7 @@ Run the tests by entering `gleam test` in the command line.
 1. Run `gleam add glacier`.
 2. Open `./test/YOUR_PROJECT.gleam` and replace `import gleeunit` with `import glacier` and `gleeunit.main()` with `glacier.main()`.
 3. Run `gleam test --target erlang -- --glacier` or `gleam test --target javascript -- --glacier`.
+4. Save a `src` or `test` module and watch associated tests to re-run.
 
 *Notice: On Linux **inotify** must be installed.*
 
