@@ -51,9 +51,9 @@ Run the tests by entering `gleam test` in the command line.
 # Glacier · Gleam Incremental Interactive Unit Testing
 >>>>>>> cb94e4f (readme)
 
-<figure>
+<figure style="margin-bottom: 1em">
 	<img src="https://raw.githubusercontent.com/inoas/glacier/main/glacier-logo.png" alt="photo of a Lychee" style="max-height: 10em"/>
-  <figcaption><i><small>Glacier: A persistent body of dense ice that is constantly moving under its own weight (<a href="https://en.wikipedia.org/wiki/Glacier">(source)</a></small></i></figcaption>
+  <figcaption><i><small><a href="https://en.wikipedia.org/wiki/Glacier">Glacier: A persistent body of dense ice that is constantly moving under its own weight.</a></small></i></figcaption>
 </figure>
 
 [![Package Version](https://img.shields.io/hexpm/v/glacier)](https://hex.pm/packages/glacier)
