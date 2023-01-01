@@ -86,6 +86,8 @@ Run `gleam test --target erlang -- --glacier` and `gleam test --target javascrip
 
 #### Target Erlang
 
+Development and testing only happens on very recent stable Erlang/OTP versions, and thus may or may not run on previous versions.
+
 Depends on [fs](https://hexdocs.pm/fs/):
 
 - Linux [relies](https://github.com/synrc/fs#backends) on [`inotify`](https://en.wikipedia.org/wiki/Inotify).
@@ -94,11 +96,15 @@ Depends on [fs](https://hexdocs.pm/fs/):
 
 #### Target JavaScript/NodeJS
 
+Development and testing only happens on very recent NodeJS LTS versions, and thus may or may not run on previous versions.
+
 Depends on [`fsPromises.watch`](https://nodejs.org/api/fs.html#fspromiseswatchfilename-options):
 
 - Linux: [relies](https://nodejs.org/docs/latest-v18.x/api/fs.html#fs_caveats) on [`inotify`](https://en.wikipedia.org/wiki/Inotify).
 - Mac: Should work out of the box.
 - Windows: Should work out of the box.
+
+[Deno](https://deno.land) is not yet supported.
 
 ### Installation
 
@@ -112,12 +118,6 @@ Run `gleam add glacier`.
 2. Run `gleam test -- --glacier`
    - Save any test module (within `./test`) file to re-run that single test
    - Save any src module (within `./src`) to run all associated tests. Associated tests are test modules where the module is imported or where any of the module's imports and their import's imports (import chain) are imported into.
-
-### Supported Erlang/OTP and JavaScript/NodeJS versions
-
-Development and testing only happens on very recent stable Erlang/OTP and recent NodeJS LTS versions, it thus may or may not run on previous versions.
-
-[Deno](https://deno.land) is not yet supported.
 
 ## Documentation
 
