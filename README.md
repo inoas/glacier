@@ -33,9 +33,21 @@ Run `gleam test --target erlang -- --glacier` and `gleam test --target javascrip
 
 ### Requirements
 
-For Erlang this library depends on [fs](https://hexdocs.pm/fs/). Because of this on Linux you will need [`inotify`](https://en.wikipedia.org/wiki/Inotify) [to be installed](https://github.com/synrc/fs#backends). On Mac and Windows it should work out of the box.
+#### Erlang
 
-For JavaScript/NodeJS this library depends on [`fsPromises.watch`](https://nodejs.org/api/fs.html#fspromiseswatchfilename-options) and thus [relies](https://nodejs.org/docs/latest-v18.x/api/fs.html#fs_caveats) on [`inotify`](https://en.wikipedia.org/wiki/Inotify) for Linux. On Mac and Windows it should work out of the box.
+Depends on [fs](https://hexdocs.pm/fs/):
+
+- Linux [relies](https://github.com/synrc/fs#backends) on [`inotify`](https://en.wikipedia.org/wiki/Inotify).
+- Mac: Should work out of the box.
+- Windows: Should work out of the box.
+
+#### JavaScript/NodeJS
+
+Depends on [`fsPromises.watch`](https://nodejs.org/api/fs.html#fspromiseswatchfilename-options):
+
+- Linux: [relies](https://nodejs.org/docs/latest-v18.x/api/fs.html#fs_caveats) on [`inotify`](https://en.wikipedia.org/wiki/Inotify).
+- Mac: Should work out of the box.
+- Windows: Should work out of the box.
 
 ### Installation
 
