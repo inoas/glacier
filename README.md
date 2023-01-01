@@ -73,7 +73,7 @@ Run `gleam add glacier`.
 ### Usage
 
 1. Open `./test/YOUR_PROJECT.gleam` and replace `import gleeunit` with `import glacier` and `gleeunit.main()` with `glacier.main()`.
-2. Run `gleam test -- --glacier`, and then:
+2. Run `gleam test -- --glacier`, then:
    - Save any test module (within `./test`) file to re-run that single test
    - Save any src module (within `./src`) to run all associated tests. Associated tests are test modules where the module is imported or where any of the module's imports and their import's imports (import chain) are imported into.
 
