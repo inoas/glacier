@@ -2,6 +2,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## v0.8.0 - 2022-12-17
 
 - `should.be_ok` and `should.be_error` now return the contained value when the
@@ -60,6 +61,12 @@
 - Initial release.
 =======
 =======
+=======
+## 0.2.2
+
+- Fixed `README.md`.
+
+>>>>>>> 2af773c (readme)
 ## 0.2.1
 
 - Fixed `README.md`.
