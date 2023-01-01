@@ -1,4 +1,4 @@
--module(gleeunit_demo_erlang_test_module).
+-module(gleeunit2_demo_erlang_test_module).
 
 -include_lib("eunit/include/eunit.hrl").
 

@@ -25,7 +25,7 @@
 %% success, 'F' for each failure, and 'E' for each error. It can also
 %% optionally summarize the failures at the end.
 -compile({nowarn_unused_function, [insert/2, to_list/1, to_list/2, size/1]}).
--module(gleeunit_progress).
+-module(gleeunit2_progress).
 -behaviour(eunit_listener).
 -define(NOTEST, true).
 -include_lib("eunit/include/eunit.hrl").
