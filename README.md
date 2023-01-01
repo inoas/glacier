@@ -54,7 +54,7 @@ Run `gleam add glacier`.
 
 Development and testing only happens on very recent stable Erlang/OTP and recent NodeJS LTS versions, it thus may or may not run on previous versions.
 
-Deno is not yet supported.
+[Deno](https://deno.land) is not yet supported.
 
 ## Documentation
 
