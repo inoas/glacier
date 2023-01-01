@@ -185,16 +185,28 @@ and its documentation can be found at <https://hexdocs.pm/glacier>. -->
 ```sh
 git clone https://github.com/inoas/glacier.git
 cd glacier
+```
 
-# Run the tests on this library in one terminal for Erlang:
+### Erlang
+
+```sh
+# Traditional test runs
 gleam test --target erlang
 gleam test --target erlang -- test/glacier_demo/glacier_demo_module_a_test.gleam
+
+# Incremental interactive test
 gleam test --target erlang -- --glacier
 # Re-save ./src/glacier_demo/glacier_demo_module_a.gleam
+```
 
-# Run the tests on this library in one terminal for JavaScript:
+### JavaScript
+
+```sh
+# Traditional test runs
 gleam test --target javascript
 gleam test --target javascript -- test/glacier_demo/glacier_demo_module_a_test.gleam
+
+# Incremental interactive test
 gleam test --target javascript -- --glacier
 # Re-save ./src/glacier_demo/glacier_demo_module_a.gleam
 ```
