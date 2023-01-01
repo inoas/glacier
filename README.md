@@ -55,6 +55,9 @@ Run the tests by entering `gleam test` in the command line.
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3?label=%F0%9F%93%9A)](https://hexdocs.pm/glacier/)
 [![License](https://img.shields.io/hexpm/l/glacier?color=ffaff3&label=%F0%9F%93%83)](https://github.com/inoas/glacier/blob/main/LICENSE)
 
+**Glacier** brings incremental interactive unit testing to [Gleam](https://gleam.run).
+It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit) and it relies on it, internally.
+
 <figure>
 	<img src="https://raw.githubusercontent.com/inoas/glacier/main/glacier-logo.png" alt="Glacier Logo" style="max-height: 33vh; width: auto; height: auto" width="480" height="480"/>
   <figcaption><i><small>Glacier: <a href="https://en.wikipedia.org/wiki/Glacier">«A persistent body of dense ice that is constantly moving under its own weight.»</a></small></i></figcaption>
@@ -70,9 +73,6 @@ Run the tests by entering `gleam test` in the command line.
 *Notice: On Linux **inotify** must be installed.*
 
 ## Introduction
-
-**Glacier** brings incremental interactive unit testing to [Gleam](https://gleam.run).
-It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit) and it relies on it, internally.
 
 **Glacier** differs from **Gleeunit** insofar, that it let's you:
 

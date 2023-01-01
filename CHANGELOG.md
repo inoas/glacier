@@ -1,6 +1,7 @@
 # Changelog
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## v0.8.0 - 2022-12-17
 
 - `should.be_ok` and `should.be_error` now return the contained value when the
@@ -58,6 +59,12 @@
 
 - Initial release.
 =======
+=======
+## 0.2.1
+
+- Fixed `README.md`.
+
+>>>>>>> 69cbfa0 (fixed readme)
 ## 0.2.0
 
 <<<<<<< HEAD
