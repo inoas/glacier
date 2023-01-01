@@ -19,7 +19,7 @@ It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit)
 3. Run `gleam test --target erlang -- --glacier` or `gleam test --target javascript -- --glacier`.
 4. Save a `src` or `test` module and watch associated tests to re-run.
 
-*Notice: On Linux **inotify** must be installed.*
+*Notice: On Linux [**inotify**](https://en.wikipedia.org/wiki/Inotify) must be installed.*
 
 ## Introduction
 
@@ -48,7 +48,7 @@ Development and testing only happens on very recent stable Erlang/OTP versions, 
 
 Depends on [fs](https://hexdocs.pm/fs/):
 
-- Linux [relies](https://github.com/synrc/fs#backends) on [`**inotify**`](https://en.wikipedia.org/wiki/Inotify).
+- Linux [relies](https://github.com/synrc/fs#backends) on [**inotify**](https://en.wikipedia.org/wiki/Inotify).
 - Mac: Should work out of the box.
 - Windows: Should work out of the box.
 
@@ -58,7 +58,7 @@ Development and testing only happens on very recent NodeJS LTS versions, and thu
 
 Depends on [`fsPromises.watch`](https://nodejs.org/api/fs.html#fspromiseswatchfilename-options):
 
-- Linux: [relies](https://nodejs.org/docs/latest-v18.x/api/fs.html#fs_caveats) on [`**inotify**`](https://en.wikipedia.org/wiki/Inotify).
+- Linux: [relies](https://nodejs.org/docs/latest-v18.x/api/fs.html#fs_caveats) on [**inotify**](https://en.wikipedia.org/wiki/Inotify).
 - Mac: Should work out of the box.
 - Windows: Should work out of the box.
 

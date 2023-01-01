@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.2
+
+- Fixed `README.md`.
+
 ## 0.2.1
 
 - Fixed `README.md`.
