@@ -2,8 +2,8 @@
 
 ## 0.2.0
 
-- Added changelog file.
+- Added `CHANGELOG.md`.
 - Renamed internal gleeunit fork to gleeunit2 to avoid collisions.
-- Fixed readme.
+- Fixed `README.md`.
 - Added logo and shields badges.
 - JavaScript: File renames are picked up by the watcher.
