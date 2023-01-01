@@ -57,7 +57,7 @@ Run the tests by entering `gleam test` in the command line.
 
 <figure>
 	<img src="https://raw.githubusercontent.com/inoas/glacier/main/glacier-logo.png" alt="Glacier Logo" style="max-height: 33vh; width: auto; height: auto" width="480" height="480"/>
-  <figcaption><a href="https://en.wikipedia.org/wiki/Glacier"><i><small>Glacier: A persistent body of dense ice that is constantly moving under its own weight.</small></i></a></figcaption>
+  <figcaption><i><small>Glacier: <a href="https://en.wikipedia.org/wiki/Glacier">«A persistent body of dense ice that is constantly moving under its own weight.»</a></small></i></figcaption>
 </figure>
 
 ## Introduction
