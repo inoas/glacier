@@ -53,7 +53,7 @@ Run the tests by entering `gleam test` in the command line.
 
 > A persistent body of dense ice that is constantly moving under its own weight.
 
-<p align="center" width="100%"><a href="https://en.wikipedia.org/wiki/Glacier"><img alt="Glacier" title="Glacier: A persistent body of dense ice that is constantly moving under its own weight" src="https://github.com/inoas/argamak/raw/main/glacier-logo.png" width="250"></a></p>
+<p align="center" width="100%"><a href="https://en.wikipedia.org/wiki/Glacier"><img alt="Glacier" title="Glacier: A persistent body of dense ice that is constantly moving under its own weight" src="https://raw.githubusercontent.com/inoas/glacier/main/glacier-logo.png" width="250"></a></p>
 
 [![Package Version](https://img.shields.io/hexpm/v/glacier)](https://hex.pm/packages/glacier)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/glacier/)
