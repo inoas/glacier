@@ -213,7 +213,7 @@ Alpha quality, thus while this is still...
 >>>>>>> 2aa191b (readme)
 =======
 - Erlang: Introduce some delay between the file watcher picking up a change and the test running, so that if you find-replace-save-all via an editor it does not try to run the tests 10 times. This requires some medium large changes as the code to detect imports and dependent imports needs to run for 1..n modules and if test modules are affected it needs to be handled separately (added afterwards distinct, unique).
-- Gleam 0.26+: Handling of JavaScript `src` and `test` modules for **Deno**: <https://deno.land/api@v1.29.1?s=Deno.watchFs>.
+- Gleam 0.26+: Handling of JavaScript `src` and `test` modules for **Deno**, via <https://deno.land/api@v1.29.1?s=Deno.watchFs>.
 - Speed: Save import lists per module into an in-memory hash-table. Before a file gets parsed for its imports, build the hash and check if a cached version already exists.
 - Handling of Elixir `src` and `test` modules.
 - Handling of JavaScript `src` and `test` modules.
