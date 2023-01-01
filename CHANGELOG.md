@@ -73,6 +73,7 @@
 >>>>>>> a630773 (changelog)
 - Renamed internal gleeunit fork to gleeunit2 to avoid collisions.
 - JavaScript: File renames are picked up by the watcher.
+- Replaced `glacier.run()` with `glacier.main()` as latter did not make sense before.
 - Fixed `README.md`.
 <<<<<<< HEAD
 - Added logo and shields badges.
