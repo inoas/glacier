@@ -71,16 +71,18 @@ Documentation can be found at <https://hexdocs.pm/glacier>.
 ```sh
 git clone https://github.com/inoas/glacier.git
 cd glacier
-# Show instructions how to use the library stand alone:
-gleam run
+
 # Run the tests on this library in one terminal for Erlang:
 gleam test --target erlang
 gleam test --target erlang -- test/glacier_demo/glacier_demo_module_a_test.gleam
-gleam test --target erlang -- --glacier # Re-save ./src/glacier_demo/glacier_demo_module_a.gleam
+gleam test --target erlang -- --glacier
+# Re-save ./src/glacier_demo/glacier_demo_module_a.gleam
+
 # Run the tests on this library in one terminal for JavaScript:
 gleam test --target javascript
 gleam test --target javascript -- test/glacier_demo/glacier_demo_module_a_test.gleam
-gleam test --target javascript -- --glacier # Re-save ./src/glacier_demo/glacier_demo_module_a.gleam
+gleam test --target javascript -- --glacier
+# Re-save ./src/glacier_demo/glacier_demo_module_a.gleam
 ```
 
 ### Possible improvements
