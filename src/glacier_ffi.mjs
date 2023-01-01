@@ -5,7 +5,7 @@ import * as NodePath from "node:path";
 import * as NodeProcess from "node:process";
 import { SrcModuleKind, TestModuleKind } from "./glacier.mjs";
 
-const file_change_watcher_debounce_interval_in_ms = 200;
+const file_change_watcher_debounce_interval_in_ms = 100;
 
 process.on('SIGINT', function () {
   console.log("\n🏔 Gracefully shutting down Glacier from SIGINT (Ctrl-C)!");
@@ -31,6 +31,11 @@ export const cwd = function () {
 };
 
 export const start_file_change_watcher = function (file_change_handler_fn) {
+  require('events')
+  const emitter = new events.EventEmitter()
+  // emitter.setMaxListeners(1000)
+  // or 0 to turn off the limit
+  emitter.setMaxListeners(0)
   let file_change_handler_timeout_id = null;
   let file_change_handler_collection = [];
   const watch_directory = async function (directory, events, file_change_handler_fn, module_kind) {
@@ -44,16 +49,21 @@ export const start_file_change_watcher = function (file_change_handler_fn) {
         file_change_handler_collection.push([module_kind, touched_file]);
         file_change_handler_timeout_id = setTimeout(function () {
           // node fs watch is prone to report the same change twice, thus we need to distinct the changes:
-          const distinct_file_change_handler_collection = [...new Set(file_change_handler_collection)];
+          let distinct_file_change_handler_collection = [...new Set(file_change_handler_collection)];
+					// As we collect file on a delay set by file_change_watcher_debounce_interval_in_ms, they could be gone once we want to handle them:
+					distinct_file_change_handler_collection = distinct_file_change_handler_collection.filter(function(file_info) {
+						const absolute_file_name = file_info[1];
+						return file_exists(absolute_file_name);
+					});
           file_change_handler_fn(Gleam.List.fromArray(distinct_file_change_handler_collection));
-					file_change_handler_timeout_id = null;
-					file_change_handler_collection = [];
+          file_change_handler_timeout_id = null;
+          file_change_handler_collection = [];
         }, file_change_watcher_debounce_interval_in_ms);
       }
     }
   };
-  watch_directory(cwd() + "/src", ["change"], file_change_handler_fn, new SrcModuleKind());
-  watch_directory(cwd() + "/test", ["change"], file_change_handler_fn, new TestModuleKind());
+  watch_directory(cwd() + "/src", ["change", "rename"], file_change_handler_fn, new SrcModuleKind());
+  watch_directory(cwd() + "/test", ["change", "rename"], file_change_handler_fn, new TestModuleKind());
 
   return undefined; // Translates to `Nil` in Gleam
 };
