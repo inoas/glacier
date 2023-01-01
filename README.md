@@ -65,14 +65,14 @@ Run the tests by entering `gleam test` in the command line.
 **Glacier** brings incremental interactive unit testing to [Gleam](https://gleam.run).
 It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit) and it relies on it, internally.
 
-*Glacier* differs from *Gleeunit* insofar, that it let's you:
+**Glacier** differs from **Gleeunit** insofar, that it let's you:
 
 1. Pass in the `glacier` flag like so: `gleam test -- --glacier`, save a module and only related tests will rerun.
 2. Or Pass in a specific unit test modules to rerun `gleam test -- test/my_module_test.gleam`.
-3. If `gleam test` is passed without any `--`-arguments it behaves the same as *Gleeunit*.
+3. If `gleam test` is passed without any `--`-arguments it behaves the same as **Gleeunit**.
 4. You can still pass in `--target erlang` or `--target javascript` like so `gleam test --target erlang -- --glacier`, or like `gleam test --target javascript -- test/my_module_test.gleam`.
 
-To enable this behavior, all you have to do is add *Glacier* as a dev dependency, aka `gleam add glacier`, open `./test/YOUR_PROJECT.gleam` and replace `gleeunit.main()` with `glacier.main()`.
+To enable this behavior, all you have to do is add **Glacier** as a dev dependency, aka `gleam add glacier`, open `./test/YOUR_PROJECT.gleam` and replace `gleeunit.main()` with `glacier.main()`.
 
 *Note: gleam test must only be executed from the base project directory!*
 
@@ -113,8 +113,8 @@ Documentation can be found at <https://hexdocs.pm/glacier>.
 
 ### How does it work?
 
-1. `gleam test` passes through `glacier.run()` and simply executes `gleeunit.main()` as if *Gleeunit* was used directly.
-2. `gleam test -- test_module_a test_module_b` passes through `glacier.run()` and executes `gleeunit.test_modules(modules_list)` where `modules_list` is `["foo", "bar"]`. The given modules are checked if they exist as either `.gleam` or `.erl` test module files and then *Gleeunit* runs these test modules.
+1. `gleam test` passes through `glacier.run()` and simply executes `gleeunit.main()` as if **Gleeunit** was used directly.
+2. `gleam test -- test_module_a test_module_b` passes through `glacier.run()` and executes `gleeunit.test_modules(modules_list)` where `modules_list` is `["foo", "bar"]`. The given modules are checked if they exist as either `.gleam` or `.erl` test module files and then **Gleeunit** runs these test modules.
 3. `gleam test -- --glacier` enters `glacier.run()` and starts a file watcher: Upon changes in module files in `./test` it just passes those through as `gleam test -- changed_test_module`(so re-saving test files executes the single test), and if a module file in `./src` got changed it parses that changed module file for any imported modules and puts the module and all chained imported modules in a distinct list of modules that should be tested. Then all test module files are read and imports of those are gathered one by one and cross matched against that list. The result is a list of test modules that need to be run, which then gets done by executing a shell call similar to `gleam test -- detected_test_module_a detected_test_module_b detected_test_module_c etc`, aka jumps to `2.`.
 
 <<<<<<< HEAD
