@@ -3,6 +3,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## v0.8.0 - 2022-12-17
 
 - `should.be_ok` and `should.be_error` now return the contained value when the
@@ -62,6 +63,12 @@
 =======
 =======
 =======
+=======
+## 0.2.3
+
+- Remove code that did nothing.
+
+>>>>>>> be11c70 (0.2.3)
 ## 0.2.2
 
 - Fixed `README.md`.
