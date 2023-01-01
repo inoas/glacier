@@ -78,7 +78,7 @@ To enable this behavior, all you have to do is add **Glacier** as a dev dependen
 
 ### Testing against Erlang & JavaScript
 
-- Simply run `gleam test --target erlang -- --glacier` and `gleam test --target javascript -- --glacier` in two tabs side by side.
+- Just run `gleam test --target erlang -- --glacier` and `gleam test --target javascript -- --glacier` in two terminals side by side.
 
 ## Requirements, Installation & Usage
 
