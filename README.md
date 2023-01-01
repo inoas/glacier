@@ -41,7 +41,7 @@ For JavaScript/NodeJS this library depends on [`fsPromises.watch`](https://nodej
 
 This package is available on [hex.pm](https://hex.pm) can be added to your Gleam project:
 
-Run `gleam add glacier`
+Run `gleam add glacier`.
 
 ### Usage
 
