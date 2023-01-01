@@ -6,54 +6,30 @@ import gleam/string_builder
 import gleeunit2
 import shellout
 
+/// Let's Gleam switch code based on the current target.
+///
 type Target {
   ErlangTarget
   JavaScriptTarget
 }
 
+/// Atom to internally differentiate between Src and Test modules.
+/// Public because the FFIs rely on it.
+///
 pub type ModuleKind {
   SrcModuleKind
   TestModuleKind
 }
 
-pub const shellout_lookups: shellout.Lookups = [
+/// Colour options for shellout
+///
+const shellout_lookups: shellout.Lookups = [
   #(["color", "background"], [#("lightblue", ["156", "231", "255"])]),
 ]
 
+/// Runs either gleeunit or glacier depending on given flags
+///
 pub fn main() {
-  "Glacier · Gleam Incremental Interactive Unit Testing"
-  |> shellout.style(
-    with: shellout.display(["bold"])
-    |> map.merge(shellout.color(["lightblue"])),
-    custom: shellout_lookups,
-  )
-  |> io.println
-
-  "\nUsage:
-
-1. In your app, run: gleam add glacier
-2. In your app's ./test/YOUR_PROJECT_test.gleam module change:
-  import gleeunit
-
-  pub fn main() {
-    gleeunit.main()
-  }
-to:
-  import glacier
-
-  pub fn main() {
-    glacier.run()
-  }
-3. Run: gleam test --target erlang -- --glacier
-   Or run: gleam test --target javascript -- --glacier"
-  |> shellout.style(
-    with: shellout.color(["lightblue"]),
-    custom: shellout_lookups,
-  )
-  |> io.println
-}
-
-pub fn run() {
   let start_args = start_args()
   let is_incremental = list.contains(start_args, "--glacier")
   let is_empty_args = start_args == []
@@ -68,14 +44,16 @@ pub fn run() {
       )
       |> io.println
       start_file_change_watcher(fn(modules: List(#(ModuleKind, String))) -> Nil {
-        run_tests(modules)
+        execute_tests(modules)
       })
     }
     _, _ -> gleeunit2.run(for: start_args)
   }
 }
 
-fn run_tests(modules: List(#(ModuleKind, String))) {
+/// Executes tests
+///
+fn execute_tests(modules: List(#(ModuleKind, String))) {
   let test_modules =
     list.fold(
       over: modules,
@@ -85,7 +63,7 @@ fn run_tests(modules: List(#(ModuleKind, String))) {
         let full_module_path = module.1
         let test_modules = case module_kind {
           SrcModuleKind ->
-            detect_unique_import_module_dependencies(
+            detect_distinct_import_module_dependency_chain(
               [file_name_to_module_name(full_module_path, SrcModuleKind)],
               [],
             )
@@ -155,6 +133,8 @@ fn run_tests(modules: List(#(ModuleKind, String))) {
   }
 }
 
+/// Starts the file watcher
+///
 fn start_file_change_watcher(
   file_change_handler: fn(List(#(ModuleKind, String))) -> Nil,
 ) -> Nil {
@@ -162,7 +142,9 @@ fn start_file_change_watcher(
   Nil
 }
 
-fn detect_unique_import_module_dependencies(
+/// Detects distinct import module dependency chain
+///
+fn detect_distinct_import_module_dependency_chain(
   module_names: List(String),
   processed_module_names: List(String),
 ) -> List(String) {
@@ -171,7 +153,7 @@ fn detect_unique_import_module_dependencies(
     [module_name, ..rest_module_names] ->
       case list.contains(processed_module_names, module_name) {
         True ->
-          detect_unique_import_module_dependencies(
+          detect_distinct_import_module_dependency_chain(
             rest_module_names,
             processed_module_names,
           )
@@ -187,7 +169,7 @@ fn detect_unique_import_module_dependencies(
                 SrcModuleKind,
               ))
             })
-          detect_unique_import_module_dependencies(
+          detect_distinct_import_module_dependency_chain(
             list.append(rest_module_names, unchecked_module_names),
             list.append(processed_module_names, [module_name]),
           )
@@ -196,6 +178,8 @@ fn detect_unique_import_module_dependencies(
   }
 }
 
+/// Parses a module file for its import statements
+///
 fn parse_module_for_imports(module_file_name: String) -> List(String) {
   module_file_name
   |> fn(module_file) {
@@ -214,6 +198,8 @@ type ParseMode {
   ParseModeSearch
 }
 
+/// Parses a module string for its import statements
+///
 fn parse_module_string(
   chars: List(String),
   imports: List(String),
@@ -288,6 +274,8 @@ fn parse_module_string(
   }
 }
 
+/// Parses an import statement
+///
 fn parse_import_chars(
   chars: List(String),
   import_module: string_builder.StringBuilder,
@@ -309,6 +297,8 @@ fn parse_import_chars(
   }
 }
 
+/// Derives test modules from its src import dependencies
+///
 fn derive_test_modules_from_src_import_dependencies(
   src_modules: List(String),
 ) -> List(String) {
@@ -335,26 +325,32 @@ fn derive_test_modules_from_src_import_dependencies(
   dirty_test_modules
 }
 
+/// Derives src imports from test module
+///
 fn derive_src_imports_off_test_module(test_module_name) {
   test_module_name
   |> module_name_to_file_name(TestModuleKind)
   |> parse_module_for_imports
 }
 
+/// Converts a module name to a module file name
+///
 fn module_name_to_file_name(
   module_name: String,
   module_kind: ModuleKind,
 ) -> String {
   case module_kind {
-    SrcModuleKind -> get_src_dir() <> module_name <> ".gleam"
-    TestModuleKind -> get_test_dir() <> module_name <> ".gleam"
+    SrcModuleKind -> get_src_dir() <> "/" <> module_name <> ".gleam"
+    TestModuleKind -> get_test_dir() <> "/" <> module_name <> ".gleam"
   }
 }
 
+/// Converts a module file name to a module name
+///
 fn file_name_to_module_name(module_name: String, module_kind: ModuleKind) {
   assert Ok(#(_base_path, module_name_dot_gleam)) = case module_kind {
-    SrcModuleKind -> string.split_once(module_name, get_src_dir())
-    TestModuleKind -> string.split_once(module_name, get_test_dir())
+    SrcModuleKind -> string.split_once(module_name, get_src_dir() <> "/")
+    TestModuleKind -> string.split_once(module_name, get_test_dir() <> "/")
   }
   case string.ends_with(module_name, ".erl") {
     True -> {
@@ -370,34 +366,50 @@ fn file_name_to_module_name(module_name: String, module_kind: ModuleKind) {
   }
 }
 
+/// Checks if a given absolute file path exists
+///
 fn file_exists(absolute_file_name: String) -> Bool {
   do_file_exists(absolute_file_name)
 }
 
-fn find_project_files(in in: String) -> List(String) {
-  do_find_project_files(in)
+/// Finds files in project sub directory
+///
+fn find_project_files(in sub_directory: String) -> List(String) {
+  do_find_project_files(sub_directory)
 }
 
+/// Get's the target at runtime
+///
 fn target() -> Target {
   do_target()
 }
 
+/// Get's the start arguments sometimes called argv.
+///
 fn start_args() -> List(String) {
   do_start_args()
 }
 
+/// Get's the current project directory.
+///
 fn get_cwd() -> String {
   do_get_cwd()
 }
 
+/// Get's the project's src directory.
+///
 fn get_src_dir() -> String {
-  get_cwd() <> "/src/"
+  get_cwd() <> "/src"
 }
 
+/// Get's the project's test directory.
+///
 fn get_test_dir() -> String {
-  get_cwd() <> "/test/"
+  get_cwd() <> "/test"
 }
 
+/// Cut's off the base path from the project directory.
+///
 fn to_relative_path(absolute_file_path path: String) -> String {
   assert Ok(#(_pre_path, relative_file_name)) =
     string.split_once(path, get_cwd() <> "/")
