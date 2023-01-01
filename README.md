@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/hexpm/l/glacier?color=ffaff3&label=%F0%9F%93%83)](https://github.com/inoas/glacier/blob/main/LICENSE)
 
 <figure>
-	<img src="https://raw.githubusercontent.com/inoas/glacier/main/glacier-logo.png" alt="photo of a Lychee" width="480" style="max-height: 10em"/>
+	<img src="https://raw.githubusercontent.com/inoas/glacier/main/glacier-logo.png" alt="Glacier Logo" width="480" style="max-height: 10em"/>
   <figcaption><a href="https://en.wikipedia.org/wiki/Glacier"><i><small>Glacier: A persistent body of dense ice that is constantly moving under its own weight.</small></i></a></figcaption>
 </figure>
 
@@ -74,3 +74,7 @@ gleam test --target javascript -- --glacier
 - Speed: Save import lists per module into an in-memory hash-table. Before a file gets parsed for its imports, build the hash and check if a cached version already exists.
 - Handling of Elixir `src` and `test` modules.
 - Handling of JavaScript `src` and `test` modules.
+
+## License
+
+[Apache 2.0](./LICENSE)

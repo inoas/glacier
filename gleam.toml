@@ -16,5 +16,6 @@ shellout = "~> 1.0"
 
 [documentation]
 pages = [
+	{ title = "CHANGELOG", path = "changelog.html", source = "CHANGELOG.md" },
 	{ title = "LICENSE", path = "license.html", source = "LICENSE" },
 ]
