@@ -16,12 +16,6 @@ process.on('warning', function (e) {
   console.warn(e.stack);
 });
 
-// require('events')
-// const emitter = new events.EventEmitter()
-// emitter.setMaxListeners(1000)
-// // or 0 to turn off the limit
-// emitter.setMaxListeners(0)
-
 export const start_args = function () {
   return Gleam.List.fromArray(NodeProcess.argv.slice(1));
 };
@@ -31,11 +25,6 @@ export const cwd = function () {
 };
 
 export const start_file_change_watcher = function (file_change_handler_fn) {
-  require('events')
-  const emitter = new events.EventEmitter()
-  // emitter.setMaxListeners(1000)
-  // or 0 to turn off the limit
-  emitter.setMaxListeners(0)
   let file_change_handler_timeout_id = null;
   let file_change_handler_collection = [];
   const watch_directory = async function (directory, events, file_change_handler_fn, module_kind) {

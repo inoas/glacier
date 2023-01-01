@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.3
+
+- Remove code that did nothing.
+
 ## 0.2.2
 
 - Fixed `README.md`.
