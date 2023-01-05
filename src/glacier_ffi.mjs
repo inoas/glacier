@@ -42,7 +42,7 @@ export const start_file_change_watcher = function (file_change_handler_fn) {
         }
         file_change_handler_collection.push([module_kind, touched_file]);
         file_change_handler_timeout_id = setTimeout(function () {
-          // NOdeJS Fs.watch is prone to report the same change twice, thus we need to distinct the changes:
+          // NodeJS Fs.watch is prone to report the same change twice, thus we need to distinct the changes:
           let distinct_file_change_handler_collection = [...new Set(file_change_handler_collection)];
           // As we collect file on a delay set by file_change_watcher_debounce_interval_in_ms,
           // they could be gone once we want to handle them:
