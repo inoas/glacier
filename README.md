@@ -1,4 +1,4 @@
-# Glacier · Gleam Incremental Interactive Unit Testing
+# Glacier <small>· Gleam Incremental Interactive Unit Testing</small>
 
 [![Hex Package](https://img.shields.io/hexpm/v/glacier?color=ffaff3&label=%F0%9F%93%A6)](https://hex.pm/packages/glacier)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3?label=%F0%9F%93%9A)](https://hexdocs.pm/glacier/)
