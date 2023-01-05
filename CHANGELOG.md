@@ -3,6 +3,7 @@
 ## Unreleased - 0.2.7
 
 - Cleanup `README.md`.
+- Fix `MaxListenersExceededWarning: Possible EventEmitter memory leak detected` (#4).
 
 ## 0.2.6
 

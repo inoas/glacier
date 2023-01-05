@@ -121,7 +121,7 @@ fn execute_tests(modules: List(#(ModuleKind, String))) {
           run: "gleam",
           with: args,
           in: ".",
-          opt: [shellout.LetBeStdout, shellout.LetBeStderr],
+          opt: [shellout.LetBeStderr],
         )
       {
         Ok(msg) -> {
