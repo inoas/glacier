@@ -95,6 +95,8 @@ git clone https://github.com/inoas/glacier.git
 cd glacier
 ```
 
+See all [open issues](https://github.com/inoas/glacier/issues) on GitHub if you want to help out.
+
 ### Demo for target Erlang
 
 ```sh
@@ -118,14 +120,6 @@ gleam test --target javascript -- test/glacier_demo/glacier_demo_module_a_test.g
 gleam test --target javascript -- --glacier
 # Re-save ./src/glacier_demo/glacier_demo_module_a.gleam
 ```
-
-### Possible improvements
-
-- Erlang: Introduce some delay between the file watcher picking up a change and the test running, so that if you find-replace-save-all via an editor it does not try to run the tests 10 times. This requires some medium large changes as the code to detect imports and dependent imports needs to run for 1..n modules and if test modules are affected it needs to be handled separately (added afterwards distinct, unique).
-- Gleam 0.26+: Handling of JavaScript `src` and `test` modules for **Deno**, via <https://deno.land/api@v1.29.1?s=Deno.watchFs>.
-- Speed: Save import lists per module into an in-memory hash-table. Before a file gets parsed for its imports, build the hash and check if a cached version already exists.
-- Handling of Elixir `src` and `test` modules.
-- Handling of JavaScript `src` and `test` modules.
 
 ## License
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - 0.2.7
+
+- Cleanup `README.md`.
+
 ## 0.2.6
 
 - Instruct to use `gleam add glacier --dev` to add as a dev dependency, only.
