@@ -2,6 +2,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # gleeunit
 
 Gleam bindings to the Erlang EUnit test framework.
@@ -50,6 +51,9 @@ Run the tests by entering `gleam test` in the command line.
 =======
 # Glacier · Gleam Incremental Interactive Unit Testing
 >>>>>>> cb94e4f (readme)
+=======
+# Glacier <small>· Gleam Incremental Interactive Unit Testing</small>
+>>>>>>> 7d34303 (tag)
 
 [![Hex Package](https://img.shields.io/hexpm/v/glacier?color=ffaff3&label=%F0%9F%93%A6)](https://hex.pm/packages/glacier)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3?label=%F0%9F%93%9A)](https://hexdocs.pm/glacier/)
