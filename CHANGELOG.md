@@ -8,6 +8,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## v0.8.0 - 2022-12-17
 
 - `should.be_ok` and `should.be_error` now return the contained value when the
@@ -73,9 +74,12 @@
 =======
 =======
 ## Unreleased - 0.2.7
+=======
+## 0.2.7
+>>>>>>> 133ac4c (fix js bug)
 
-- Cleanup `README.md`.
 - Fix `MaxListenersExceededWarning: Possible EventEmitter memory leak detected` (#4).
+- Cleanup `README.md`.
 
 >>>>>>> f721aef (cleanup readme)
 ## 0.2.6
