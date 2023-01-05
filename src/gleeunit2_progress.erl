@@ -475,18 +475,18 @@ format_assertion_failure(Type, Props, I) when Type =:= assertion_failed
     HasHamcrestProps = ([expected, actual, matcher] -- Keys) =:= [],
     if
         HasEUnitProps ->
-            [indent(I, "Failure: ?assert(~ts)~n", [proplists:get_value(expression, Props)]),
+            [indent(I, "Failure: ?assert(~ts)~n", gleamify([proplists:get_value(expression, Props)])),
              indent(I, "  expected: true~n", []),
              case proplists:get_value(value, Props) of
                  false ->
-                     indent(I, "       got: false", []);
+                     indent(I, "       got: ~p", gleamify([false]));
                  {not_a_boolean, V} ->
-                     indent(I, "       got: ~p", [V])
+                     indent(I, "       got: ~p", gleamify([V]))
              end];
         HasHamcrestProps ->
-            [indent(I, "Failure: ?assertThat(~p)~n", [proplists:get_value(matcher, Props)]),
-             indent(I, "  expected: ~p~n", [proplists:get_value(expected, Props)]),
-             indent(I, "       got: ~p", [proplists:get_value(actual, Props)])];
+            [indent(I, "Failure: ?assertThat(~p)~n", gleamify([proplists:get_value(matcher, Props)])),
+             indent(I, "  expected: ~p~n", gleamify([proplists:get_value(expected, Props)])),
+             indent(I, "       got: ~p", gleamify([proplists:get_value(actual, Props)]))];
         true ->
             [indent(I, "Failure: unknown assert: ~p", [Props])]
     end;
@@ -496,52 +496,50 @@ format_assertion_failure(Type, Props, I) when Type =:= assertMatch_failed
     Expr = proplists:get_value(expression, Props),
     Pattern = proplists:get_value(pattern, Props),
     Value = proplists:get_value(value, Props),
-    [indent(I, "Failure: ?assertMatch(~ts, ~ts)~n", [Pattern, Expr]),
-     indent(I, "  expected: = ~ts~n", [Pattern]),
-     indent(I, "       got: ~p", [Value])];
+    [indent(I, "Failure: ?assertMatch(~ts, ~ts)~n", gleamify([Pattern, Expr])),
+     indent(I, "  expected: = ~ts~n", gleamify([Pattern])),
+     indent(I, "       got: ~p", gleamify([Value]))];
 
 format_assertion_failure(Type, Props, I) when Type =:= assertNotMatch_failed
                                                              ; Type =:= assertNotMatch  ->
     Expr = proplists:get_value(expression, Props),
     Pattern = proplists:get_value(pattern, Props),
     Value = proplists:get_value(value, Props),
-    [indent(I, "Failure: ?assertNotMatch(~ts, ~ts)~n", [Pattern, Expr]),
-     indent(I, "  expected not: = ~ts~n", [Pattern]),
-     indent(I, "           got:   ~p", [Value])];
+    [indent(I, "Failure: ?assertNotMatch(~ts, ~ts)~n", gleamify([Pattern, Expr])),
+     indent(I, "  expected not: = ~ts~n", gleamify([Pattern])),
+     indent(I, "           got:   ~p", gleamify([Value]))];
 
 format_assertion_failure(Type, Props, I) when Type =:= assertEqual_failed
                                             ; Type =:= assertEqual  ->
     Expr = proplists:get_value(expression, Props),
     Expected = proplists:get_value(expected, Props),
     Value = proplists:get_value(value, Props),
-    [indent(I, "Failure: ?assertEqual(~w, ~ts)~n", [Expected,
-                                                         Expr]),
-     indent(I, "  expected: ~p~n", [Expected]),
-     indent(I, "       got: ~p", [Value])];
+    [indent(I, "Failure: ?assertEqual(~w, ~ts)~n", gleamify([Expected, Expr])),
+     indent(I, "  expected: ~p~n", gleamify([Expected])),
+     indent(I, "       got: ~p", gleamify([Value]))];
 
 format_assertion_failure(Type, Props, I) when Type =:= assertNotEqual_failed
                                             ; Type =:= assertNotEqual ->
     Expr = proplists:get_value(expression, Props),
     Value = proplists:get_value(value, Props),
-    [indent(I, "Failure: ?assertNotEqual(~p, ~ts)~n",
-            [Value, Expr]),
-     indent(I, "  expected not: == ~p~n", [Value]),
-     indent(I, "           got:    ~p", [Value])];
+    [indent(I, "Failure: ?assertNotEqual(~p, ~ts)~n", gleamify([Value, Expr])),
+     indent(I, "  expected not: == ~p~n", gleamify([Value])),
+     indent(I, "           got:    ~p", gleamify([Value]))];
 
 format_assertion_failure(Type, Props, I) when Type =:= assertException_failed
                                             ; Type =:= assertException ->
     Expr = proplists:get_value(expression, Props),
     Pattern = proplists:get_value(pattern, Props),
     {Class, Term} = extract_exception_pattern(Pattern), % I hate that we have to do this, why not just give DATA
-    [indent(I, "Failure: ?assertException(~ts, ~ts, ~ts)~n", [Class, Term, Expr]),
+    [indent(I, "Failure: ?assertException(~ts, ~ts, ~ts)~n", gleamify([Class, Term, Expr])),
      case proplists:is_defined(unexpected_success, Props) of
          true ->
-             [indent(I, "  expected: exception ~ts but nothing was raised~n", [Pattern]),
-              indent(I, "       got: value ~p", [proplists:get_value(unexpected_success, Props)])];
+             [indent(I, "  expected: exception ~ts but nothing was raised~n", gleamify([Pattern])),
+              indent(I, "       got: value ~p", gleamify([proplists:get_value(unexpected_success, Props)]))];
          false ->
              Ex = proplists:get_value(unexpected_exception, Props),
-             [indent(I, "  expected: exception ~ts~n", [Pattern]),
-              indent(I, "       got: exception ~p", [Ex])]
+             [indent(I, "  expected: exception ~ts~n", gleamify([Pattern])),
+              indent(I, "       got: exception ~p", gleamify([Ex]))]
      end];
 
 format_assertion_failure(Type, Props, I) when Type =:= assertNotException_failed
@@ -550,43 +548,53 @@ format_assertion_failure(Type, Props, I) when Type =:= assertNotException_failed
     Pattern = proplists:get_value(pattern, Props),
     {Class, Term} = extract_exception_pattern(Pattern), % I hate that we have to do this, why not just give DAT
     Ex = proplists:get_value(unexpected_exception, Props),
-    [indent(I, "Failure: ?assertNotException(~ts, ~ts, ~ts)~n", [Class, Term, Expr]),
-     indent(I, "  expected not: exception ~ts~n", [Pattern]),
-     indent(I, "           got: exception ~p", [Ex])];
+    [indent(I, "Failure: ?assertNotException(~ts, ~ts, ~ts)~n", gleamify([Class, Term, Expr])),
+     indent(I, "  expected not: exception ~ts~n", gleamify([Pattern])),
+     indent(I, "           got: exception ~p", gleamify([Ex]))];
 
 format_assertion_failure(Type, Props, I) when Type =:= command_failed
                                             ; Type =:= command ->
     Cmd = proplists:get_value(command, Props),
     Expected = proplists:get_value(expected_status, Props),
     Status = proplists:get_value(status, Props),
-    [indent(I, "Failure: ?cmdStatus(~p, ~p)~n", [Expected, Cmd]),
-     indent(I, "  expected: status ~p~n", [Expected]),
-     indent(I, "       got: status ~p", [Status])];
+    [indent(I, "Failure: ?cmdStatus(~p, ~p)~n", gleamify([Expected, Cmd])),
+     indent(I, "  expected: status ~p~n", gleamify([Expected])),
+     indent(I, "       got: status ~p", gleamify([Status]))];
 
 format_assertion_failure(Type, Props, I) when Type =:= assertCmd_failed
                                             ; Type =:= assertCmd ->
     Cmd = proplists:get_value(command, Props),
     Expected = proplists:get_value(expected_status, Props),
     Status = proplists:get_value(status, Props),
-    [indent(I, "Failure: ?assertCmdStatus(~p, ~p)~n", [Expected, Cmd]),
-     indent(I, "  expected: status ~p~n", [Expected]),
-     indent(I, "       got: status ~p", [Status])];
+    [indent(I, "Failure: ?assertCmdStatus(~p, ~p)~n", gleamify([Expected, Cmd])),
+     indent(I, "  expected: status ~p~n", gleamify([Expected])),
+     indent(I, "       got: status ~p", gleamify([Status]))];
 
 format_assertion_failure(Type, Props, I) when Type =:= assertCmdOutput_failed
                                             ; Type =:= assertCmdOutput ->
     Cmd = proplists:get_value(command, Props),
     Expected = proplists:get_value(expected_output, Props),
     Output = proplists:get_value(output, Props),
-    [indent(I, "Failure: ?assertCmdOutput(~p, ~p)~n", [Expected, Cmd]),
-     indent(I, "  expected: ~p~n", [Expected]),
-     indent(I, "       got: ~p", [Output])];
+    [indent(I, "Failure: ?assertCmdOutput(~p, ~p)~n", gleamify([Expected, Cmd])),
+     indent(I, "  expected: ~p~n", gleamify([Expected])),
+     indent(I, "       got: ~p", gleamify([Output]))];
 
 format_assertion_failure(Type, Props, I) ->
-    indent(I, "~p", [{Type, Props}]).
+    indent(I, "~p", gleamify([{Type, Props}])).
 
 indent(I, Fmt, Args) ->
+	% io:fwrite(Args).
     io_lib:format("~" ++ integer_to_list(I) ++ "s" ++ Fmt, [" "|Args]).
 
 extract_exception_pattern(Str) ->
     ["{", Class, Term|_] = re:split(Str, "[, ]{1,2}", [unicode,{return,list}]),
     {Class, Term}.
+
+gleamify(Args) ->
+	% logger:notice("inspect:"),
+	% logger:notice(<<(gleam@string:inspect(Args))/binary>>),
+	% logger:notice("Args:"),
+	% logger:notice(Args),
+	% <<(gleam@string:inspect(Args))/utf8>>.
+    % Args.
+	bitstring_to_list(gleam@string:inspect(Args)).
