@@ -188,6 +188,8 @@ git clone https://github.com/inoas/glacier.git
 cd glacier
 ```
 
+See all [open issues](https://github.com/inoas/glacier/issues) on GitHub if you want to help out.
+
 ### Demo for target Erlang
 
 ```sh
@@ -215,6 +217,7 @@ gleam test --target javascript -- --glacier
 >>>>>>> 3df3ccd (readme)
 =======
 
+<<<<<<< HEAD
 ### Possible improvements
 
 <<<<<<< HEAD
@@ -234,6 +237,8 @@ Alpha quality, thus while this is still...
 >>>>>>> bc4b674 (prep version 0.2.0)
 =======
 
+=======
+>>>>>>> f721aef (cleanup readme)
 ## License
 
 [Apache 2.0](./LICENSE)
