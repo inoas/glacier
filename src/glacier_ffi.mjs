@@ -8,10 +8,14 @@ import { SrcModuleKind, TestModuleKind } from "./glacier.mjs";
 const file_change_watcher_debounce_interval_in_ms = 100;
 const Nil = undefined; // Translates to `Nil` in Gleam
 
-process.on('SIGINT', function () {
-  console.log("\n🏔 Gracefully shutting down Glacier from SIGINT (Ctrl-C)!");
-  process.exit(0);
-});
+// process.on('SIGINT', function () {
+//   process.exit(0);
+// });
+['SIGINT', 'SIGTERM', 'SIGQUIT']
+  .forEach(signal => process.on(signal, function () {
+    console.log("\n🏔 Gracefully shutting down Glacier from SIGINT (Ctrl-C)!");
+    process.exit(0);
+  }));
 
 process.on('warning', function (e) {
   console.warn(e.stack);
@@ -38,16 +42,19 @@ export const start_file_change_watcher = function (file_change_handler_fn) {
         }
         file_change_handler_collection.push([module_kind, touched_file]);
         file_change_handler_timeout_id = setTimeout(function () {
-          // node fs watch is prone to report the same change twice, thus we need to distinct the changes:
+          // NOdeJS Fs.watch is prone to report the same change twice, thus we need to distinct the changes:
           let distinct_file_change_handler_collection = [...new Set(file_change_handler_collection)];
-          // As we collect file on a delay set by file_change_watcher_debounce_interval_in_ms, they could be gone once we want to handle them:
-          distinct_file_change_handler_collection = distinct_file_change_handler_collection.filter(function(file_info) {
+          // As we collect file on a delay set by file_change_watcher_debounce_interval_in_ms,
+          // they could be gone once we want to handle them:
+          distinct_file_change_handler_collection = distinct_file_change_handler_collection.filter(function (file_info) {
             const absolute_file_name = file_info[1];
             return file_exists(absolute_file_name);
           });
-          file_change_handler_fn(Gleam.List.fromArray(distinct_file_change_handler_collection));
-          file_change_handler_timeout_id = null;
-          file_change_handler_collection = [];
+          process.nextTick(function () {
+            file_change_handler_fn(Gleam.List.fromArray(distinct_file_change_handler_collection));
+            file_change_handler_timeout_id = null;
+            file_change_handler_collection = [];
+          });
         }, file_change_watcher_debounce_interval_in_ms);
       }
     }

@@ -75,6 +75,7 @@
 ## Unreleased - 0.2.7
 
 - Cleanup `README.md`.
+- Fix `MaxListenersExceededWarning: Possible EventEmitter memory leak detected` (#4).
 
 >>>>>>> f721aef (cleanup readme)
 ## 0.2.6
