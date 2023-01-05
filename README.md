@@ -42,6 +42,8 @@ Run `gleam test --target erlang -- --glacier` and `gleam test --target javascrip
 
 ### Requirements
 
+Requires Gleam 0.25 or later.
+
 #### Target Erlang
 
 Development and testing only happens on very recent stable Erlang/OTP versions, and thus may or may not run on previous versions.
