@@ -21,13 +21,14 @@ pub type ModuleKind {
   TestModuleKind
 }
 
-/// Colour options for shellout
+/// Colour options for Shellout.
 ///
 const shellout_lookups: shellout.Lookups = [
   #(["color", "background"], [#("lightblue", ["156", "231", "255"])]),
 ]
 
-/// Runs either gleeunit or glacier depending on given flags
+/// Runs either Glacier or Gleeunit bundled as `gleeunit2`, depending on
+/// the given command line arguments.
 ///
 pub fn main() {
   let start_args = start_args()
@@ -133,7 +134,7 @@ fn execute_tests(modules: List(#(ModuleKind, String))) {
   }
 }
 
-/// Starts the file watcher
+/// Starts the file watcher.
 ///
 fn start_file_change_watcher(
   file_change_handler: fn(List(#(ModuleKind, String))) -> Nil,
@@ -142,7 +143,7 @@ fn start_file_change_watcher(
   Nil
 }
 
-/// Detects distinct import module dependency chain
+/// Detects distinct import module dependency chain.
 ///
 fn detect_distinct_import_module_dependency_chain(
   module_names: List(String),
@@ -178,14 +179,10 @@ fn detect_distinct_import_module_dependency_chain(
   }
 }
 
-/// Parses a module file for its import statements
+/// Parses a module file for its import statements.
 ///
 fn parse_module_for_imports(module_file_name: String) -> List(String) {
   module_file_name
-  |> fn(module_file) {
-    // io.debug(#("module_file", module_file))
-    module_file
-  }
   |> read_module_file()
   |> string.to_graphemes()
   |> parse_module_string([], ParseModeSearch, "")
@@ -209,7 +206,6 @@ fn parse_module_string(
   case chars {
     [] -> imports
     [char, ..rest_chars] ->
-      // io.debug(#(context, collected, char))
       case context, collected, char {
         // Found `/`: Continue Initial with / in collected
         ParseModeSearch, "", "/" ->
@@ -233,7 +229,6 @@ fn parse_module_string(
           let #(rest_chars, new_import) =
             parse_import_chars(rest_chars, string_builder.new())
           let new_import = string_builder.to_string(new_import)
-          // io.debug(#("detected import", new_import))
           let updated_imports = [new_import, ..imports]
           parse_module_string(rest_chars, updated_imports, ParseModeSearch, "")
         }
