@@ -49,3 +49,63 @@ previous contributions transparently.
 - Replaced `glacier.run()` with `glacier.main()` as latter did not make sense before.
 - Fixed `README.md`.
 - Fixed the logo to work across hexpm and github and shields badges.
+
+## 0.1.0
+
+- _Ex post_ rebased on `lpil/gleeunit`
+
+### Gleeunit v0.8
+
+- `should.be_ok` and `should.be_error` now unwrap the result argument
+
+### Gleeunit v0.7.2 - 2022-11-19
+
+- Update for Gleam v0.25.0.
+
+### Gleeunit v0.7.1 - 2022-11-11
+
+- Fixed a bug where project names containing numbers would not run correctly on
+  JavaScript.
+
+### Gleeunit v0.7.0 - 2022-09-24
+
+- Line numbers are printed on JS for assertions.
+
+### Gleeunit v0.6.2 - 2022-07-15
+
+- Fixed a bug where assertions in JavaScript tests could fail to report an
+  error due to them being async.
+
+### Gleeunit v0.6.1 - 2022-01-26
+
+- Fixed a bug where failed tests on the JavaScript target would crash the `main`
+  function.
+- Fixed a bug where tests on the JavaScript target could succeed regardless of
+  return value.
+
+### Gleeunit v0.6.0 - 2022-01-09
+
+- Added support for OTP versions below 23.
+- Added support for running tests on the JavaScript target.
+
+### Gleeunit v0.5.0 - 2021-12-05
+
+- Updated for Gleam v0.18.0.
+- Added `gleeunit/should` module containing assertions.
+
+### Gleeunit v0.4.0 - 2021-11-01
+
+- Slightly improved failure format.
+
+### Gleeunit v0.3.0 - 2021-10-31
+
+- Fixed Hex package which was missing some files.
+
+### Gleeunit v0.2.0 - 2021-10-31
+
+- `gleeunit.discover_and_run_tests` removed.
+- `gleeunit.main` added.
+
+### Gleeunit v0.1.0 - 2021-10-31
+
+- Initial release.
