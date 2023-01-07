@@ -2,7 +2,7 @@
 
 [![Hex Package](https://img.shields.io/hexpm/v/glacier?color=ffaff3&label=%F0%9F%93%A6)](https://hex.pm/packages/glacier)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3?label=%F0%9F%93%9A)](https://hexdocs.pm/glacier/)
-[![License](https://img.shields.io/hexpm/l/glacier?color=ffaff3&label=%F0%9F%93%83)](https://github.com/inoas/glacier/blob/main/LICENSE)
+[![Licence](https://img.shields.io/hexpm/l/glacier?color=ffaff3&label=%F0%9F%93%83)](https://github.com/inoas/glacier/blob/main/LICENCE)
 
 **Glacier** brings incremental interactive unit testing to [Gleam](https://gleam.run).
 It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit) and it relies on it, internally.
@@ -125,4 +125,4 @@ gleam test --target javascript -- --glacier
 
 ## License
 
-[Apache 2.0](./LICENSE)
+[Apache 2.0](./LICENCE)
