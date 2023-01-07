@@ -68,7 +68,7 @@ Depends on [`fsPromises.watch`](https://nodejs.org/api/fs.html#fspromiseswatchfi
 
 ### Installation
 
-This package is available on [hex.pm](https://hex.pm) can be added to your Gleam project:
+This package is [available on hex.pm](https://hex.pm/packages/glacier) can be added to your Gleam project:
 
 Run `gleam add glacier --dev`.
 
