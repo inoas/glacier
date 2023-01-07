@@ -1,7 +1,4 @@
 *.beam
 *.ez
 build
-<<<<<<< HEAD
-=======
 erl_crash.dump
->>>>>>> 52d5260 (integrate gleeunit)
