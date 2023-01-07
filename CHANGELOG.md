@@ -10,6 +10,8 @@ required because initially `Glacier` was supposed to depend on a patched
 previous contributions transparently.
 - Fixed readme
 - Proper BE noun instead of an AE one for the `LICENCE` file.
+- Fix detection of unqualified imports.
+- Fix detection of aliased imports.
 
 ## 0.2.7
 
