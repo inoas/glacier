@@ -11,16 +11,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-<<<<<<< HEAD
-      - uses: actions/checkout@v2.0.0
-      - uses: erlef/setup-beam@v1.13.0
-        with:
-          otp-version: "25.1"
-          gleam-version: "0.25.2"
-      - run: gleam format --check src test
-      - run: gleam test
-      - run: gleam test --target javascript
-=======
       - uses: actions/checkout@v3.2.0
       - uses: erlef/setup-beam@v1.15.0
         with:
@@ -31,4 +21,3 @@ jobs:
       - run: gleam format --check src test
       - run: gleam deps download
       - run: gleam test
->>>>>>> 52d5260 (integrate gleeunit)
