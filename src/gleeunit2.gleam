@@ -61,53 +61,10 @@ fn run_suite(
 }
 
 if erlang {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-  import gleam/list
-=======
-=======
   import gleam/dynamic.{Dynamic}
->>>>>>> b4109aa (make erlang work again)
   import gleam/int
->>>>>>> 2c161a5 (js wip)
   import gleam/result
   import gleam/string
-<<<<<<< HEAD
-=======
-  import glacier/glacier_helpers
->>>>>>> 52d5260 (integrate gleeunit)
-=======
-  import gleam/list
-  import gleam/string
-  import gleam/int
-  import gleam/io
->>>>>>> 851cdb8 (accept stdlib as dep)
-=======
-  import gleam/result
->>>>>>> 132c225 (cleanup)
-  import gleam/dynamic.{Dynamic}
-=======
-  import gleam/dynamic.{Dynamic}
-  import gleam/erlang
-  import gleam/int
-  import gleam/io
-=======
->>>>>>> c36ab77 (polish)
-  import gleam/list
-  import gleam/result
-  import gleam/string
-<<<<<<< HEAD
->>>>>>> 0c23b2b (run specific test modules only)
-=======
-  import gleam/dynamic.{Dynamic}
->>>>>>> c36ab77 (polish)
-=======
->>>>>>> b4109aa (make erlang work again)
 
   fn do_run_suite(
     test_module_files: List(String),
@@ -120,50 +77,17 @@ if erlang {
     ]
 
     let result =
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-      find_files(matching: "**/*.{erl,gleam}", in: "test")
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-      determine_test_modules()
->>>>>>> 0c23b2b (run specific test modules only)
-=======
-      test_modules
->>>>>>> 493c0ca (first buggy alpha version for erlang runs :yippie:)
-=======
       test_module_files
       |> list.map(fn(test_module_file: String) {
         assert Ok(#(_test_prefix, test_module_file)) =
           string.split_once(test_module_file, "test/")
         test_module_file
       })
->>>>>>> b4109aa (make erlang work again)
       |> list.map(gleam_to_erlang_module_name)
       |> list.map(dangerously_convert_string_to_atom(_, Utf8))
       |> run_eunit(options)
       |> dynamic.result(dynamic.dynamic, dynamic.dynamic)
       |> result.unwrap(Error(dynamic.from(Nil)))
-<<<<<<< HEAD
-=======
-      |> glacier_helpers.list_map(gleam_to_erlang_module_name)
-      |> glacier_helpers.list_map(dangerously_convert_string_to_atom(_, Utf8))
-=======
-      |> list.map(gleam_to_erlang_module_name)
-      |> list.map(dangerously_convert_string_to_atom(_, Utf8))
->>>>>>> 851cdb8 (accept stdlib as dep)
-      |> run_eunit(options)
-      |> dynamic.result(dynamic.dynamic, dynamic.dynamic)
-      |> fn(result) {
-        case result {
-          Ok(v) -> v
-          Error(_) -> Error(dynamic.from(Nil))
-        }
-      }
->>>>>>> 52d5260 (integrate gleeunit)
-=======
->>>>>>> c36ab77 (polish)
 
     let exit_code = case result {
       Ok(_) -> 0
@@ -188,8 +112,6 @@ if erlang {
 
   fn gleam_to_erlang_module_name(path: String) -> String {
     path
-<<<<<<< HEAD
-<<<<<<< HEAD
     |> string.replace(".gleam", "")
     |> string.replace(".erl", "")
     |> string.replace("/", "@")
@@ -203,27 +125,7 @@ if erlang {
   }
 
   external fn find_files(matching: String, in: String) -> List(String) =
-<<<<<<< HEAD:src/gleeunit.gleam
-<<<<<<< HEAD
-=======
-    |> glacier_helpers.string_replace(".gleam", "")
-    |> glacier_helpers.string_replace(".erl", "")
-    |> glacier_helpers.string_replace("/", "@")
-=======
-    |> string.replace(".gleam", "")
-    |> string.replace(".erl", "")
-    |> string.replace("/", "@")
->>>>>>> 851cdb8 (accept stdlib as dep)
-  }
-
-  external fn find_files(matching: a, in: String) -> List(String) =
->>>>>>> 52d5260 (integrate gleeunit)
-=======
->>>>>>> c36ab77 (polish)
-    "gleeunit_ffi" "find_files"
-=======
     "gleeunit2_ffi" "find_files"
->>>>>>> bc4b674 (prep version 0.2.0):src/gleeunit2.gleam
 
   external type Atom
 

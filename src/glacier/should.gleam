@@ -21,11 +21,6 @@ if erlang {
 }
 
 if javascript {
-<<<<<<< HEAD
-  import gleam/string
-
-=======
->>>>>>> 52d5260 (integrate gleeunit)
   external fn stringify(anything) -> String =
     "../gleam.mjs" "inspect"
 
@@ -36,16 +31,7 @@ if javascript {
     case a == b {
       True -> Nil
       _ ->
-<<<<<<< HEAD
-        crash(string.concat([
-          "\n\t",
-          stringify(a),
-          "\n\tshould equal \n\t",
-          stringify(b),
-        ]))
-=======
         crash("\n\t" <> stringify(a) <> "\n\tshould equal \n\t" <> stringify(b))
->>>>>>> 52d5260 (integrate gleeunit)
     }
   }
 
@@ -53,38 +39,21 @@ if javascript {
     case a != b {
       True -> Nil
       _ ->
-<<<<<<< HEAD
-        crash(string.concat([
-          "\n",
-          stringify(a),
-          "\nshould not equal \n",
-          stringify(b),
-        ]))
-=======
         crash("\n" <> stringify(a) <> "\nshould not equal \n" <> stringify(b))
->>>>>>> 52d5260 (integrate gleeunit)
     }
   }
 
   pub fn be_ok(a) {
     case a {
       Ok(value) -> value
-<<<<<<< HEAD
-      _ -> crash(string.concat(["\n", stringify(a), "\nshould be ok"]))
-=======
       _ -> crash("\n" <> stringify(a) <> "\nshould be ok")
->>>>>>> 52d5260 (integrate gleeunit)
     }
   }
 
   pub fn be_error(a) {
     case a {
       Error(error) -> error
-<<<<<<< HEAD
-      _ -> crash(string.concat(["\n", stringify(a), "\nshould be error"]))
-=======
       _ -> crash("\n" <> stringify(a) <> "\nshould be error")
->>>>>>> 52d5260 (integrate gleeunit)
     }
   }
 }

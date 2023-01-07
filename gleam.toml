@@ -1,15 +1,3 @@
-<<<<<<< HEAD
-name = "gleeunit"
-version = "0.8.0"
-licences = ["Apache-2.0"]
-description = "Gleam bindings to Erlang's EUnit test framework"
-
-[dependencies]
-gleam_stdlib = "~> 0.19"
-
-[dev-dependencies]
-# some_test_package = "~> 1.0.0"
-=======
 name = "glacier"
 version = "0.2.7"
 
@@ -25,17 +13,9 @@ gleam_erlang = "~> 0.17"
 shellout = "~> 1.0"
 
 [dev-dependencies]
-<<<<<<< HEAD
-<<<<<<< HEAD
-gleam_stdlib = "~> 0.25"
->>>>>>> 52d5260 (integrate gleeunit)
-=======
->>>>>>> edef0a6 (wip)
-=======
 
 [documentation]
 pages = [
 	{ title = "CHANGELOG", path = "changelog.html", source = "CHANGELOG.md" },
 	{ title = "LICENSE", path = "license.html", source = "LICENSE" },
 ]
->>>>>>> aaacb84 (license)

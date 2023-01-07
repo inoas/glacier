@@ -2,15 +2,9 @@
 %% Changes made to the original code:
 %% - Embedded binomial_heap.erl file contents into current file.
 %% - ignore warnings for heap implementation to keep complete implementation.
-<<<<<<< HEAD
-%% - removed "namespaced_dicts" dependant preprocessor directive, 
-%%   as it does not apply for our project, we just assume OTP version >= 17.
-%%   This is because the previous verison uses rebar, and we won't do that.
-=======
 %% - removed "namespaced_dicts" dependant preprocessor directive,
 %%   as it does not apply for our project, we just assume OTP version >= 17.
 %%   This is because the previous version uses rebar, and we won't do that.
->>>>>>> 52d5260 (integrate gleeunit)
 
 %% Copyright 2014 Sean Cribbs
 %%

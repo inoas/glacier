@@ -2,21 +2,8 @@
 # You typically do not need to edit this file
 
 packages = [
-<<<<<<< HEAD
-<<<<<<< HEAD
-  { name = "gleam_stdlib", version = "0.22.3", build_tools = ["gleam"], requirements = [], otp_app = "gleam_stdlib", source = "hex", outer_checksum = "F2C2D389B06426E1289D5419F89BDE8E0F7F35A40B2BBB3C88188481F0D44A9F" },
-]
-
-[requirements]
-gleam_stdlib = "~> 0.19"
-=======
-=======
   { name = "fs", version = "8.6.1", build_tools = ["rebar3"], requirements = [], otp_app = "fs", source = "hex", outer_checksum = "61EA2BDAEDAE4E2024D0D25C63E44DCCF65622D4402DB4A2DF12868D1546503F" },
-<<<<<<< HEAD
->>>>>>> edef0a6 (wip)
-=======
   { name = "gleam_erlang", version = "0.17.1", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_erlang", source = "hex", outer_checksum = "BAAA84F5BCC4477E809BA3E03BB3009A3894A6544C1511626C44408E39DB2AE6" },
->>>>>>> 9cf08d5 (wip)
   { name = "gleam_stdlib", version = "0.25.0", build_tools = ["gleam"], requirements = [], otp_app = "gleam_stdlib", source = "hex", outer_checksum = "AD0F89928E0B919C8F8EDF640484633B28DBF88630A9E6AE504617A3E3E5B9A2" },
   { name = "shellout", version = "1.0.0", build_tools = ["gleam"], requirements = ["gleam_erlang", "gleam_stdlib"], otp_app = "shellout", source = "hex", outer_checksum = "310662075CDCB6E3928B03E3FD371B1DDCD691E1C709E606AB02195E36675D4E" },
 ]
@@ -25,8 +12,4 @@ gleam_stdlib = "~> 0.19"
 fs = "~> 8.6"
 gleam_erlang = "~> 0.17"
 gleam_stdlib = "~> 0.25"
-<<<<<<< HEAD
->>>>>>> 52d5260 (integrate gleeunit)
-=======
 shellout = "~> 1.0"
->>>>>>> c36ab77 (polish)
