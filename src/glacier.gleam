@@ -184,9 +184,16 @@ fn detect_distinct_import_module_dependency_chain(
 fn parse_module_for_imports(module_file_name: String) -> List(String) {
   module_file_name
   |> read_module_file()
-  |> string.to_graphemes()
-  |> parse_module_string([], ParseModeSearch, "")
-  |> list.unique()
+  |> fn(result: Result(String, Nil)) -> List(String) {
+    case result {
+      Ok(text) ->
+        text
+        |> string.to_graphemes()
+        |> parse_module_string([], ParseModeSearch, "")
+        |> list.unique()
+      Error(Nil) -> []
+    }
+  }
 }
 
 type ParseMode {
@@ -279,12 +286,16 @@ fn parse_import_chars(
   case chars {
     // Return if end of line
     [] -> #([], import_module)
+    // Return if . - aka found unqualified import
+    [".", ..rest_chars] -> #(rest_chars, import_module)
+    // Whitespaces stop inmports and return
+    [" ", ..rest_chars] -> #(rest_chars, import_module)
     // Return if \r\n
     ["\r\n", ..rest_chars] -> #(rest_chars, import_module)
     // Return if \n
     ["\n", ..rest_chars] -> #(rest_chars, import_module)
     // Ignore whitespaces
-    [char, ..rest_chars] if char == " " || char == "\t" || char == "\r" || char == "\n" || char == "\r\n" ->
+    [char, ..rest_chars] if char == "\t" || char == "\r" || char == "\n" || char == "\r\n" ->
       parse_import_chars(rest_chars, import_module)
     // Append for any other character
     [char, ..rest_chars] ->
@@ -428,9 +439,19 @@ if erlang {
   ) -> Nil =
     "glacier_ffi" "start_file_change_watcher"
 
-  fn read_module_file(module_path: String) -> String {
-    assert Ok(contents) = file.read(module_path)
-    contents
+  fn read_module_file(module_path: String) -> Result(String, Nil) {
+    case file.read(module_path) {
+      Ok(text) -> Ok(text)
+      Error(file_reason) -> {
+        io.debug(#(
+          "Could not read file",
+          module_path,
+          "with reason",
+          file_reason,
+        ))
+        Error(Nil)
+      }
+    }
   }
 
   external fn do_get_cwd() -> String =
@@ -463,8 +484,9 @@ if javascript {
   ) -> Nil =
     "./glacier_ffi.mjs" "start_file_change_watcher"
 
-  fn read_module_file(module_path: String) -> String {
-    do_read_module_file(module_path)
+  fn read_module_file(module_path: String) -> Result(String, Nil) {
+    // TODO get `Result` from JS
+    Ok(do_read_module_file(module_path))
   }
 
   external fn do_read_module_file(module_path: String) -> String =
