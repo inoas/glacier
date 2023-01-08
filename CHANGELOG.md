@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1
+
+- Fix readme.
+
 ## 0.4.0
 
 - Remove internal verbatim copy to `gleeunit` and depend on a fork:
