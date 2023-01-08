@@ -2,16 +2,17 @@
 
 ## Unreleased - 0.2.8
 
+- Fix detection of unqualified imports.
+- Fix detection of aliased imports.
+- Fix detection of renames.
+- Improved readme.
 - Force rebased on `lpil/gleeunit` and then reverted any changes to the
 `0.2.6` main commit state to keep all contributor history alive. This was
 required because initially `Glacier` was supposed to depend on a patched
 `Gleeunit`, but the idea of patching `Gleeunit` a bit was rejected by the
 `Gleeunit` team. While this may not be strictly necessary this honors
 previous contributions transparently.
-- Fixed readme
-- Proper BE noun instead of an AE one for the `LICENCE` file.
-- Fix detection of unqualified imports.
-- Fix detection of aliased imports.
+- Proper BE noun instead of an AE one for the `LICENCE` file and naming.
 
 ## 0.2.7
 

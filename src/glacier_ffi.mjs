@@ -42,18 +42,21 @@ export const start_file_change_watcher = function (file_change_handler_fn) {
         }
         file_change_handler_collection.push([module_kind, touched_file]);
         file_change_handler_timeout_id = setTimeout(function () {
-          // NodeJS Fs.watch is prone to report the same change twice, thus we need to distinct the changes:
-          let distinct_file_change_handler_collection = [...new Set(file_change_handler_collection)];
-          // As we collect file on a delay set by file_change_watcher_debounce_interval_in_ms,
-          // they could be gone once we want to handle them:
-          distinct_file_change_handler_collection = distinct_file_change_handler_collection.filter(function (file_info) {
-            const absolute_file_name = file_info[1];
-            return file_exists(absolute_file_name);
-          });
+          // possibly drop nextTick?
           process.nextTick(function () {
-            file_change_handler_fn(Gleam.List.fromArray(distinct_file_change_handler_collection));
-            file_change_handler_timeout_id = null;
-            file_change_handler_collection = [];
+            // NodeJS Fs.watch is prone to report the same change twice, thus we need to distinct the changes:
+            let distinct_file_change_handler_collection = [...new Set(file_change_handler_collection)];
+            // As we collect file on a delay set by file_change_watcher_debounce_interval_in_ms,
+            // they could be gone once we want to handle them:
+            distinct_file_change_handler_collection = distinct_file_change_handler_collection.filter(function (file_info) {
+              const absolute_file_name = file_info[1];
+              return file_exists(absolute_file_name);
+            });
+            if (distinct_file_change_handler_collection.length > 0) {
+              file_change_handler_fn(Gleam.List.fromArray(distinct_file_change_handler_collection));
+              file_change_handler_timeout_id = null;
+              file_change_handler_collection = [];
+            }
           });
         }, file_change_watcher_debounce_interval_in_ms);
       }

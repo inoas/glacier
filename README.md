@@ -38,11 +38,15 @@ To enable this behavior, all you have to do is add **Glacier** as a dev dependen
 
 Run `gleam test --target erlang -- --glacier` and `gleam test --target javascript -- --glacier` in two terminals side by side.
 
-## Requirements, Installation & Usage
+## Requirements, Caveats & Installation
 
 ### Requirements
 
 Requires Gleam 0.25 or later.
+
+### Caveats
+
+Source and Test module files with non-alphanumeric names and/or white spaces are generally not supported.
 
 #### Target Erlang
 
@@ -72,7 +76,7 @@ This package is [available on hex.pm](https://hex.pm/packages/glacier) can be ad
 
 Run `gleam add glacier --dev`.
 
-### Usage
+## Usage
 
 1. Open `./test/YOUR_PROJECT.gleam` and replace `import gleeunit` with `import glacier` and `gleeunit.main()` with `glacier.main()`.
 2. Run `gleam test -- --glacier`, then:

@@ -23,18 +23,20 @@ process_file_update_and_loop(ModuleKind, WatchPath, FileChangeHandlerFn) ->
             TestDir = <<CwdBinary/binary, "/test">>,
             IsSrcModuleKind = string:find(Path, SrcDir) =:= Path,
             IsTestModuleKind = string:find(Path, TestDir) =:= Path,
+            FileExists = filelib:is_regular(Path),
+            IsGleamFile = gleam_stdlib:string_ends_with(list_to_bitstring(Path), <<".gleam"/utf8>>),
             MatchingEvent =
                 lists:member(modified, Changes)
                 orelse lists:member(created, Changes)
                 orelse lists:member(renamed, Changes),
-            case {MatchingEvent, IsSrcModuleKind, IsTestModuleKind} of
-                {true, true, _} ->
-                    % io:format("~p ", [Path]),
+            case {FileExists, IsGleamFile, MatchingEvent, IsSrcModuleKind, IsTestModuleKind} of
+                {true, true, true, true, _} ->
+                    % io:format("\n~p: ~p\n\n", [Changes, Path]),
                     FileChangeHandlerFn([{src_module_kind, iolist_to_binary(Path)}]);
-                {true, _, true} ->
-                    % io:format("~p ", [Path]),
+                {true, true, true, _, true} ->
+                    % io:format("\n~p: ~p \n\n", [Changes, Path]),
                     FileChangeHandlerFn([{test_module_kind, iolist_to_binary(Path)}]);
-                {_, _, _} ->
+                {_, _, _, _, _} ->
                     nil
             end,
             process_file_update_and_loop(ModuleKind, WatchPath, FileChangeHandlerFn);
