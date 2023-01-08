@@ -1,6 +1,10 @@
 # Changelog
 
-## Unreleased - 0.3.0
+## 0.3.1
+
+- Fix Changelog.
+
+## 0.3.0
 
 - Fix detection of unqualified imports.
 - Fix detection of aliased imports.
