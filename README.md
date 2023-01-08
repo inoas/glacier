@@ -2,7 +2,7 @@
 
 [![Hex Package](https://img.shields.io/hexpm/v/glacier?color=ffaff3&label=%F0%9F%93%A6)](https://hex.pm/packages/glacier)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3?label=%F0%9F%93%9A)](https://hexdocs.pm/glacier/)
-[![License](https://img.shields.io/hexpm/l/glacier?color=ffaff3&label=%F0%9F%93%83)](https://github.com/inoas/glacier/blob/main/LICENSE)
+[![Licence](https://img.shields.io/hexpm/l/glacier?color=ffaff3&label=%F0%9F%93%83)](https://github.com/inoas/glacier/blob/main/LICENCE)
 
 **Glacier** brings incremental interactive unit testing to [Gleam](https://gleam.run).
 It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit) and it relies on it, internally.
@@ -38,7 +38,12 @@ To enable this behavior, all you have to do is add **Glacier** as a dev dependen
 
 Run `gleam test --target erlang -- --glacier` and `gleam test --target javascript -- --glacier` in two terminals side by side.
 
-## Requirements, Installation & Usage
+## Caveats, Requirements & Installation
+
+### Caveats
+
+- `./src` and `./test` source files with white spaces will not pass detection.
+- Behavior towards `./src` and `./test` source files with non-alphanumeric characters is not tested, and generally unsupported.
 
 ### Requirements
 
@@ -68,11 +73,11 @@ Depends on [`fsPromises.watch`](https://nodejs.org/api/fs.html#fspromiseswatchfi
 
 ### Installation
 
-This package is available on [hex.pm](https://hex.pm) can be added to your Gleam project:
+This package is [available on hex.pm](https://hex.pm/packages/glacier) can be added to your Gleam project:
 
 Run `gleam add glacier --dev`.
 
-### Usage
+## Usage
 
 1. Open `./test/YOUR_PROJECT.gleam` and replace `import gleeunit` with `import glacier` and `gleeunit.main()` with `glacier.main()`.
 2. Run `gleam test -- --glacier`, then:
@@ -125,4 +130,4 @@ gleam test --target javascript -- --glacier
 
 ## License
 
-[Apache 2.0](./LICENSE)
+[Apache 2.0](./LICENCE)

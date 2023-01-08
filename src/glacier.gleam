@@ -3,7 +3,7 @@ import gleam/list
 import gleam/map
 import gleam/string
 import gleam/string_builder
-import gleeunit2
+import gleeunit
 import shellout
 
 /// Let's Gleam switch code based on the current target.
@@ -27,7 +27,7 @@ const shellout_lookups: shellout.Lookups = [
   #(["color", "background"], [#("lightblue", ["156", "231", "255"])]),
 ]
 
-/// Runs either Glacier or Gleeunit bundled as `gleeunit2`, depending on
+/// Runs either Glacier or Gleeunit bundled as `gleeunit`, depending on
 /// the given command line arguments.
 ///
 pub fn main() {
@@ -35,7 +35,7 @@ pub fn main() {
   let is_incremental = list.contains(start_args, "--glacier")
   let is_empty_args = start_args == []
   case is_empty_args, is_incremental {
-    True, _ -> gleeunit2.main()
+    True, _ -> gleeunit.main()
     _, True -> {
       "🏔 Glacier is watching for changes…"
       |> shellout.style(
@@ -48,7 +48,7 @@ pub fn main() {
         execute_tests(modules)
       })
     }
-    _, _ -> gleeunit2.run(for: start_args)
+    _, _ -> gleeunit.run(start_args, halts_on_error: False)
   }
 }
 
@@ -184,9 +184,16 @@ fn detect_distinct_import_module_dependency_chain(
 fn parse_module_for_imports(module_file_name: String) -> List(String) {
   module_file_name
   |> read_module_file()
-  |> string.to_graphemes()
-  |> parse_module_string([], ParseModeSearch, "")
-  |> list.unique()
+  |> fn(result: Result(String, Nil)) -> List(String) {
+    case result {
+      Ok(text) ->
+        text
+        |> string.to_graphemes()
+        |> parse_module_string([], ParseModeSearch, "")
+        |> list.unique()
+      Error(Nil) -> []
+    }
+  }
 }
 
 type ParseMode {
@@ -279,12 +286,16 @@ fn parse_import_chars(
   case chars {
     // Return if end of line
     [] -> #([], import_module)
+    // Return if . - aka found unqualified import
+    [".", ..rest_chars] -> #(rest_chars, import_module)
+    // Whitespaces stop inmports and return
+    [" ", ..rest_chars] -> #(rest_chars, import_module)
     // Return if \r\n
     ["\r\n", ..rest_chars] -> #(rest_chars, import_module)
     // Return if \n
     ["\n", ..rest_chars] -> #(rest_chars, import_module)
     // Ignore whitespaces
-    [char, ..rest_chars] if char == " " || char == "\t" || char == "\r" || char == "\n" || char == "\r\n" ->
+    [char, ..rest_chars] if char == "\t" || char == "\r" || char == "\n" || char == "\r\n" ->
       parse_import_chars(rest_chars, import_module)
     // Append for any other character
     [char, ..rest_chars] ->
@@ -428,9 +439,18 @@ if erlang {
   ) -> Nil =
     "glacier_ffi" "start_file_change_watcher"
 
-  fn read_module_file(module_path: String) -> String {
-    assert Ok(contents) = file.read(module_path)
-    contents
+  fn read_module_file(module_path: String) -> Result(String, Nil) {
+    case file.read(module_path) {
+      Ok(text) -> Ok(text)
+      Error(_file_reason) ->
+        // io.debug(#(
+        //   "Could not read file",
+        //   module_path,
+        //   "with reason",
+        //   file_reason,
+        // ))
+        Error(Nil)
+    }
   }
 
   external fn do_get_cwd() -> String =
@@ -463,11 +483,11 @@ if javascript {
   ) -> Nil =
     "./glacier_ffi.mjs" "start_file_change_watcher"
 
-  fn read_module_file(module_path: String) -> String {
+  fn read_module_file(module_path: String) -> Result(String, Nil) {
     do_read_module_file(module_path)
   }
 
-  external fn do_read_module_file(module_path: String) -> String =
+  external fn do_read_module_file(module_path: String) -> Result(String, Nil) =
     "./glacier_ffi.mjs" "read_file"
 
   external fn do_get_cwd() -> String =
@@ -487,7 +507,7 @@ if javascript {
 
   external fn do_find_files_recursive(
     in: String,
-    file_exists: List(String),
+    file_ext: List(String),
   ) -> List(String) =
     "./glacier_ffi.mjs" "find_files_recursive_by_exts"
 }

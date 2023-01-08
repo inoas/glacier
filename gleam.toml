@@ -1,8 +1,8 @@
 name = "glacier"
-version = "0.2.7"
+version = "0.4.0"
 
 licences = ["Apache-2.0"]
-description = "Glacier brings incremental interactive unit testing to Gleam. It is meant as a drop-in replacement for Gleeunit and it relies on it, internally."
+description = "Glacier brings incremental interactive unit testing to Gleam. It is meant as a drop-in replacement for Gleeunit and depends and wraps a fork of it."
 repository = { type = "github", user = "inoas", repo = "glacier" }
 # links = [{ title = "Website", href = "https://gleam.run" }]
 
@@ -11,6 +11,7 @@ fs = "~> 8.6"
 gleam_stdlib = "~> 0.25"
 gleam_erlang = "~> 0.17"
 shellout = "~> 1.0"
+glacier_gleeunit = "~> 0.9"
 
 [dev-dependencies]
 
