@@ -5,6 +5,7 @@
 - Fix detection of unqualified imports.
 - Fix detection of aliased imports.
 - Fix detection of renames.
+- Files with white spaces are now ignored.
 - Improved readme.
 - Force rebased on `lpil/gleeunit` and then reverted any changes to the
 `0.2.6` main commit state to keep all contributor history alive. This was

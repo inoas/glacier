@@ -91,10 +91,11 @@ export const find_files_recursive_by_exts = function (directory, file_exts_list)
   /* mut files */ const detect_files_recursive = function (directory) {
     const files_in_directory = NodeFs.readdirSync(directory);
     for (const file of files_in_directory) {
-      const absolute_path = NodePath.join(directory, file);
+      let absolute_path = NodePath.join(directory, file);
+      absolute_path = absolute_path.replace(/\s/g, '');
       if (NodeFs.statSync(absolute_path).isDirectory()) {
         detect_files_recursive(absolute_path);
-      } else if (absolute_path.endsWith(file_exts_list)) {
+      } else if (absolute_path.endsWith(file_exts_list) && file_exists(absolute_path)) {
         files.push(absolute_path);
       }
     }
