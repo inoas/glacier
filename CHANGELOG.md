@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.0
+
+- Remove internal verbatim copy to `gleeunit` and depend on a fork:
+  [`glacier_gleeunit`](https://hex.pm/glacier_gleeunit).
+
 ## 0.3.1
 
 - Fix Changelog.
