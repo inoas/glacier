@@ -1,18 +1,22 @@
 # Changelog
 
-## Unreleased - 0.2.8
+## Unreleased - 0.3.0
 
 - Fix detection of unqualified imports.
 - Fix detection of aliased imports.
 - Fix detection of renames.
 - Files with white spaces are now ignored.
 - Improved readme.
-- Force rebased on `lpil/gleeunit` and then reverted any changes to the
-`0.2.6` main commit state to keep all contributor history alive. This was
-required because initially `Glacier` was supposed to depend on a patched
-`Gleeunit`, but the idea of patching `Gleeunit` a bit was rejected by the
-`Gleeunit` team. While this may not be strictly necessary this honors
-previous contributions transparently.
+- Force rebased on `lpil/gleeunit` to keep all contributor history alive.
+  - This was required because initially `Glacier` was supposed to depend on
+    a patched `Gleeunit`, but the idea of patching `Gleeunit` a bit was
+    rejected by the `Gleeunit` team. While this may not be strictly necessary
+    this honors previous contributions transparently.
+  - This was a quick and dirty process where I saved a lot of time by _not_
+    fixing any merges and instead just adding them without touching them
+    including the diff noise. As a consequence single commits if checked out
+    might not run any more. After the dirty rebase I've commited the
+    source code state equvialent to `0.2.7` to restore functionality.
 - Proper BE noun instead of an AE one for the `LICENCE` file and naming.
 
 ## 0.2.7
