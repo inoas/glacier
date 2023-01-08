@@ -17,25 +17,31 @@ start_file_change_watcher(FileChangeHandlerFn) ->
 
 process_file_update_and_loop(ModuleKind, WatchPath, FileChangeHandlerFn) ->
     receive
-        {_Pid, {fs, file_event}, {Path, Changes}} ->
+        {_Pid, {fs, file_event}, {FilePath, Changes}} ->
+			% By stripping spaces we just do not support them at all in source
+			% file names. This makes handling across targets and in regards do
+			% module names and file name mapping a lot easier:
+			FilePathNoSpaces = re:replace(FilePath, "\\s+", "", [global,{return,list}]),
+			% Detect the parent dir type:
             CwdBinary = get_cwd_as_binary(),
             SrcDir = <<CwdBinary/binary, "/src">>,
             TestDir = <<CwdBinary/binary, "/test">>,
-            IsSrcModuleKind = string:find(Path, SrcDir) =:= Path,
-            IsTestModuleKind = string:find(Path, TestDir) =:= Path,
-            FileExists = filelib:is_regular(Path),
-            IsGleamFile = gleam_stdlib:string_ends_with(list_to_bitstring(Path), <<".gleam"/utf8>>),
+            IsSrcModuleKind = string:find(FilePath, SrcDir) =:= FilePathNoSpaces,
+            IsTestModuleKind = string:find(FilePathNoSpaces, TestDir) =:= FilePathNoSpaces,
+			% Make sure files are actually existing and end with .gleam:
+            FileExists = filelib:is_regular(FilePathNoSpaces),
+            IsGleamFile = gleam_stdlib:string_ends_with(list_to_bitstring(FilePathNoSpaces), <<".gleam"/utf8>>),
             MatchingEvent =
                 lists:member(modified, Changes)
                 orelse lists:member(created, Changes)
                 orelse lists:member(renamed, Changes),
             case {FileExists, IsGleamFile, MatchingEvent, IsSrcModuleKind, IsTestModuleKind} of
                 {true, true, true, true, _} ->
-                    % io:format("\n~p: ~p\n\n", [Changes, Path]),
-                    FileChangeHandlerFn([{src_module_kind, iolist_to_binary(Path)}]);
+                    % io:format("\n~p: ~p\n\n", [Changes, FilePathNoSpaces]),
+                    FileChangeHandlerFn([{src_module_kind, iolist_to_binary(FilePathNoSpaces)}]);
                 {true, true, true, _, true} ->
-                    % io:format("\n~p: ~p \n\n", [Changes, Path]),
-                    FileChangeHandlerFn([{test_module_kind, iolist_to_binary(Path)}]);
+                    % io:format("\n~p: ~p \n\n", [Changes, FilePathNoSpaces]),
+                    FileChangeHandlerFn([{test_module_kind, iolist_to_binary(FilePathNoSpaces)}]);
                 {_, _, _, _, _} ->
                     nil
             end,

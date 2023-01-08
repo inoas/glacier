@@ -49,7 +49,8 @@ export const start_file_change_watcher = function (file_change_handler_fn) {
             // As we collect file on a delay set by file_change_watcher_debounce_interval_in_ms,
             // they could be gone once we want to handle them:
             distinct_file_change_handler_collection = distinct_file_change_handler_collection.filter(function (file_info) {
-              const absolute_file_name = file_info[1];
+              let absolute_file_name = file_info[1];
+              absolute_file_name = absolute_file_name.replace(/\s/g, '');
               return file_exists(absolute_file_name);
             });
             if (distinct_file_change_handler_collection.length > 0) {
@@ -93,14 +94,11 @@ export const find_files_recursive_by_exts = function (directory, file_exts_list)
       const absolute_path = NodePath.join(directory, file);
       if (NodeFs.statSync(absolute_path).isDirectory()) {
         detect_files_recursive(absolute_path);
-      } else {
+      } else if (absolute_path.endsWith(file_exts_list)) {
         files.push(absolute_path);
       }
     }
   };
   detect_files_recursive(directory);
-  files = files.filter(function (absolute_file_name) {
-    return absolute_file_name.endsWith(file_exts_list);
-  });
   return Gleam.List.fromArray(files);
 };
