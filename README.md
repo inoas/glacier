@@ -5,7 +5,7 @@
 [![Licence](https://img.shields.io/hexpm/l/glacier?color=ffaff3&label=%F0%9F%93%83)](https://github.com/inoas/glacier/blob/main/LICENCE)
 
 **Glacier** brings incremental interactive unit testing to [Gleam](https://gleam.run).
-It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit) and it relies on it, internally.
+It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit) and depends on a fork of it.
 
 <figure>
 	<img src="https://raw.githubusercontent.com/inoas/glacier/main/glacier-logo.png" alt="Glacier Logo" style="max-height: 33vh; width: auto; height: auto" width="480" height="480"/>
