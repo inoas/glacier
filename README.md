@@ -14,8 +14,8 @@ It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit)
 
 ## Quick start
 
-1. Run `gleam add glacier --dev`.
-2. Open `gleam.toml` and remove `gleeunit` from the dependencies.
+1. Open `gleam.toml` and remove `gleeunit` from the dependencies.
+2. Run `gleam add glacier --dev`.
 3. Open `./test/YOUR_PROJECT.gleam` and replace `import gleeunit` with `import glacier` and `gleeunit.main()` with `glacier.main()`.
 4. Run `gleam test --target erlang -- --glacier` or `gleam test --target javascript -- --glacier`.
 5. Save a `src` or `test` module and watch associated tests to re-run.
@@ -76,7 +76,8 @@ Depends on [`fsPromises.watch`](https://nodejs.org/api/fs.html#fspromiseswatchfi
 
 This package is [available on hex.pm](https://hex.pm/packages/glacier) can be added to your Gleam project:
 
-Run `gleam add glacier --dev`.
+1. Open `.gleam.toml` and remove the `gleeunit` dependency because `Glacier` will fetch its own gleeunit fork.
+2. Run `gleam add glacier --dev`.
 
 ## Usage
 
