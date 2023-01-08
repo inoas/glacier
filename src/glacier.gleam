@@ -442,15 +442,14 @@ if erlang {
   fn read_module_file(module_path: String) -> Result(String, Nil) {
     case file.read(module_path) {
       Ok(text) -> Ok(text)
-      Error(file_reason) -> {
-        io.debug(#(
-          "Could not read file",
-          module_path,
-          "with reason",
-          file_reason,
-        ))
+      Error(_file_reason) ->
+        // io.debug(#(
+        //   "Could not read file",
+        //   module_path,
+        //   "with reason",
+        //   file_reason,
+        // ))
         Error(Nil)
-      }
     }
   }
 
@@ -485,11 +484,10 @@ if javascript {
     "./glacier_ffi.mjs" "start_file_change_watcher"
 
   fn read_module_file(module_path: String) -> Result(String, Nil) {
-    // TODO get `Result` from JS
-    Ok(do_read_module_file(module_path))
+    do_read_module_file(module_path)
   }
 
-  external fn do_read_module_file(module_path: String) -> String =
+  external fn do_read_module_file(module_path: String) -> Result(String, Nil) =
     "./glacier_ffi.mjs" "read_file"
 
   external fn do_get_cwd() -> String =
