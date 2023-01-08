@@ -15,9 +15,10 @@ It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit)
 ## Quick start
 
 1. Run `gleam add glacier --dev`.
-2. Open `./test/YOUR_PROJECT.gleam` and replace `import gleeunit` with `import glacier` and `gleeunit.main()` with `glacier.main()`.
-3. Run `gleam test --target erlang -- --glacier` or `gleam test --target javascript -- --glacier`.
-4. Save a `src` or `test` module and watch associated tests to re-run.
+2. Open `gleam.toml` and remove `gleeunit` from the dependencies.
+3. Open `./test/YOUR_PROJECT.gleam` and replace `import gleeunit` with `import glacier` and `gleeunit.main()` with `glacier.main()`.
+4. Run `gleam test --target erlang -- --glacier` or `gleam test --target javascript -- --glacier`.
+5. Save a `src` or `test` module and watch associated tests to re-run.
 
 *Notice: On Linux [**inotify**](https://en.wikipedia.org/wiki/Inotify) must be installed.*
 
