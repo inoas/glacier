@@ -477,6 +477,7 @@ if javascript {
 
   fn do_start_args() -> List(String) {
     start_args_ffi()
+    // This is a work around around a bug introduced in 0.26.0:
     |> list.filter(fn(arg) {
       arg != "--" && string.ends_with(arg, "/gleam.main.mjs") == False
     })
