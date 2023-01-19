@@ -48,7 +48,7 @@ Run `gleam test --target erlang -- --glacier` and `gleam test --target javascrip
 
 ### Requirements
 
-Requires Gleam 0.25 or later.
+Requires Gleam 0.26 or later.
 
 #### Target Erlang
 

@@ -3,15 +3,15 @@
 
 packages = [
   { name = "fs", version = "8.6.1", build_tools = ["rebar3"], requirements = [], otp_app = "fs", source = "hex", outer_checksum = "61EA2BDAEDAE4E2024D0D25C63E44DCCF65622D4402DB4A2DF12868D1546503F" },
-  { name = "glacier_gleeunit", version = "0.9.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "glacier_gleeunit", source = "hex", outer_checksum = "58E7B883EF3CF5CD1EBD54B84D70E993D23ECB2F7AF6B2E5E14C56779BE2C968" },
+  { name = "glacier_gleeunit", version = "0.10.2", build_tools = ["gleam"], requirements = ["gleam_stdlib", "gleam_erlang"], otp_app = "glacier_gleeunit", source = "hex", outer_checksum = "7BD597336FDD91CC20C34FC29C2AF873A2593A0AC65DA46287040A557C60AA5E" },
   { name = "gleam_erlang", version = "0.17.1", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_erlang", source = "hex", outer_checksum = "BAAA84F5BCC4477E809BA3E03BB3009A3894A6544C1511626C44408E39DB2AE6" },
-  { name = "gleam_stdlib", version = "0.25.0", build_tools = ["gleam"], requirements = [], otp_app = "gleam_stdlib", source = "hex", outer_checksum = "AD0F89928E0B919C8F8EDF640484633B28DBF88630A9E6AE504617A3E3E5B9A2" },
+  { name = "gleam_stdlib", version = "0.26.0", build_tools = ["gleam"], requirements = [], otp_app = "gleam_stdlib", source = "hex", outer_checksum = "6221F9D7A08B6D6DBCDD567B2BB7C4B2A7BBF4C04C6110757BE04635143BDEC8" },
   { name = "shellout", version = "1.0.0", build_tools = ["gleam"], requirements = ["gleam_erlang", "gleam_stdlib"], otp_app = "shellout", source = "hex", outer_checksum = "310662075CDCB6E3928B03E3FD371B1DDCD691E1C709E606AB02195E36675D4E" },
 ]
 
 [requirements]
 fs = "~> 8.6"
-glacier_gleeunit = "~> 0.9"
+glacier_gleeunit = "~> 0.10.2"
 gleam_erlang = "~> 0.17"
 gleam_stdlib = "~> 0.25"
 shellout = "~> 1.0"

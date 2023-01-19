@@ -475,7 +475,14 @@ if javascript {
     JavaScriptTarget
   }
 
-  external fn do_start_args() -> List(String) =
+  fn do_start_args() -> List(String) {
+    start_args_ffi()
+    |> list.filter(fn(arg) {
+      arg != "--" && string.ends_with(arg, "/gleam.main.mjs") == False
+    })
+  }
+
+  external fn start_args_ffi() -> List(String) =
     "./glacier_ffi.mjs" "start_args"
 
   external fn do_start_file_change_watcher(
