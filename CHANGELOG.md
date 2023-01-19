@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.0
+
+- Added fixes and work arounds so that glacier runs with Gleam 0.26.0
+- Glacier might run on Deno might (or might not) run once Gleam 0.26.1 is out
+
 ## 0.4.1
 
 - Fix readme.

@@ -11,7 +11,7 @@ fs = "~> 8.6"
 gleam_stdlib = "~> 0.25"
 gleam_erlang = "~> 0.17"
 shellout = "~> 1.0"
-glacier_gleeunit = "~> 0.10.2"
+glacier_gleeunit = "~> 0.10.3"
 
 [dev-dependencies]
 
