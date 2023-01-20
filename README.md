@@ -22,6 +22,10 @@ It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit)
 
 *Notice: On Linux [**inotify**](https://en.wikipedia.org/wiki/Inotify) must be installed.*
 
+## Upgrading Glacier
+
+Make sure to run `gleam clean` after upgrading Glacier as a dependency.
+
 ## Introduction
 
 **Glacier** differs from **Gleeunit** insofar, that it let's you:
