@@ -1,23 +1,23 @@
 import { SrcModuleKind, TestModuleKind } from "./glacier.mjs";
 import * as Gleam from "./gleam.mjs";
-import * as NodeFs from "node:fs";
-import * as NodeFsPromises from "node:fs/promises";
-import * as NodePath from "node:path";
-import * as NodeProcess from "node:process";
+import * as NodeFs from "fs";
+import * as NodeFsPromises from "fs/promises";
+import * as NodePath from "path";
+import * as NodeProcess from "process";
 
 const file_change_watcher_debounce_interval_in_ms = 100;
 const Nil = undefined; // Translates to `Nil` in Gleam
 
-// NodeProcess.on('SIGINT', function () {
-//   NodeProcess.exit(0);
+// process.on('SIGINT', function () {
+//   process.exit(0);
 // });
 ['SIGINT', 'SIGTERM', 'SIGQUIT']
-  .forEach(signal => NodeProcess.on(signal, function () {
+  .forEach(signal => process.on(signal, function () {
     console.log("\n🏔 Gracefully shutting down Glacier from SIGINT (Ctrl-C)!");
-    NodeProcess.exit(0);
+    process.exit(0);
   }));
 
-NodeProcess.on('warning', function (e) {
+process.on('warning', function (e) {
   console.warn(e.stack);
 });
 
