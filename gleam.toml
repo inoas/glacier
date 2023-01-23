@@ -1,5 +1,5 @@
 name = "glacier"
-version = "0.5.0"
+version = "0.5.1"
 
 licences = ["Apache-2.0"]
 description = "Glacier brings incremental interactive unit testing to Gleam. It is meant as a drop-in replacement for Gleeunit and depends and wraps a fork of it."
@@ -11,7 +11,7 @@ fs = "~> 8.6"
 gleam_stdlib = "~> 0.25"
 gleam_erlang = "~> 0.17"
 shellout = "~> 1.0"
-glacier_gleeunit = "~> 0.10.3"
+glacier_gleeunit = "~> 0.10.11"
 
 [dev-dependencies]
 
