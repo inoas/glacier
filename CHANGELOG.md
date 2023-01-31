@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.1
+
+- Attempt to fix deno testing.
+
 ## 0.6.0
 
 - With Gleam 0.26 supporting *Deno*, so does Glacier
