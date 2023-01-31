@@ -8,18 +8,17 @@ repository = { type = "github", user = "inoas", repo = "glacier" }
 
 [dependencies]
 fs = "~> 8.6"
-gleam_stdlib = "~> 0.25"
-gleam_erlang = "~> 0.17"
-shellout = "~> 1.0"
 glacier_gleeunit = "~> 0.10.11"
 gleam_community_ansi = "~> 1.1"
+gleam_erlang = "~> 0.17"
+gleam_stdlib = "~> 0.25"
+shellout = "~> 1.0"
 
 [dev-dependencies]
 
 [javascript.deno]
-allow_env = true
-allow_read = true
-allow_run = true
+allow_read = ["./"]
+allow_run = ["gleam"]
 
 [documentation]
 pages = [
