@@ -1,4 +1,5 @@
 import gleam_community/ansi
+import gleam_community/colour
 import gleam/io
 import gleam/list
 import gleam/string
@@ -20,11 +21,10 @@ pub type ModuleKind {
   TestModuleKind
 }
 
-// /// Colour options for Shellout.
-// ///
-// const shellout_lookups: shellout.Lookups = [
-//   #(["color", "background"], [#("lightblue", ["156", "231", "255"])]),
-// ]
+fn light_cyan_ansi_colour() {
+	assert Ok(colour) = colour.from_rgb255(r: 156, g: 231, b: 255)
+	colour
+}
 
 /// Runs either Glacier or Gleeunit bundled as `gleeunit`, depending on
 /// the given command line arguments.
@@ -37,7 +37,7 @@ pub fn main() {
     True, _ -> gleeunit.main()
     _, True -> {
       "🏔 Glacier is watching for changes…"
-      |> ansi.bright_blue()
+      |> ansi.colour(light_cyan_ansi_colour())
       |> ansi.italic()
       |> io.println
       start_file_change_watcher(fn(modules: List(#(ModuleKind, String))) -> Nil {
@@ -76,14 +76,14 @@ fn execute_tests(modules: List(#(ModuleKind, String))) {
   case test_modules {
     [] -> {
       "🏔 Did not detect any matching test modules!"
-      |> ansi.bright_blue()
+      |> ansi.colour(light_cyan_ansi_colour())
       |> ansi.bold()
       |> io.println
       Nil
     }
     test_modules -> {
       "🏔 Detected test modules:"
-      |> ansi.bright_blue()
+      |> ansi.colour(light_cyan_ansi_colour())
       |> ansi.bold()
       |> io.println
 
@@ -92,7 +92,7 @@ fn execute_tests(modules: List(#(ModuleKind, String))) {
         with: fn(test_module: String) { "  ❄ " <> test_module },
       )
       |> string.join("\n")
-      |> ansi.bright_blue()
+      |> ansi.colour(light_cyan_ansi_colour())
       |> io.println
 
       let args = [
