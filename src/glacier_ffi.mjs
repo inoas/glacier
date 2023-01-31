@@ -31,7 +31,14 @@ export const start_file_change_watcher = function (file_change_handler_fn) {
   let file_change_handler_timeout_id = null;
   let file_change_handler_collection = [];
   const watch_directory = async function (directory, events, file_change_handler_fn, module_kind) {
-    const watcher = fs_promises.watch(directory, { persistent: true, recursive: true });
+    let watcher = undefined;
+    if (globalThis.Deno) {
+      // FIXME: buggy
+      watcher = Deno.watchFs([directory], { persistent: true, recursive: true });
+    } else {
+      watcher = fs_promises.watch(directory, { persistent: true, recursive: true });
+    }
+		console.log(watcher);
     for await (const event of watcher) {
       if (events.includes(event.eventType) && event.filename.endsWith(".gleam")) {
         const touched_file = directory + "/" + event.filename
