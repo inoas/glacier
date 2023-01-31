@@ -158,7 +158,7 @@ gleam test --target javascript --runtime node -- --glacier
 # Re-save ./src/glacier_demo/glacier_demo_module_a.gleam
 ```
 
-You may omit `--runtime node` as it is currently set as the default runtime for target `javascript`.
+Notice: You may omit `--runtime node` as it is currently set as the default runtime for target `javascript`.
 
 ### Demo for target JavaScript/Deno
 
@@ -171,6 +171,8 @@ gleam test --target javascript --runtime deno -- test/glacier_demo/glacier_demo_
 gleam test --target javascript --runtime deno -- --glacier
 # Re-save ./src/glacier_demo/glacier_demo_module_a.gleam
 ```
+
+Notice: Do not forget to edit `gleam.toml` to add deno privileges.
 
 ## License
 
