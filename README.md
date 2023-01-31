@@ -39,9 +39,13 @@ To enable this behavior, all you have to do is add **Glacier** as a dev dependen
 
 *Note: `gleam test` must only be executed from the base project directory!*
 
-### Testing against Erlang & JavaScript
+### Testing against Erlang, NodeJS and Deno simultaneously
 
-Run `gleam test --target erlang -- --glacier` and `gleam test --target javascript -- --glacier` in two terminals side by side.
+Run these in 3 terminals side by side:
+
+- `gleam test --target erlang -- --glacier`
+- `gleam test --target javascript -- --glacier`
+- `gleam test --target javascript --runtime deno -- --glacier`
 
 ## Caveats, Requirements & Installation
 
@@ -74,7 +78,7 @@ Depends on [fs](https://hexdocs.pm/fs/):
 
 Development and testing only happens on very recent NodeJS LTS versions, and thus may or may not run on previous versions.
 
-Depends on [`fsPromises.watch`](https://nodejs.org/api/fs.html#fspromiseswatchfilename-options):
+Depends on [NodeJS:`fsPromises.watch`](https://nodejs.org/api/fs.html#fspromiseswatchfilename-options) or [`Deno.watchFs`](https://deno.land/api@v1.30.0?s=Deno.watchFs):
 
 - Linux: [relies](https://nodejs.org/docs/latest-v18.x/api/fs.html#fs_caveats) on [**inotify**](https://en.wikipedia.org/wiki/Inotify).
 - Mac: Should work out of the box.
@@ -86,6 +90,14 @@ This package is [available on hex.pm](https://hex.pm/packages/glacier) can be ad
 
 1. Open `.gleam.toml` and remove the `gleeunit` dependency because `Glacier` will fetch its own gleeunit fork.
 2. Run `gleam add glacier --dev`.
+
+If you are using *Deno* you will need to add this to your projects's `gleam.toml` file:
+
+```toml
+[javascript.deno]
+allow_read = ["./"]
+allow_run = ["gleam"]
+```
 
 ## Usage
 
@@ -104,6 +116,7 @@ Documentation can be found at <https://hexdocs.pm/glacier>.
 1. `gleam test` passes through `glacier.main()` and simply executes `gleeunit.main()` as if **Gleeunit** was used directly.
 2. `gleam test -- test_module_a test_module_b` passes through `glacier.main()` and executes `gleeunit.test_modules(modules_list)` where `modules_list` is `["foo", "bar"]`. The given modules are checked if they exist as either `.gleam` or `.erl` test module files and then **Gleeunit** runs these test modules.
 3. `gleam test -- --glacier` enters `glacier.main()` and starts a file watcher: Upon changes in module files in `./test` it just passes those through as `gleam test -- changed_test_module`(so re-saving test files executes the single test), and if a module file in `./src` got changed it parses that changed module file for any imported modules and puts the module and all chained imported modules in a distinct list of modules that should be tested. Then all test module files are read and imports of those are gathered one by one and cross matched against that list. The result is a list of test modules that need to be run, which then gets done by executing a shell call similar to `gleam test -- detected_test_module_a detected_test_module_b detected_test_module_c etc`, aka jump to step `2`.
+4. `gleam test --target javascript --runtime deno -- --glacier` will run glacier on Deno instead of Erlang or NodeJS.
 
 ## Developing Glacier
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.2
+
+- Add docs on how to run glacier with deno
+
 ## 0.6.1
 
 - Attempt to fix deno testing.
