@@ -54,6 +54,12 @@ Run `gleam test --target erlang -- --glacier` and `gleam test --target javascrip
 
 Requires Gleam 0.26 or later.
 
+#### Target specific requirements
+
+- Erlang/OTP 25 (lower may or may not run)
+- NodeJS 18 LTS+ (lower may or may not run)
+- Deno v1.30.0+ (lower does not run)
+
 #### Target Erlang
 
 Development and testing only happens on very recent stable Erlang/OTP versions, and thus may or may not run on previous versions.
@@ -64,7 +70,7 @@ Depends on [fs](https://hexdocs.pm/fs/):
 - Mac: Should work out of the box.
 - Windows: Should work out of the box.
 
-#### Target JavaScript/NodeJS
+#### Target JavaScript/NodeJS/Deno
 
 Development and testing only happens on very recent NodeJS LTS versions, and thus may or may not run on previous versions.
 
@@ -73,8 +79,6 @@ Depends on [`fsPromises.watch`](https://nodejs.org/api/fs.html#fspromiseswatchfi
 - Linux: [relies](https://nodejs.org/docs/latest-v18.x/api/fs.html#fs_caveats) on [**inotify**](https://en.wikipedia.org/wiki/Inotify).
 - Mac: Should work out of the box.
 - Windows: Should work out of the box.
-
-[**Deno**](https://deno.land) is not yet supported.
 
 ### Installation
 

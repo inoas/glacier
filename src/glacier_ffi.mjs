@@ -1,16 +1,14 @@
 import { SrcModuleKind, TestModuleKind } from "./glacier.mjs";
 import * as Gleam from "./gleam.mjs";
-import * as NodeFs from "fs";
-import * as NodeFsPromises from "fs/promises";
-import * as NodePath from "path";
-import * as NodeProcess from "process";
+import child_process from 'node:child_process';
+import fs from "node:fs";
+import fs_promises from "node:fs/promises";
+import path from "node:path";
+import process from 'node:process';
 
 const file_change_watcher_debounce_interval_in_ms = 100;
 const Nil = undefined; // Translates to `Nil` in Gleam
 
-// process.on('SIGINT', function () {
-//   process.exit(0);
-// });
 ['SIGINT', 'SIGTERM', 'SIGQUIT']
   .forEach(signal => process.on(signal, function () {
     console.log("\n🏔 Gracefully shutting down Glacier from SIGINT (Ctrl-C)!");
@@ -22,18 +20,18 @@ process.on('warning', function (e) {
 });
 
 export const start_args = function () {
-  return Gleam.List.fromArray(NodeProcess.argv.slice(1));
+  return Gleam.List.fromArray(process.argv.slice(1));
 };
 
 export const cwd = function () {
-  return NodeProcess.cwd();
+  return process.cwd();
 };
 
 export const start_file_change_watcher = function (file_change_handler_fn) {
   let file_change_handler_timeout_id = null;
   let file_change_handler_collection = [];
   const watch_directory = async function (directory, events, file_change_handler_fn, module_kind) {
-    const watcher = NodeFsPromises.watch(directory, { persistent: true, recursive: true });
+    const watcher = fs_promises.watch(directory, { persistent: true, recursive: true });
     for await (const event of watcher) {
       if (events.includes(event.eventType) && event.filename.endsWith(".gleam")) {
         const touched_file = directory + "/" + event.filename
@@ -43,8 +41,8 @@ export const start_file_change_watcher = function (file_change_handler_fn) {
         file_change_handler_collection.push([module_kind, touched_file]);
         file_change_handler_timeout_id = setTimeout(function () {
           // possibly drop nextTick?
-          NodeProcess.nextTick(function () {
-            // NodeJS NodeFs.watch is prone to report the same change twice, thus we need to distinct the changes:
+          process.nextTick(function () {
+            // NodeJS fs.watch is prone to report the same change twice, thus we need to distinct the changes:
             let distinct_file_change_handler_collection = [...new Set(file_change_handler_collection)];
             // As we collect file on a delay set by file_change_watcher_debounce_interval_in_ms,
             // they could be gone once we want to handle them:
@@ -71,7 +69,7 @@ export const start_file_change_watcher = function (file_change_handler_fn) {
 
 export const read_file = function (absolute_file_name) {
   try {
-    const data = NodeFs.readFileSync(absolute_file_name, 'utf8');
+    const data = fs.readFileSync(absolute_file_name, 'utf8');
     return new Gleam.Ok(data);
   } catch (err) {
     // console.error({"Could not read file" : err});
@@ -80,7 +78,7 @@ export const read_file = function (absolute_file_name) {
 };
 
 export const file_exists = function (absolute_file_name) {
-  if (NodeFs.existsSync(absolute_file_name)) {
+  if (fs.existsSync(absolute_file_name)) {
     return true;
   }
   return false;
@@ -90,11 +88,11 @@ export const find_files_recursive_by_exts = function (directory, file_exts_list)
   file_exts_list = file_exts_list.toArray();
   let files = [];
   /* mut files */ const detect_files_recursive = function (directory) {
-    const files_in_directory = NodeFs.readdirSync(directory);
+    const files_in_directory = fs.readdirSync(directory);
     for (const file of files_in_directory) {
-      let absolute_path = NodePath.join(directory, file);
+      let absolute_path = path.join(directory, file);
       absolute_path = absolute_path.replace(/\s/g, '');
-      if (NodeFs.statSync(absolute_path).isDirectory()) {
+      if (fs.statSync(absolute_path).isDirectory()) {
         detect_files_recursive(absolute_path);
       } else if (absolute_path.endsWith(file_exts_list) && file_exists(absolute_path)) {
         files.push(absolute_path);
@@ -104,3 +102,24 @@ export const find_files_recursive_by_exts = function (directory, file_exts_list)
   detect_files_recursive(directory);
   return Gleam.List.fromArray(files);
 };
+
+export const shell_exec_print = async function (gleam_list_of_graphemes) {
+  const cmd = "gleam " + gleam_list_of_graphemes.toArray().join(" ");
+
+  let { stdout } = await shell_exec(cmd);
+  for (let line of stdout.split('\n')) {
+    console.log(`${line}`);
+  }
+}
+
+export const shell_exec = async function (cmd) {
+  return new Promise(function (resolve, reject) {
+    child_process.exec(cmd, (err, stdout, stderr) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve({ stdout, stderr });
+      }
+    });
+  });
+}

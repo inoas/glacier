@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0
+
+- With Gleam 0.26 supporting *Deno*, so does Glacier
+
 ## 0.5.0
 
 - Added fixes and work arounds so that glacier runs with Gleam 0.26.0

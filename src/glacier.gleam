@@ -1,10 +1,9 @@
+import gleam_community/ansi
 import gleam/io
 import gleam/list
-import gleam/map
 import gleam/string
 import gleam/string_builder
 import gleeunit
-import shellout
 
 /// Let's Gleam switch code based on the current target.
 ///
@@ -21,11 +20,11 @@ pub type ModuleKind {
   TestModuleKind
 }
 
-/// Colour options for Shellout.
-///
-const shellout_lookups: shellout.Lookups = [
-  #(["color", "background"], [#("lightblue", ["156", "231", "255"])]),
-]
+// /// Colour options for Shellout.
+// ///
+// const shellout_lookups: shellout.Lookups = [
+//   #(["color", "background"], [#("lightblue", ["156", "231", "255"])]),
+// ]
 
 /// Runs either Glacier or Gleeunit bundled as `gleeunit`, depending on
 /// the given command line arguments.
@@ -38,11 +37,8 @@ pub fn main() {
     True, _ -> gleeunit.main()
     _, True -> {
       "🏔 Glacier is watching for changes…"
-      |> shellout.style(
-        with: shellout.display(["italic"])
-        |> map.merge(shellout.color(["lightblue"])),
-        custom: shellout_lookups,
-      )
+      |> ansi.bright_blue()
+      |> ansi.italic()
       |> io.println
       start_file_change_watcher(fn(modules: List(#(ModuleKind, String))) -> Nil {
         execute_tests(modules)
@@ -80,32 +76,25 @@ fn execute_tests(modules: List(#(ModuleKind, String))) {
   case test_modules {
     [] -> {
       "🏔 Did not detect any matching test modules!"
-      |> shellout.style(
-        with: shellout.display(["bold"])
-        |> map.merge(shellout.color(["lightblue"])),
-        custom: shellout_lookups,
-      )
+      |> ansi.bright_blue()
+      |> ansi.bold()
       |> io.println
       Nil
     }
     test_modules -> {
       "🏔 Detected test modules:"
-      |> shellout.style(
-        with: shellout.display(["bold"])
-        |> map.merge(shellout.color(["lightblue"])),
-        custom: shellout_lookups,
-      )
+      |> ansi.bright_blue()
+      |> ansi.bold()
       |> io.println
+
       list.map(
         test_modules,
         with: fn(test_module: String) { "  ❄ " <> test_module },
       )
       |> string.join("\n")
-      |> shellout.style(
-        with: shellout.color(["lightblue"]),
-        custom: shellout_lookups,
-      )
+      |> ansi.bright_blue()
       |> io.println
+
       let args = [
         "test",
         "--target",
@@ -116,20 +105,8 @@ fn execute_tests(modules: List(#(ModuleKind, String))) {
         "--",
         ..test_modules
       ]
-      case
-        shellout.command(
-          run: "gleam",
-          with: args,
-          in: ".",
-          opt: [shellout.LetBeStderr],
-        )
-      {
-        Ok(msg) -> {
-          io.print(msg)
-          Nil
-        }
-        Error(_error_tuple) -> Nil
-      }
+
+      shell_exec_print(args)
     }
   }
 }
@@ -425,6 +402,7 @@ fn to_relative_path(absolute_file_path path: String) -> String {
 if erlang {
   import gleam/erlang
   import gleam/erlang/file
+  import shellout
 
   fn do_target() -> Target {
     ErlangTarget
@@ -468,6 +446,23 @@ if erlang {
     matching: String,
   ) -> List(String) =
     "glacier_ffi" "find_files_recursive"
+
+  fn shell_exec_print(args: List(String)) -> Nil {
+    case
+      shellout.command(
+        run: "gleam",
+        with: args,
+        in: ".",
+        opt: [shellout.LetBeStderr],
+      )
+    {
+      Ok(msg) -> {
+        io.print(msg)
+        Nil
+      }
+      Error(_error_tuple) -> Nil
+    }
+  }
 }
 
 if javascript {
@@ -518,4 +513,7 @@ if javascript {
     file_ext: List(String),
   ) -> List(String) =
     "./glacier_ffi.mjs" "find_files_recursive_by_exts"
+
+  external fn shell_exec_print(args: List(String)) -> Nil =
+    "./glacier_ffi.mjs" "shell_exec_print"
 }
