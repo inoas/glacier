@@ -22,8 +22,8 @@ pub type ModuleKind {
 }
 
 fn light_cyan_ansi_colour() {
-	assert Ok(colour) = colour.from_rgb255(r: 156, g: 231, b: 255)
-	colour
+  let assert Ok(colour) = colour.from_rgb255(r: 156, g: 231, b: 255)
+  colour
 }
 
 /// Runs either Glacier or Gleeunit bundled as `gleeunit`, depending on
@@ -289,7 +289,7 @@ fn derive_test_modules_from_src_import_dependencies(
   let all_test_modules =
     project_test_files
     |> list.map(fn(module_name_dot_gleam) {
-      assert Ok(#(module_name, _dot_gleam)) =
+      let assert Ok(#(module_name, _dot_gleam)) =
         string.split_once(module_name_dot_gleam, ".gleam")
       module_name
     })
@@ -331,18 +331,18 @@ fn module_name_to_file_name(
 /// Converts a module file name to a module name
 ///
 fn file_name_to_module_name(module_name: String, module_kind: ModuleKind) {
-  assert Ok(#(_base_path, module_name_dot_gleam)) = case module_kind {
+  let assert Ok(#(_base_path, module_name_dot_gleam)) = case module_kind {
     SrcModuleKind -> string.split_once(module_name, get_src_dir() <> "/")
     TestModuleKind -> string.split_once(module_name, get_test_dir() <> "/")
   }
   case string.ends_with(module_name, ".erl") {
     True -> {
-      assert Ok(#(module_name, _dot_gleam)) =
+      let assert Ok(#(module_name, _dot_gleam)) =
         string.split_once(module_name_dot_gleam, ".erl")
       module_name
     }
     False -> {
-      assert Ok(#(module_name, _dot_gleam)) =
+      let assert Ok(#(module_name, _dot_gleam)) =
         string.split_once(module_name_dot_gleam, ".gleam")
       module_name
     }
@@ -394,7 +394,7 @@ fn get_test_dir() -> String {
 /// Cut's off the base path from the project directory.
 ///
 fn to_relative_path(absolute_file_path path: String) -> String {
-  assert Ok(#(_pre_path, relative_file_name)) =
+  let assert Ok(#(_pre_path, relative_file_name)) =
     string.split_once(path, get_cwd() <> "/")
   relative_file_name
 }
@@ -502,7 +502,7 @@ if javascript {
   fn do_find_project_files(dir: String) -> List(String) {
     do_find_files_recursive(dir, [".gleam"])
     |> list.map(fn(file_name) {
-      assert Ok(#(_test_prefix, file_name)) =
+      let assert Ok(#(_test_prefix, file_name)) =
         string.split_once(file_name, "test/")
       file_name
     })

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0 - Unreleased
+
+- Upgraded deps, fixed code to be in line with Gleam 0.27.0.
+
 ## 0.6.2
 
 - Add docs on how to run glacier with deno
