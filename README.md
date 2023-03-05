@@ -181,6 +181,7 @@ Do not forget to edit `gleam.toml` to add deno privileges:
 ```toml
 [javascript.deno]
 allow_read = ["./"]
+allow_net = ["deno.land"]
 allow_run = ["gleam"]
 ```
 
