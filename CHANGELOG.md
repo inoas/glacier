@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.0
+
+- Upgraded to be in line with gleam 0.27.0
+
 ## 0.7.0 - Unreleased
 
 - Upgraded deps, fixed code to be in line with Gleam 0.27.0.

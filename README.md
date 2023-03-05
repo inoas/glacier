@@ -22,6 +22,7 @@ It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit)
    ```toml
    [javascript.deno]
    allow_read = ["./"]
+   allow_net = ["deno.land"]
    allow_run = ["gleam"]
    ```
 
@@ -104,6 +105,7 @@ If you are using *Deno* you will need to add this to your projects's `gleam.toml
 ```toml
 [javascript.deno]
 allow_read = ["./"]
+allow_net = ["deno.land"]
 allow_run = ["gleam"]
 ```
 
@@ -172,7 +174,15 @@ gleam test --target javascript --runtime deno -- --glacier
 # Re-save ./src/glacier_demo/glacier_demo_module_a.gleam
 ```
 
-Notice: Do not forget to edit `gleam.toml` to add deno privileges.
+#### Deno Privileges
+
+Do not forget to edit `gleam.toml` to add deno privileges:
+
+```toml
+[javascript.deno]
+allow_read = ["./"]
+allow_run = ["gleam"]
+```
 
 ## License
 
