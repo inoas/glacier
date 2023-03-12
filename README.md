@@ -16,14 +16,14 @@ It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit)
 
 1. Open `gleam.toml` and remove `gleeunit` from the dependencies.
 2. Run `gleam add glacier --dev`.
-3. Open `gleam.toml` and remove:
+3. Open `gleam.toml` and **remove**:
    
    ```toml
    [dev-dependencies]
    gleeunit = "~> 0.x"
    ```
 
-4. Run `gleam clean`
+4. Run `gleam clean`.
 5. Open `./test/YOUR_PROJECT.gleam` and replace `import gleeunit` with `import glacier` and `gleeunit.main()` with `glacier.main()`.
 6. If you want to run on **Deno 1.30+** open `gleam.toml` and add:
 
