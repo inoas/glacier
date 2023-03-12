@@ -16,8 +16,16 @@ It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit)
 
 1. Open `gleam.toml` and remove `gleeunit` from the dependencies.
 2. Run `gleam add glacier --dev`.
-3. Open `./test/YOUR_PROJECT.gleam` and replace `import gleeunit` with `import glacier` and `gleeunit.main()` with `glacier.main()`.
-4. If you want to run on **Deno 1.30+** open `gleam.toml` and add:
+3. Open `gleam.toml` and remove:
+   
+   ```toml
+   [dev-dependencies]
+   gleeunit = "~> 0.x"
+   ```
+
+4. Run `gleam clean`
+5. Open `./test/YOUR_PROJECT.gleam` and replace `import gleeunit` with `import glacier` and `gleeunit.main()` with `glacier.main()`.
+6. If you want to run on **Deno 1.30+** open `gleam.toml` and add:
 
    ```toml
    [javascript.deno]
@@ -26,8 +34,8 @@ It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit)
    allow_run = ["gleam"]
    ```
 
-5. Run `gleam test --target erlang -- --glacier` or `gleam test --target javascript --runtime deno -- --glacier` or `gleam test --target javascript --runtime node -- --glacier`.
-6. Save a `src` or `test` module and watch associated tests to re-run.
+7. Run `gleam test --target erlang -- --glacier` or `gleam test --target javascript --runtime deno -- --glacier` or `gleam test --target javascript --runtime node -- --glacier`.
+8. Save a `src` or `test` module and watch associated tests to re-run.
 
 *Notice: On Linux [**inotify**](https://en.wikipedia.org/wiki/Inotify) must be installed.*
 
