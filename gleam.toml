@@ -1,10 +1,15 @@
 name = "glacier"
-version = "0.8.0"
+version = "0.8.1"
 
 licences = ["Apache-2.0"]
 description = "Glacier brings incremental interactive unit testing to Gleam. It is meant as a drop-in replacement for Gleeunit and depends and wraps a fork of it."
 repository = { type = "github", user = "inoas", repo = "glacier" }
 # links = [{ title = "Website", href = "https://gleam.run" }]
+internal_modules = [
+  "glacier",
+  "glacier_demo",
+  "glacier_demo/*",
+]
 
 [dependencies]
 fs = "~> 8.6"
@@ -26,3 +31,4 @@ pages = [
 	{ title = "CHANGELOG", path = "changelog.html", source = "CHANGELOG.md" },
 	{ title = "LICENSE", path = "license.html", source = "LICENSE" },
 ]
+

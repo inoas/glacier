@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.1
+
+- Improve readme
+- Hide internal modules from docs
+- Improve docs
+
 ## 0.8.0
 
 - Upgraded to be in line with gleam 0.27.0
