@@ -20,7 +20,7 @@ It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit)
    
    ```toml
    [dev-dependencies]
-   gleeunit = "~> 0.x"
+   gleeunit = ...
    ```
 
 4. Run `gleam clean`.
