@@ -16,18 +16,18 @@ pub fn function_4() {
   glacier_demo_module_c.function_5() - 1
 }
 
-if erlang {
-  import gleam/string
+@target(erlang)
+import gleam/string
 
-  pub fn a() {
-    string.inspect("a")
-  }
+@target(erlang)
+pub fn a() {
+  string.inspect("a")
 }
 
-if javascript {
-  import gleam/string
+@target(javascript)
+import gleam/string
 
-  pub fn a() {
-    string.inspect("a")
-  }
+@target(javascript)
+pub fn a() {
+  string.inspect("a")
 }
