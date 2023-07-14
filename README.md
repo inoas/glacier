@@ -17,7 +17,7 @@ It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit)
 1. Open `gleam.toml` and remove `gleeunit` from the dependencies.
 2. Run `gleam add glacier --dev`.
 3. Open `gleam.toml` and **remove**:
-   
+
    ```toml
    [dev-dependencies]
    gleeunit = ...
@@ -25,7 +25,7 @@ It is meant as a drop-in replacement for [Gleeunit](https://hexdocs.pm/gleeunit)
 
 4. Run `gleam clean`.
 5. Open `./test/YOUR_PROJECT.gleam` and replace `import gleeunit` with `import glacier` and `gleeunit.main()` with `glacier.main()`.
-6. If you want to run on **Deno 1.30+** open `gleam.toml` and add:
+6. If you want to run on **Deno 1.35+** open `gleam.toml` and add:
 
    ```toml
    [javascript.deno]
@@ -73,7 +73,7 @@ Run these in 3 terminals side by side:
 
 ### Requirements
 
-Requires Gleam 0.26 or later.
+Requires Gleam 0.30 or later.
 
 #### Target specific requirements
 
