@@ -113,7 +113,7 @@ Depends on [NodeJS:`fsPromises.watch`](https://nodejs.org/api/fs.html#fspromises
 
 Documentation can be found at <https://hexdocs.pm/glacier>.
 
-## Improving Glacier
+## Contributing to Glacier
 
 See [DEVELOPMENT.md](./DEVELOPMENT.md).
 

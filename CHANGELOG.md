@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0
+
+- Updates glacier_gleeunit dep to up to date version.
+
 ## 0.10.0
 
 - Updates Glacier for Gleam 1.0.
