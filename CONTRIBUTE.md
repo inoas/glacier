@@ -1,4 +1,4 @@
-# Glacier · Gleam Incremental Interactive Unit Testing
+# Glacier · Contribution Guide
 
 ## Improving Glacier
 
