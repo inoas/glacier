@@ -25,7 +25,7 @@
 
 2. Open `YOUR_GlEAM_PROJECT/test/YOUR_GLEAM_PROJECT.gleam` and replace `import gleeunit` with
   `import glacier` and `gleeunit.main()` with `glacier.main()` (or alias glacier as gleeunit).
-3. If you want to run on **Deno 1.30+** open `gleam.toml` and add:
+3. If you want to run on **Deno 1.40+** open `gleam.toml` and add:
 
    ```toml
    [javascript.deno]
