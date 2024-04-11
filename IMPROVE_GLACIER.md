@@ -27,7 +27,7 @@ gleam test --target erlang -- --glacier
 # Re-save ./src/glacier_demo/glacier_demo_module_a.gleam
 ```
 
-### Demo for target JavaScript/NodeJS
+### Demo for target JavaScript on NodeJS
 
 ```shell
 # Traditional test runs
@@ -41,7 +41,7 @@ gleam test --target javascript --runtime node -- --glacier
 
 Notice: You may omit `--runtime node` as it is currently set as the default runtime for target `javascript`.
 
-### Demo for target JavaScript/Deno
+### Demo for target JavaScript on Deno
 
 ```shell
 # Traditional test runs

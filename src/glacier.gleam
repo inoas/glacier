@@ -6,14 +6,14 @@ import gleam/string
 import gleam/string_builder
 import gleeunit
 
-/// Let's Gleam switch code based on the current target.
+/// Lets Gleam switch code based on the current target.
 ///
 type Target {
   ErlangTarget
   JavaScriptTarget
 }
 
-/// Atom to internally differentiate between Src and Test modules.
+/// Atom to internally differentiate between `src` and `test` modules.
 /// Public because the FFIs rely on it.
 ///
 pub type ModuleKind {
@@ -26,7 +26,7 @@ fn light_cyan_ansi_colour() {
   colour
 }
 
-/// Runs either Glacier or Gleeunit bundled as `gleeunit`, depending on
+/// Runs either `glacier` or `gleeunit` bundled as `gleeunit`, depending on
 /// the given command line arguments.
 ///
 pub fn main() {
@@ -82,15 +82,9 @@ fn execute_tests(modules: List(#(ModuleKind, String))) {
       Nil
     }
     test_modules -> {
-      "🏔 Detected test modules:"
-      |> ansi.colour(light_cyan_ansi_colour())
-      |> ansi.bold()
-      |> io.println
-
-      list.map(
-        test_modules,
-        with: fn(test_module: String) { "  ❄ " <> test_module },
-      )
+      list.map(test_modules, with: fn(test_module: String) {
+        "🏔 " <> test_module
+      })
       |> string.join("\n")
       |> ansi.colour(light_cyan_ansi_colour())
       |> io.println
@@ -141,8 +135,9 @@ fn detect_distinct_import_module_dependency_chain(
             |> module_name_to_file_name(SrcModuleKind)
             |> parse_module_for_imports
             |> list.append(module_names)
-            |> list.filter(for: fn(module_name) {
-              list.contains(processed_module_names, module_name) == False && file_exists(module_name_to_file_name(
+            |> list.filter(keeping: fn(module_name) {
+              list.contains(processed_module_names, module_name) == False
+              && file_exists(module_name_to_file_name(
                 module_name,
                 SrcModuleKind,
               ))
@@ -201,7 +196,18 @@ fn parse_module_string(
         ParseModeSearch, _collected, "\"" ->
           parse_module_string(rest_chars, imports, ParseModeInString, "")
         // Collecting import keyword: Continue Initial
-        ParseModeSearch, collected, char if collected == "" && char == "i" || collected == "i" && char == "m" || collected == "im" && char == "p" || collected == "imp" && char == "o" || collected == "impo" && char == "r" || collected == "impor" && char == "t" ->
+        ParseModeSearch, collected, char if collected == ""
+          && char == "i"
+          || collected == "i"
+          && char == "m"
+          || collected == "im"
+          && char == "p"
+          || collected == "imp"
+          && char == "o"
+          || collected == "impo"
+          && char == "r"
+          || collected == "impor"
+          && char == "t" ->
           parse_module_string(
             rest_chars,
             imports,
@@ -209,7 +215,10 @@ fn parse_module_string(
             collected <> char,
           )
         // Found `import` + whitespaceish: Enter Import
-        ParseModeSearch, "import", char if char == " " || char == "\t" || char == "\n" || char == "\r\n" -> {
+        ParseModeSearch, "import", char if char == " "
+          || char == "\t"
+          || char == "\n"
+          || char == "\r\n" -> {
           let #(rest_chars, new_import) =
             parse_import_chars(rest_chars, string_builder.new())
           let new_import = string_builder.to_string(new_import)
@@ -259,7 +268,7 @@ fn parse_import_chars(
   chars: List(String),
   import_module: string_builder.StringBuilder,
 ) {
-  // TODO: try pop grapheme
+  // TODO: Try pop grapheme
   case chars {
     // Return if end of line
     [] -> #([], import_module)
@@ -272,8 +281,10 @@ fn parse_import_chars(
     // Return if \n
     ["\n", ..rest_chars] -> #(rest_chars, import_module)
     // Ignore whitespaces
-    [char, ..rest_chars] if char == "\t" || char == "\r" || char == "\n" || char == "\r\n" ->
-      parse_import_chars(rest_chars, import_module)
+    [char, ..rest_chars] if char == "\t"
+      || char == "\r"
+      || char == "\n"
+      || char == "\r\n" -> parse_import_chars(rest_chars, import_module)
     // Append for any other character
     [char, ..rest_chars] ->
       parse_import_chars(rest_chars, string_builder.append(import_module, char))
@@ -297,13 +308,10 @@ fn derive_test_modules_from_src_import_dependencies(
     all_test_modules
     |> list.filter(fn(test_module) {
       let test_module_imports = derive_src_imports_off_test_module(test_module)
-      list.any(
-        in: src_modules,
-        satisfying: fn(src_module) {
-          test_module_imports
-          |> list.contains(src_module)
-        },
-      )
+      list.any(in: src_modules, satisfying: fn(src_module) {
+        test_module_imports
+        |> list.contains(src_module)
+      })
     })
   dirty_test_modules
 }
@@ -361,37 +369,37 @@ fn find_project_files(in sub_directory: String) -> List(String) {
   do_find_project_files(sub_directory)
 }
 
-/// Get's the target at runtime
+/// Gets the target at runtime
 ///
 fn target() -> Target {
   do_target()
 }
 
-/// Get's the start arguments sometimes called argv.
+/// Gets the start arguments sometimes called argv.
 ///
 fn start_args() -> List(String) {
   do_start_args()
 }
 
-/// Get's the current project directory.
+/// Gets the current project directory.
 ///
 fn get_cwd() -> String {
   do_get_cwd()
 }
 
-/// Get's the project's src directory.
+/// Gets the project's `src` directory.
 ///
 fn get_src_dir() -> String {
   get_cwd() <> "/src"
 }
 
-/// Get's the project's test directory.
+/// Gets the project's `test` directory.
 ///
 fn get_test_dir() -> String {
   get_cwd() <> "/test"
 }
 
-/// Cut's off the base path from the project directory.
+/// Cuts off the base path from the project directory.
 ///
 fn to_relative_path(absolute_file_path path: String) -> String {
   let assert Ok(#(_pre_path, relative_file_name)) =
@@ -399,121 +407,121 @@ fn to_relative_path(absolute_file_path path: String) -> String {
   relative_file_name
 }
 
-if erlang {
-  import gleam/erlang
-  import gleam/erlang/file
-  import shellout
+@target(erlang)
+import simplifile as file
+@target(erlang)
+import shellout
 
-  fn do_target() -> Target {
-    ErlangTarget
-  }
+@target(erlang)
+fn do_target() -> Target {
+  ErlangTarget
+}
 
-  fn do_start_args() -> List(String) {
-    erlang.start_arguments()
-  }
+@target(erlang)
+import argv
 
-  external fn do_start_file_change_watcher(
-    file_change_handler: fn(List(#(ModuleKind, String))) -> Nil,
-  ) -> Nil =
-    "glacier_ffi" "start_file_change_watcher"
+@target(erlang)
+fn do_start_args() -> List(String) {
+  argv.load().arguments
+}
 
-  fn read_module_file(module_path: String) -> Result(String, Nil) {
-    case file.read(module_path) {
-      Ok(text) -> Ok(text)
-      Error(_file_reason) ->
-        // io.debug(#(
-        //   "Could not read file",
-        //   module_path,
-        //   "with reason",
-        //   file_reason,
-        // ))
-        Error(Nil)
-    }
-  }
+@external(erlang, "glacier_ffi", "start_file_change_watcher")
+@external(javascript, "./glacier_ffi.mjs", "start_file_change_watcher")
+fn do_start_file_change_watcher(
+  file_change_handler file_change_handler: fn(List(#(ModuleKind, String))) ->
+    Nil,
+) -> Nil
 
-  external fn do_get_cwd() -> String =
-    "glacier_ffi" "get_cwd_as_binary"
-
-  external fn do_file_exists(absolute_file_name: String) -> Bool =
-    "filelib" "is_regular"
-
-  fn do_find_project_files(in: String) -> List(String) {
-    do_find_files_recursive(in: in, matching: "**/*.{gleam}")
-  }
-
-  external fn do_find_files_recursive(
-    in: String,
-    matching: String,
-  ) -> List(String) =
-    "glacier_ffi" "find_files_recursive"
-
-  fn shell_exec_print(args: List(String)) -> Nil {
-    case
-      shellout.command(
-        run: "gleam",
-        with: args,
-        in: ".",
-        opt: [shellout.LetBeStderr],
-      )
-    {
-      Ok(msg) -> {
-        io.print(msg)
-        Nil
-      }
-      Error(_error_tuple) -> Nil
+@target(erlang)
+fn read_module_file(module_path: String) -> Result(String, Nil) {
+  case file.read(module_path) {
+    Ok(text) -> Ok(text)
+    Error(file_reason) -> {
+      io.debug(#("Could not read file", module_path, "with reason", file_reason))
+      Error(Nil)
     }
   }
 }
 
-if javascript {
-  fn do_target() -> Target {
-    JavaScriptTarget
-  }
+@external(erlang, "glacier_ffi", "get_cwd_as_binary")
+@external(javascript, "./glacier_ffi.mjs", "cwd")
+fn do_get_cwd() -> String
 
-  fn do_start_args() -> List(String) {
-    start_args_ffi()
-    // This is a work around around a bug introduced in 0.26.0:
-    |> list.filter(fn(arg) {
-      arg != "--" && string.ends_with(arg, "/gleam.main.mjs") == False
-    })
-  }
+@external(erlang, "filelib", "is_regular")
+@external(javascript, "./glacier_ffi.mjs", "file_exists")
+fn do_file_exists(absolute_file_name absolute_file_name: String) -> Bool
 
-  external fn start_args_ffi() -> List(String) =
-    "./glacier_ffi.mjs" "start_args"
-
-  external fn do_start_file_change_watcher(
-    file_change_handler: fn(List(#(ModuleKind, String))) -> Nil,
-  ) -> Nil =
-    "./glacier_ffi.mjs" "start_file_change_watcher"
-
-  fn read_module_file(module_path: String) -> Result(String, Nil) {
-    do_read_module_file(module_path)
-  }
-
-  external fn do_read_module_file(module_path: String) -> Result(String, Nil) =
-    "./glacier_ffi.mjs" "read_file"
-
-  external fn do_get_cwd() -> String =
-    "./glacier_ffi.mjs" "cwd"
-
-  external fn do_file_exists(absolute_file_name: String) -> Bool =
-    "./glacier_ffi.mjs" "file_exists"
-
-  fn do_find_project_files(dir: String) -> List(String) {
-    do_find_files_recursive(dir, [".gleam"])
-    |> list.map(fn(file_name) {
-      let assert Ok(#(_test_prefix, file_name)) =
-        string.split_once(file_name, "test/")
-      file_name
-    })
-  }
-
-  external fn do_find_files_recursive(
-    in: String,
-    file_ext: List(String),
-  ) -> List(String) =
-    "./glacier_ffi.mjs" "find_files_recursive_by_exts"
-
-  external fn shell_exec_print(args: List(String)) -> Nil =
-    "./glacier_ffi.mjs" "shell_exec_print"
+@target(erlang)
+fn do_find_project_files(in: String) -> List(String) {
+  do_find_files_recursive(in: in, matching: "**/*.{gleam}")
 }
+
+@target(erlang)
+@external(erlang, "glacier_ffi", "find_files_recursive")
+fn do_find_files_recursive(
+  in in: String,
+  matching matching: String,
+) -> List(String)
+
+@target(erlang)
+fn shell_exec_print(args: List(String)) -> Nil {
+  case
+    shellout.command(run: "gleam", with: args, in: ".", opt: [
+      shellout.LetBeStderr,
+    ])
+  {
+    Ok(msg) -> {
+      io.print(msg)
+      Nil
+    }
+    Error(_error_tuple) -> Nil
+  }
+}
+
+@target(javascript)
+fn do_target() -> Target {
+  JavaScriptTarget
+}
+
+@target(javascript)
+fn do_start_args() -> List(String) {
+  start_args_ffi()
+  // // This is a work-around for a bug introduced in Gleam 0.26.0:
+  // |> list.filter(fn(arg) {
+  //   arg != "--" && string.ends_with(arg, "/gleam.main.mjs") == False
+  // })
+}
+
+@target(javascript)
+@external(javascript, "./glacier_ffi.mjs", "start_args")
+fn start_args_ffi() -> List(String)
+
+@target(javascript)
+fn read_module_file(module_path: String) -> Result(String, Nil) {
+  do_read_module_file(module_path)
+}
+
+@target(javascript)
+@external(javascript, "./glacier_ffi.mjs", "read_file")
+fn do_read_module_file(module_path module_path: String) -> Result(String, Nil)
+
+@target(javascript)
+fn do_find_project_files(dir: String) -> List(String) {
+  do_find_files_recursive(dir, [".gleam"])
+  |> list.map(fn(file_name) {
+    let assert Ok(#(_test_prefix, file_name)) =
+      string.split_once(file_name, "test/")
+    file_name
+  })
+}
+
+@target(javascript)
+@external(javascript, "./glacier_ffi.mjs", "find_files_recursive_by_exts")
+fn do_find_files_recursive(
+  in in: String,
+  file_ext file_ext: List(String),
+) -> List(String)
+
+@target(javascript)
+@external(javascript, "./glacier_ffi.mjs", "shell_exec_print")
+fn shell_exec_print(args args: List(String)) -> Nil

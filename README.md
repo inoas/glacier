@@ -36,10 +36,12 @@
 
 ## Usage
 
-1. Run any one of these:
+1. Run any one of these, of which some are synonyms:
    - `gleam test --target erlang -- --glacier`
+   - `gleam test --target erl -- --glacier`
    - `gleam test --target javascript --runtime deno -- --glacier`
-   - `gleam test --target javascript --runtime node -- --glacier`
+   - `gleam test --target javascript --runtime nodejs -- --glacier`
+   - `gleam test --target js --runtime node -- --glacier`
 2. Save gleam module within your projects `src` or `test` gleam directory and
    watch associated tests to re-run.
 
@@ -60,9 +62,10 @@ Make sure to run `gleam clean` after upgrading Glacier as a dependency.
 3. If `gleam test` is passed without any `--`-arguments it behaves the same as
    **gleeunit**.
 4. You can still pass in target or runtime flags, such as `--target javascript`
-   `--runtime deno`:
+   `--runtime deno`, aka:
    - `gleam test --target javascript --runtime deno -- --glacier`
-   - `gleam test --target javascript --tuntime deno -- test/my_module_test.gleam`.
+   - `gleam test --target javascript --runtime deno -- test/my_module_test.gleam`.
+   - `gleam test --target js --runtime deno -- test/my_module_test.gleam`.
 
 *Note: `gleam test` must only be executed from the base project directory!*
 
@@ -70,9 +73,9 @@ Make sure to run `gleam clean` after upgrading Glacier as a dependency.
 
 Run these in 3 terminals side by side:
 
-- `gleam test --target erlang -- --glacier`
-- `gleam test --target javascript --runtime node -- --glacier`
-- `gleam test --target javascript --runtime deno -- --glacier`
+- `gleam test -- --glacier # this implies --target erlang`
+- `gleam test --target js --runtime node -- --glacier`
+- `gleam test --target js --runtime deno -- --glacier`
 
 ## Requirements & Installation
 
@@ -105,8 +108,6 @@ Depends on [NodeJS:`fsPromises.watch`](https://nodejs.org/api/fs.html#fspromises
 - Linux: [relies](https://nodejs.org/docs/latest-v18.x/api/fs.html#fs_caveats) on [**inotify**](https://en.wikipedia.org/wiki/Inotify).
 - Mac: Should work out of the box.
 - Windows: Should work out of the box.
-
-Optional: You may find and replace all `import gleeunit/should` with `import glacier/should` and remove `gleeunit` from your dependencies in `gleam.toml`.
 
 ## Documentation
 

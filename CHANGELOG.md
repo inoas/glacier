@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.0
+
+- Updates Glacier for Gleam 1.0.
+
+## 0.9.0
+
+-
+
 ## 0.8.1
 
 - Improve readme
