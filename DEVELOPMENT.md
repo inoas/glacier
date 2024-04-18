@@ -1,5 +1,7 @@
 # Glacier · Gleam Incremental Interactive Unit Testing
 
+This package heavily depends on a [gleeunit](https://github.com/lpil/gleeunit) fork called [glacier_gleeunit](https://github.com/inoas/gleeunit)!
+
 ## Improving Glacier
 
 ```shell
