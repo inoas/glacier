@@ -115,7 +115,7 @@ Documentation can be found at <https://hexdocs.pm/glacier>.
 
 ## Improving Glacier
 
-See [IMPROVE_GLACIER.md](./DEVELOPMENT.md).
+See [DEVELOPMENT.md](./DEVELOPMENT.md).
 
 ## License
 
