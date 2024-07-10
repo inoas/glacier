@@ -1,8 +1,12 @@
 # Changelog
 
+## 1.1.0
+
+- Updated upstream gleeunit dependency to 1.2.0 (glacier_gleeunit 1.2.1001).
+
 ## 1.0.0
 
-- Updates glacier_gleeunit dep to up to date version.
+- Updates glacier_gleeunit dependency to up to date version.
 
 ## 0.10.0
 

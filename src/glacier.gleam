@@ -1,9 +1,9 @@
-import gleam_community/ansi
-import gleam_community/colour
 import gleam/io
 import gleam/list
 import gleam/string
 import gleam/string_builder
+import gleam_community/ansi
+import gleam_community/colour
 import gleeunit
 
 /// Lets Gleam switch code based on the current target.
@@ -196,7 +196,8 @@ fn parse_module_string(
         ParseModeSearch, _collected, "\"" ->
           parse_module_string(rest_chars, imports, ParseModeInString, "")
         // Collecting import keyword: Continue Initial
-        ParseModeSearch, collected, char if collected == ""
+        ParseModeSearch, collected, char
+          if collected == ""
           && char == "i"
           || collected == "i"
           && char == "m"
@@ -207,7 +208,8 @@ fn parse_module_string(
           || collected == "impo"
           && char == "r"
           || collected == "impor"
-          && char == "t" ->
+          && char == "t"
+        ->
           parse_module_string(
             rest_chars,
             imports,
@@ -215,10 +217,9 @@ fn parse_module_string(
             collected <> char,
           )
         // Found `import` + whitespaceish: Enter Import
-        ParseModeSearch, "import", char if char == " "
-          || char == "\t"
-          || char == "\n"
-          || char == "\r\n" -> {
+        ParseModeSearch, "import", char
+          if char == " " || char == "\t" || char == "\n" || char == "\r\n"
+        -> {
           let #(rest_chars, new_import) =
             parse_import_chars(rest_chars, string_builder.new())
           let new_import = string_builder.to_string(new_import)
@@ -281,10 +282,9 @@ fn parse_import_chars(
     // Return if \n
     ["\n", ..rest_chars] -> #(rest_chars, import_module)
     // Ignore whitespaces
-    [char, ..rest_chars] if char == "\t"
-      || char == "\r"
-      || char == "\n"
-      || char == "\r\n" -> parse_import_chars(rest_chars, import_module)
+    [char, ..rest_chars]
+      if char == "\t" || char == "\r" || char == "\n" || char == "\r\n"
+    -> parse_import_chars(rest_chars, import_module)
     // Append for any other character
     [char, ..rest_chars] ->
       parse_import_chars(rest_chars, string_builder.append(import_module, char))
@@ -408,9 +408,9 @@ fn to_relative_path(absolute_file_path path: String) -> String {
 }
 
 @target(erlang)
-import simplifile as file
-@target(erlang)
 import shellout
+@target(erlang)
+import simplifile as file
 
 @target(erlang)
 fn do_target() -> Target {
