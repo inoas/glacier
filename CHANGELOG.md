@@ -3,6 +3,7 @@
 ## 1.1.0
 
 - Updated upstream gleeunit dependency to 1.2.0 (glacier_gleeunit 1.2.1001).
+- Update simplifile dep to >- 2.0.0.
 
 ## 1.0.0
 
