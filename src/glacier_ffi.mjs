@@ -20,7 +20,7 @@ process.on('warning', function (e) {
 });
 
 export const start_args = function () {
-  return Gleam.List.fromArray(process.argv.slice(1));
+  return Gleam.List.fromArray(process.argv.slice(2));
 };
 
 export const cwd = function () {
