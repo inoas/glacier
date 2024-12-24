@@ -1,7 +1,7 @@
 import gleam/io
 import gleam/list
 import gleam/string
-import gleam/string_builder
+import gleam/string_tree
 import gleam_community/ansi
 import gleam_community/colour
 import gleeunit
@@ -221,16 +221,16 @@ fn parse_module_string(
           if char == " " || char == "\t" || char == "\n" || char == "\r\n"
         -> {
           let #(rest_chars, new_import) =
-            parse_import_chars(rest_chars, string_builder.new())
-          let new_import = string_builder.to_string(new_import)
+            parse_import_chars(rest_chars, string_tree.new())
+          let new_import = string_tree.to_string(new_import)
           let updated_imports = [new_import, ..imports]
           parse_module_string(rest_chars, updated_imports, ParseModeSearch, "")
         }
         // Found `import\r` + "\n": Enter Import
         ParseModeSearch, "import\r", "\n" -> {
           let #(rest_chars, new_import) =
-            parse_import_chars(rest_chars, string_builder.new())
-          let imports = [string_builder.to_string(new_import), ..imports]
+            parse_import_chars(rest_chars, string_tree.new())
+          let imports = [string_tree.to_string(new_import), ..imports]
           parse_module_string(rest_chars, imports, ParseModeSearch, "")
         }
         // Found whitespaceish char: Continue Initial with empty collected
@@ -267,7 +267,7 @@ fn parse_module_string(
 ///
 fn parse_import_chars(
   chars: List(String),
-  import_module: string_builder.StringBuilder,
+  import_module: string_tree.StringTree,
 ) {
   // TODO: Try pop grapheme
   case chars {
@@ -287,7 +287,7 @@ fn parse_import_chars(
     -> parse_import_chars(rest_chars, import_module)
     // Append for any other character
     [char, ..rest_chars] ->
-      parse_import_chars(rest_chars, string_builder.append(import_module, char))
+      parse_import_chars(rest_chars, string_tree.append(import_module, char))
   }
 }
 
