@@ -437,7 +437,9 @@ fn read_module_file(module_path: String) -> Result(String, Nil) {
   case file.read(module_path) {
     Ok(text) -> Ok(text)
     Error(file_reason) -> {
-      io.debug(#("Could not read file", module_path, "with reason", file_reason))
+      #("Could not read file", module_path, "with reason", file_reason)
+      |> string.inspect
+      |> io.println_error
       Error(Nil)
     }
   }
