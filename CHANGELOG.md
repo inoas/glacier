@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.3.1
+
+- updated gleam community colour to allow more recent versions of other
+  dependencies such as gleam_json.
+
+## 1.3.0
+
+- updated towards glacier_gleeunit 1.3.0 which uses gleeunit 1.3.0 as a basis.
+
 ## 1.1.0
 
 - Updated upstream gleeunit dependency to 1.2.0 (glacier_gleeunit 1.2.1001).
