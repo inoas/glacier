@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.2
+
+- `get_cwd_as_binary` bugfix.
+
 ## 1.3.1
 
 - updated gleam community colour to allow more recent versions of other
