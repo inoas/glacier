@@ -1,5 +1,5 @@
 name = "glacier"
-version = "1.3.2"
+version = "1.3.3"
 gleam = ">= 1.9.1"
 
 licences = ["Apache-2.0"]
@@ -11,7 +11,7 @@ internal_modules = ["glacier_demo", "glacier_demo/*"]
 [dependencies]
 argv = ">= 1.0.0 and < 2.0.0"
 fs = ">= 8.6.0 and < 9.0.0"
-glacier_gleeunit = ">= 1.3.1002 and < 2.0.0"
+glacier_gleeunit = ">= 1.3.1003 and < 2.0.0"
 # glacier_gleeunit = { path = "../gleeunit" }
 gleam_community_ansi = ">= 1.4.0 and < 2.0.0"
 gleam_community_colour = ">= 2.0.0 and < 3.0.0"

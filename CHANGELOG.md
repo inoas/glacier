@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.3
+
+- `gleeunit_glacier_ffi` bugfix.
+
 ## 1.3.2
 
 - `get_cwd_as_binary` bugfix.
