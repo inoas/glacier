@@ -1,3 +1,10 @@
+# UNMAINTAINED
+
+notice, glacier is as of now unmaintained.
+- gleeunit upstream still does not allow itself to be called as a function
+- there are several other test runners for gleam now, which can be evaluated to either be used as libraries (like glacier does with gleeunit) or directly integrate interactive testing
+- just using watchexec and gleeunit also works
+
 # Glacier · Gleam Incremental Interactive Unit Testing
 
 [![Hex Package](https://img.shields.io/hexpm/v/glacier?color=ffaff3&label=%F0%9F%93%A6)](https://hex.pm/packages/glacier)
